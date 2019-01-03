@@ -10,7 +10,7 @@
 		</div>
 	@endif
 
- <form action="/admin/user/{{$data->id}}" method="post">
+ <form action="/admin/user/{{$data->id}}" method="post" enctype="multipart/form-data">
 
            {{ csrf_field() }}
            {{ method_field('PUT') }}

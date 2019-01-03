@@ -17,10 +17,11 @@
        </div>
       </div>
      </div> 
-     @foreach($ting as $k=>$v)
+     
      <div class="ting-list-group" style="margin:auto;">
-      <div class="ting-list ting-type-list">
-       <div class="ting-cpt">
+      <div class="ting-list ting-type-list" >
+      @foreach($ting as $k=>$v)
+       <div class="ting-cpt" >
         <div class="ting-img">
          <a href="/home/ting/{{ $v->id }}" target="_blank"><img src="{{ $v->img }}" class="lazy loaded" /><span></span></a>
         </div>       

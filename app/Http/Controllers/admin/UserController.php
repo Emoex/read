@@ -117,7 +117,10 @@ class UserController extends Controller
         ///dd($data);
         $user=User::find($id);
         $user->sex=$data['sex'];
-        $user->face=$data['face'];
+        if($request->hasFile('face')){
+            $path = $request->file('face')->store('images');
+            $user->face='/uploads/'.$path;
+        }
         $user->tel=$data['tel'];
         $user->email=$data['email'];
         $res=$user->save();

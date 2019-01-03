@@ -346,6 +346,32 @@
      </div>
     </div>
    
+    <div data-index="16" class="card-ting-cpt" style="left: 303px; top: 2193px; opacity: 1;">
+    <div class="card-top-img">
+     <a href="/pages/radio/tingInfo.html?tingid=5b64193b257be9e95ecf8963" target="_blank"><img src="http://hpimg.pianke.com/89a57f277d7e1bdfb169453706ef58cb20180803.jpg?imageView2/2/w/640/format/jpg" /> <span></span></a>
+    </div> 
+    <div class="card-item">
+     <div class="card-ting-title">
+      <a href="/pages/radio/tingInfo.html?tingid=5b64193b257be9e95ecf8963" target="_blank">这世界全部的漂亮，不过你的可爱模样</a>
+     </div> 
+     <div class="user-sign">
+      <a href="./user.html?uid=4096947" target="_blank">主播&nbsp;/&nbsp;白无常白总</a>
+     </div> 
+     <div class="card-others">
+      <span class="card-type"><a href="/pages/radio/radio.html" target="_blank">Ting</a></span> 
+      <span>11.1 k次播放&nbsp;&nbsp;|&nbsp;&nbsp;评论:11&nbsp;&nbsp;|&nbsp;&nbsp;喜欢:229</span>
+     </div> 
+     <div class="card-user">
+      <div class="card-user-info">
+       <a href="/pages/user/user.html?uid=4096947" target="_blank"><img src="http://tva3.sinaimg.cn/crop.0.0.500.500.50/006qhQumjw8f213ygfh47j30dw0dwwfi.jpg" width="" />白无常白总</a>
+      </div> 
+      <div class="card-likes likes-cpt"></div>
+     </div>
+    </div>
+   </div>
+
+
+
    <div class="back-top hidden"></div> 
 </div>
 @endsection

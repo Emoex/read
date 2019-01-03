@@ -21,6 +21,8 @@ Route::resource('/admin/user','admin\UserController');
 Route::resource('/admin/ting','admin\TingController');
 Route::resource('/admin/blogroll','admin\BlogrollController');
 Route::resource('/home/ting','home\TingController');
+Route::resource('/home/index','home\IndexController');
+
 
 
 

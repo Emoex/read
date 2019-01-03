@@ -32,7 +32,11 @@
 	</div>
 	<div class="form-group">
 		<label for="img">封面:</label>
-		<div><input type="file" name="img"></div>
+		<div><input type="file" name="img" value="{{ $data->img }}"></div>
+	</div>
+	<div class="form-group">
+		<label for="music">音乐:</label>
+		<div><input type="file" name="music" value="{{ $data->music }}"></div>
 	</div>
 	<input type="submit" value="修改" class="btn btn-success">
 	</form>
