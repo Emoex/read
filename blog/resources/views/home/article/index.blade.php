@@ -51,6 +51,8 @@
             <a href="javascript:;"></a>
         </div>
     </div>
+
+    
    <div class="index-content">
     <div class="article-type-group">
      <div class="title-cpt">
