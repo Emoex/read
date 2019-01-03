@@ -72,13 +72,19 @@
        <a href=""></a>
       </div> 
       <ul class="navbar">
-       <li class=""><a href="/home/layout/index">首页</a></li> 
-       <li class="active"><a href="/home/article">阅读</a></li> 
-       <li class=""><a href="/home/ting/radio">电台</a></li> 
-       <li class=""><a href="/home/timeline/timeline">碎片</a></li> 
-       <li class=""><a href="/home/feed/feed">动态</a></li> 
-       <li class=""><a href="/home/client/client">客户端</a></li>
+       <li class=""><a href="/home/index">首页</a></li> 
+       <li class=""><a href="/home/article">阅读</a></li> 
+       <li class=""><a href="/home/ting">电台</a></li> 
+       <li class=""><a href="/home/timeline">碎片</a></li> 
+       <li class=""><a href="/home/feed">动态</a></li> 
       </ul> 
+      <script type="text/javascript">
+          $('.navbar li').mouseover(function(){
+              $(this).addClass('active');
+          }).mouseout(function(){
+              $(this).removeClass('active');
+          });
+      </script>
       <div class="navbar-icon">
           <a href="/home/ting/create">
          <div class="editer">
