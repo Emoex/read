@@ -258,11 +258,10 @@
           return false;
         }
       }
-
     })
   </script>
   <div class="container">
-  
+
   <div ><div id="error" style="display:none;" class="errorPrompt Prompt"></div></div>
   <div><div id='success' style="display:none;" class="successPrompt Prompt"></div></div>
     {{ csrf_field() }}
