@@ -19,12 +19,18 @@
   <script type="text/javascript" charset="utf-8" async="" src="https://qnstatic.pianke.me/editor/editorBuild/2.build.js"></script>
  </head> 
  <body> 
+ <div id="article"></div>
+ <script>
+        $(function(){
+          $('#article').load('article');
+        })
+ </script>
   <div class="menuBar hidden-xs"> 
    <div class="logo">
     <a href="http://pianke.me/"><img width="18px" src="http://pianke.image.alimmdn.com/webUeditor/assets/img/logo.png" /></a>
    </div> 
    <div class="menuItem"> 
-    <a href="#!/article">文章</a> 
+    <a href="/home/article/create">文章</a> 
     <a href="#!/ting" class="v-link-active active">Ting</a> 
     <a href="#!/rootEdit" style="display: none;">管理</a> 
    </div> 

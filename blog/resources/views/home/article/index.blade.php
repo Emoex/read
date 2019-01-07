@@ -2,56 +2,75 @@
 @section('content')
 <div class="container">
      <!-- 轮播图 -->
-    <div class="Cooldog_container">
-        <div class="Cooldog_content">
-            <ul>
-                <li class="p1">
-                    <a href="#">
-                        <img src="/images/1.JPG" alt="">
-                    </a>
-                </li>
-                <li class="p2">
-                    <a href="#">
-                        <img src="/images/2.JPG" alt="">
-                    </a>
-                </li>
-                <li class="p3">
-                    <a href="#">
-                        <img src="/images/3.JPG" alt="">
-                    </a>
-                </li>
-                <li class="p4">
-                    <a href="#">
-                        <img src="/images/4.JPG" alt="">
-                    </a>
-                </li>
-                <li class="p5">
-                    <a href="#">
-                        <img src="/images/5.JPG" alt="">
-                    </a>
-                </li>
-            </ul>
+<section class="pc-banner">
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide swiper-slide-center none-effect">
+                <a href="#">
+                    <img src="/images/1.JPG">
+                </a>
+                <div class="layer-mask"></div>
+            </div>
+            <div class="swiper-slide">
+                <a href="#">
+                    <img src="/images/2.JPG">
+                </a>
+                <div class="layer-mask"></div>
+            </div>
+            <div class="swiper-slide">
+                <a href="#">
+                    <img src="/images/3.JPG">
+                </a>
+                <div class="layer-mask"></div>
+            </div>
+            <div class="swiper-slide">
+                <a href="#">
+                    <img src="/images/4.JPG">
+                </a>
+                <div class="layer-mask"></div>
+            </div>
+            <div class="swiper-slide">
+                <a href="#">
+                    <img src="/images/5.JPG">
+                </a>
+                <div class="layer-mask"></div>
+            </div>
         </div>
-        <a href="javascript:;" class="btn_left">
-            <i class="iconfont icon-zuoyoujiantou"></i>
-        </a>
-        <a href="javascript:;" class="btn_right">
-            <i class="iconfont icon-zuoyoujiantou-copy-copy"></i>
-        </a>
-        <a href="javascript:;" class="btn_close">
-            <i class="iconfont icon-icon-test"></i>
-        </a>
-        <div class="buttons clearfix">
-            <a href="javascript:;" class="color"></a>
-            <a href="javascript:;"></a>
-            <a href="javascript:;"></a>
-            <a href="javascript:;"></a>
-            <a href="javascript:;"></a>
-            <a href="javascript:;"></a>
-            <a href="javascript:;"></a>
+        <div class="button">
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
         </div>
     </div>
+</section>
+<script type="text/javascript" src="/js/swiper.min.js"></script>
+<script type="text/javascript">
 
+    window.onload = function() {
+        var swiper = new Swiper('.swiper-container',{
+            autoplay: false,
+            speed: 1000,
+            autoplayDisableOnInteraction: false,
+            loop: true,
+            centeredSlides: true,
+            slidesPerView: 2,
+            pagination: '.swiper-pagination',
+            paginationClickable: true,
+            prevButton: '.swiper-button-prev',
+            nextButton: '.swiper-button-next',
+            onInit: function(swiper) {
+                swiper.slides[2].className = "swiper-slide swiper-slide-active";
+            },
+            breakpoints: {
+                668: {
+                    slidesPerView: 1,
+                }
+            }
+        });
+    }
+
+
+</script>
+<!-- 轮播图结束 -->
     
    <div class="index-content">
     <div class="article-type-group">
@@ -77,9 +96,9 @@
          <a href="/home/article/{{ $v->id }}">{{ $v->title }}</a>
         </div> 
         <div class="article-author">
-         <a href="../user/user.html?uid=4325575" target="_blank">By&nbsp;/&nbsp;{{ $v->User->uname }}</a>
+         <a href="../user/user.html?uid=4325575" target="_blank">By&nbsp;/&nbsp;{{ $v->User->nickname }}</a>
         </div> 
-        <div class="article-content" style="overflow:hidden;line-height:18px">
+        <div class="article-content" style="overflow:hidden;line-height:20px">
            {{ preg_replace('/<\/?.+?\/?>/','',$v->content) }}<span class="view-all"><a href="/home/article/{{ $v->id }}" target="_blank">VIEW ALL<img src="http://qnstatic.pianke.me/public/assets/img/viewall.png" /></a></span>  
          
         </div>

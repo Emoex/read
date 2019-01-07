@@ -22,7 +22,8 @@ class TingController extends Controller
         $tingid=DB::select('select * from ting order by id desc limit 3');
         $like=DB::select('select * from ting order by likes desc limit 3');
         $cate=TingCate::all();
-        return view('/home/ting/redio',['ting'=>$ting,'cate'=>$cate,'listen'=>$listen,'tingid'=>$tingid,'like'=>$like]);
+        $active = 2;
+        return view('/home/ting/redio',['ting'=>$ting,'cate'=>$cate,'listen'=>$listen,'tingid'=>$tingid,'like'=>$like,'active'=>$active]);
 
     }
 
@@ -47,7 +48,6 @@ class TingController extends Controller
     {
         $ting=new Ting;
         $req=$request->except(['_token']);
-        dump($req);
         if($request->hasFile('file')){
             $path = $request->file('file')->store('music');
             $ting->music='/uploads/'.$path;
@@ -117,4 +117,5 @@ class TingController extends Controller
     {
         //
     }
+
 }

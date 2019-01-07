@@ -53,6 +53,7 @@
 	@endforeach
 	</tbody>
 </table>
+<!-- 模态框 -->
 <div id="myModal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -66,7 +67,8 @@
 	      </div>
 	    </div>
 	  </div>
-	</div>
+</div>
+
 <div id="paging">
 	{{ $articles->appends($params)->links() }}	
 </div>	

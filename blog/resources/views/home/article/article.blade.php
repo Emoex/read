@@ -1,22 +1,20 @@
 @extends('home/layout/index')
 @section('content')
-  <div class="index-content">
+  <div class="index-content" style="padding-top:100px;">
    <div class="article-info-box">
     <div class="article-header-img" style="display: none; background-image: url(&quot;&quot;);"></div> 
     <div class="article-info-content">
      <div class="article-info">
       <div class="article-header-info">
-       <div class="article-type">
-        <a href="./readNote.html" target="_blank">自由写作</a>
-       </div> 
        <div class="article-title">
-        {{ $article->title }} 
+        {{ $article->title }}
+        <input type="hidden" name="uid" value="{{ $article->uid }}"> 
         <a href="http://pianke.me/editor/#!/article/5a4ba0b74cfcf3be5384d9c8" target="_blank" style="display: none;"><span></span></a> 
         <span class="del-article" style="display: none;"></span>
        </div> 
        <div class="article-others">
-        <a href="../user/user.html?uid=4325575" target="_blank"><img src="{{ $article->User->face }}" width="40px" /> {{ $article->User->uname }}</a> 
-        <span>{{ $article->created_at }}&nbsp;&nbsp;|&nbsp;&nbsp;阅读时间: 8min&nbsp;&nbsp;|&nbsp;&nbsp;阅读次数:&nbsp;{{ $article->look }}</span>
+        <a href="/home/personal/{{ $article->User->id }}" target="_blank"><img src="{{ $article->User->face }}" width="40px" /> {{ $article->User->nickname }}</a> 
+        <span>{{ $article->created_at }}&nbsp;&nbsp;|&nbsp;&nbsp;阅读时间: 8min&nbsp;&nbsp;|&nbsp;&nbsp;阅读次数:&nbsp;<foot id="look">{{ $article->look }}</foot></span>
        </div>
       </div> 
       <div class="article-content"> 
@@ -30,12 +28,12 @@
       </style> 
        <article class="typo container"> 
         <h1>{{ $article->title }}</h1> 
-        <p class="author"><span>作者: {{ $article->User->uname }}</span>&nbsp;&nbsp; <span>8 min read</span>&nbsp;&nbsp; </p> 
+        <p class="author"><span>作者: {{ $article->User->nickname }}</span>&nbsp;&nbsp; <span>8 min read</span>&nbsp;&nbsp; </p> 
 		{!! $article->content !!}
        </article> 
       </div> 
       <div class="article-report"> 
-       <span class="report">举报</span>
+       <span class="report" onclick="report({{ $article->id }},'article')">举报</span>
       </div>
      </div> 
      <div class="article-handle">
@@ -65,7 +63,7 @@
        <input type="hidden" value="{{ $article->id }}" name="aid">
        <input type="hidden" value="{{ session('user')['uname'] }}" name="name">
        {{ csrf_field() }}
-       <textarea id="" maxlength="360" name="comment" placeholder="发表你的精彩评论啦"></textarea> 
+       <textarea id="" maxlength="30" name="comment" placeholder="发表你的精彩评论啦"></textarea> 
        <div class="btn" id="comment">
         发表评论
        </div>
@@ -100,7 +98,7 @@
                   },'json');
 
                     }else{
-                      alert('内容不能为空');
+                      error('内容不能为空');
                     }
 
                   })
@@ -113,6 +111,7 @@
             $('#comment').click(function(e){
                if($(this).prev().val()){
                   $.post('/home/article/comment',{'_token':$('input[name=_token]').val(),'aid':$('input[name=aid]').val(),'content':$('[name=comment]').val(),'parent_id':0},function(data){
+                     $('[name=comment]').val('');
                      if(data['msg'] == 'success'){
                            $('.comment-cpt:last').children().first().children().first().attr('href','/home/user/');
                            $('.comment-cpt:last').children().first().children().first().children().first().attr('src',data['face']);
@@ -121,18 +120,102 @@
                            $('.comment-user-info:last').children().first().next().text('　'+data['time']);
                            $('.comment-content:last').text(data['content']);
                            $('.comment-number:last').text(data['like']);
+                           $('.comment-reply:last').attr('onclick','dododo('+data['id']+',this)');
                            $('.comment-cpt:last').css('display','');
                            $('.comment-list-group:first').prepend('<div class="comment-cpt" style="">'+$('.comment-cpt:last').html()+'</div>');
                            $('.comment-cpt:last').css('display','none');
                      }else{
-                        alert('评论失败');
+                        error('评论失败');
                      }
                   },'json');
                }else{
-                  alert('内容不能为空');
+                  error('内容不能为空');
                }
             })
             
+
+           setTimeout(function(){
+             $.post('/home/article/look',{'_token':$('input[name=_token]').val(),'aid':$('input[name=aid]').val()},function(data){
+                      $('#look').text(data['look']);
+             },'json');
+           },5000);
+           
+           $('.likes-cpt').click(function(){
+            $.post('/home/article/like',{'_token':$('input[name=_token]').val(),'aid':$('input[name=aid]').val()},function(data){
+                      if(data['msg'] != 'error'){
+                        $('.likes-cpt').text(data['like']);
+                      }else{
+                        error('您已经喜欢过了');
+                      }
+                      
+             },'json');
+           })
+
+           $('.comment_like').click(function(){
+             click(1);
+           })
+   
+           destroy = function(id,obj,bj){
+              confirm('确认删除？');
+              $('#confirm div').eq(1).click(function(){
+                    $.post('/home/article/comment/'+id,{'_token':$('input[name=_token]').val(),'auid':$('input[name=uid]').val(),'_method':'DELETE'},function(data){
+                        $('.Confirm').addClass('hidden');     
+                        if(data['msg'] == 'success'){
+                          success('删除成功');
+                          if(bj == 2){
+                            $(obj).parent().remove();
+                          }else{
+                            $(obj).parent().parent().parent().remove();
+                          }
+                        }else{
+                          error('删除失败');
+                        }
+                    },'json')
+              })
+           }
+
+          report = function(id,table){
+            confirm('确认要举报吗？');
+            $('#confirm div').eq(1).click(function(){
+              $.post('/home/report',{'_token':$('input[name=_token]').val(),'idid':id,'table':table},function(msg){
+                 $('.Confirm').addClass('hidden');
+                 if(msg == 'success'){
+                    success('举报成功');
+                 }
+              },'html');
+              return false;
+            })
+          }
+
+           //错误消息
+           function error(text)
+            {
+              $('#error').text(text).show();
+              setTimeout(function(){
+                $('#error').text('').hide();
+              },2000);
+            }
+
+           //成功消息
+           function success(text)
+            {
+              $('#success').text(text).show();
+              setTimeout(function(){
+                $('#success').text('').hide();
+              },2000);
+            }
+
+          //确认框
+          function confirm(text)
+          {
+            $('.Confirm').removeClass('hidden');
+            $('.Confirm').find('div').eq(0).html(text);
+            $('#confirm div').eq(0).click(function(){
+              $('.Confirm').addClass('hidden');
+            });
+          } 
+
+
 
        })
 </script>     
@@ -141,7 +224,7 @@
       <div class="comment-title-cpt">
        <div>
         评论
-        <span>({{ $num }}&nbsp;条)</span>
+        <span id="comment-content">({{ $num }}&nbsp;条)</span>
        </div>
       </div> 
       <div class="comment-list-group">
@@ -155,9 +238,12 @@
                      <div class="comment-user-info">
                       <a href="/home/user" target="_blank">{{ $v->User->uname }}</a><span>　{{ $v->created_at }}</span> 
                       <span class="comment-reply" onclick="dododo({{ $v->id }},this);">回复</span> 
-                      <span class="comment-del" style="display: none;">删除</span> 
-                      <span class="comment-number">{{ $v->like }}</span> 
-                      <span class="comment-del report">举报</span>
+                      @if($v->uid == session('user')['id'] || session('user')['id'] == $article->uid)
+                      <span class="comment-del" onclick="destroy({{ $v->id }},this,1)">删除</span> 
+                      @else
+                      <span class="comment-del report" onclick="report({{ $v->id }},'article_comment')">举报</span>
+                      @endif
+                      <span class="comment-number comment_like">{{ $v->like }}</span> 
                      </div> 
                      <div class="comment-content">
                       {{ $v->content }}
@@ -165,15 +251,17 @@
                      @if($v->children)
                      @foreach($v->children as $kk=>$vv)
                        <div class="comment-content-others">
-                          <a href="../user/user.html?uid=4934695" target="_blank">　{{ $vv->User->uname }}:</a>{{ $vv->content }}
-                          <a class="comment-del report replySpan" onclick="dododo({{ $vv->id }},this);">回复</a>
-                          <span class="comment-del report" style="display: none;">举报</span>
-                          <span class="comment-del" style="display: none;">删除</span>
+                          <a href="/home/personal/{{ $vv->User->id }}" target="_blank">　{{ $vv->User->uname }}:</a>{{ $vv->content }}
+                          @if($vv->uid == session('user')['id'] || session('user')['id'] == $article->uid)
+                          <span class="comment-del delete" onclick="destroy({{ $vv->id }},this,2)">删除</span>
+                          @else
+                          <span class="comment-del report" onclick="report({{ $vv->id }},'article_comment')">举报</span>
+                          @endif
                        </div>
                      @endforeach
                      @endif
                      <div class="com-textarea hidden">
-                      <textarea name="reply" class="reply" id="replyTextarea" maxlength="360" placeholder="请输入回复内容"></textarea> 
+                      <textarea name="reply" class="reply" id="replyTextarea" maxlength="30" placeholder="请输入回复内容"></textarea> 
                       <div class="btn-group">
                        <div class="btn send">
                         发送
@@ -192,6 +280,9 @@
 
 
 
+
+
+
        <div class="comment-cpt" style="display:none">
         <div class="comment-user-icon">
          <a href="../user/user.html?uid=3404651" target="_blank"><img src="http://q.qlogo.cn/qqapp/100339551/8F7A508551FF3247337B3665F290B595/100" /></a>
@@ -199,8 +290,9 @@
         <div class="comment-info">
          <div class="comment-user-info">
           <a href="../user/user.html?uid=3404651" target="_blank">吱吱1453813691</a><span>2018-12-4 13:35</span> 
-          <span class="comment-reply">回复</span> 
+          <span class="comment-reply">回复</span>
           <span class="comment-del" style="display: none;">删除</span> 
+
           <span class="comment-number">0</span> 
           <span class="comment-del report">举报</span>
          </div> 
@@ -220,6 +312,17 @@
          </div> 
         </div>
        </div>
+<!-- 提示框 -->
+<div ><div id="error" style="display:none;" class="errorPrompt Prompt"></div></div>
+<div><div id='success' style="display:none;" class="successPrompt Prompt"></div></div>
+<!-- 确认框 -->
+  <div class="Confirm hidden">
+    <div>确认要举报吗？</div>
+    <div class="btn-group" id="confirm">
+      <div>取消</div>
+      <div>确认</div></div>
+  </div>
+
 
 <!--        <div class="common-more-btn" style="">
         查看更多评论

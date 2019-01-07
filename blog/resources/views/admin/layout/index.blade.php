@@ -421,10 +421,27 @@
 											<p>友情链接添加</p>
 										</a>
 									</li>
+								</ul>
+							</div>
+						</div>
+						</li>
+						<li class="nav-item active">
+						 <div class="info">
+							<a class="" data-toggle="collapse" href="#collapseExample7" aria-expanded="true">
+								<span>
+									
+									<i class="la la-paperclip"></i><span class="user-level">举报管理</span>
+									<span class="caret"></span>
+								</span>
+							</a>
+							<div class="clearfix"></div>
+
+							<div class="collapse in" id="collapseExample7" aria-expanded="true" style="">
+								<ul class="nav">
 									<li>
-										<a href="index.html">
-											<i class="la la-wrench"></i>
-											<p>友情链接修改</p>
+										<a href="/admin/report">
+											<i class="la la-reorder"></i>
+											<p>举报列表</p>
 										</a>
 									</li>
 								</ul>

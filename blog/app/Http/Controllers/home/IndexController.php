@@ -17,8 +17,8 @@ class IndexController extends Controller
     public function index()
     {
         $tingid=DB::select('select * from ting order by id desc limit 3');
-        //dd($tingid);
-        return view('/home/index/index',['tingid'=>$tingid]);
+        $active = 0;    
+        return view('/home/index/index',['tingid'=>$tingid,'active'=>$active]);
     }
 
     /**

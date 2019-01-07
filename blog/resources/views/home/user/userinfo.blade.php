@@ -3,15 +3,13 @@
 <div class="user-set-content">
   <div class="type-title-cpt">
     <span class="active">帐号设置</span></div>
-  <form action="/home/userinfo/1" method="post" enctype="mulitipart/form-data">
-  {{ csrf_field() }}
-  {{ method_field('PUT') }}
+  <form action="/home/userinfo/1" method="post" enctype="mulitipart/form-data" id="info_file">
   <div class="set-content">
     <div class="user-set">
       <div class="set-icon">
         <div>
           <span class="set-text">头像:</span>
-          <label>@if(session('user')['face'])<img src="{{ session('user')['face'] }}" title="点击更换头像"> @else <img src="/face.png" alt="" > @endif <input type="file" style="display:none;" name="face"> </label></div>
+          <label>@if(session('user')['face'])<img src="{{ session('user')['face'] }}" title="点击更换头像" id="face2"> @else <img src="/face.png" alt="" > @endif <input type="file" style="display:none;" name="face"> </label></div>
       </div>
       <div class="set-name" style="">
         <span class="set-text">昵称:</span>
@@ -25,12 +23,12 @@
       <div class="set-sex">
         <span class="set-text">性别:</span>
         <label class="radiovote">
-           <input type="radio" name="sex" value="男">
+           <input type="radio"  @if(session('user')['sex'] == '男') checked @endif name="sex" value="男">
           <span class="voteContent">男</span>
            <img src="@if(session('user')['sex'] == '男') /images/radioY.png @else /images/radioN.png @endif " alt="" style="width:20px;height:20px;"> 
         </label>
         <label class="radiovote">
-          <input type="radio" name="sex" value="女">
+          <input type="radio" @if(session('user')['sex'] == '女') checked @endif name="sex" value="女">
           <span class="voteContent">女</span>
           <img src="@if(session('user')['sex'] == '女') /images/radioY.png @else /images/radioN.png @endif " alt="" style="width:20px;height:20px;"> 
         </label>
@@ -41,24 +39,20 @@
       </div>
       <label>
           <div class="btn set-btn">
-            <input type="submit" value="修改">
+            修改
           </div>
       </label>
   </div>
+  {{ csrf_field() }}
+  {{ method_field('PUT') }}
   </form>
+  </div>
 </div>
 
 <style>
       .voteContent img{
          width: 20px;
          height:20px;
-      }
-      .btn input{
-        font-size: 14px;
-        outline:medium;
-        background:none;
-        border:none;
-        cursor:pointer;
       }
 </style>
 
@@ -68,6 +62,32 @@
                    $('.radiovote img').attr('src','/images/radioN.png');
                    $(this).next().next().attr('src','/images/radioY.png');
                 })
+      function ajax(){
+        $.ajax({
+            url:'/home/userinfo/1',
+            type:'post',
+            data:new FormData($('#info_file')[0]),
+            processData:false, 
+            contentType:false,
+            dataType:'json',
+            success:function(obj){
+              if(obj.msg == 'success'){
+                  $('#face1').attr('src',obj.face);
+                  $('#face2').attr('src',obj.face);
+                  $('input:[name=nikname]').val(obj.nickname);
+                  $('[name=intro]').val(obj.intro);
+              }else{
+                alert('修改失败');
+              }
+            }
+        });
+      };
+      $('form:first input:file').eq(0).change(function(){
+        ajax();
+      });
+      $('.set-btn').eq(0).click(function(){
+        ajax();
+      })
     })
       
 </script>

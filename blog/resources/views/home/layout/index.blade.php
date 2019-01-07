@@ -3,7 +3,7 @@
  <head> 
   <meta charset="UTF-8" /> 
   <meta type="" /> 
-  <title>片刻网-用文字交换世界</title> 
+  <title>嘻嘻嘻</title> 
   <script src="/assets/js/core/jquery.3.2.1.min.js"></script>
   <link href="https://qnstatic.pianke.me/public/assets/favicon.ico" rel="icon" type="image/x-icon" /> 
   <link rel="stylesheet" href="/css/index.css" /> 
@@ -16,8 +16,7 @@
   <link rel="stylesheet" href="/assets/css/user.css">
   <link rel="stylesheet" href="/css/userSet.css">
   <link rel="stylesheet" href="/css/common.css">
-  <link rel="stylesheet" href="/css/Cooldog.css">
-<link rel="stylesheet" href="/css/iconfont.css">
+  <link type="text/css" rel="stylesheet" href="/css/style.css">
 <script type="text/javascript" src="/js/jquery.min.js"></script>
 <script type="text/javascript" src="/js/Cooldog.js"></script>
   <script src="/assets/js/wsdk.js" charset="utf-8"></script>
@@ -78,15 +77,16 @@
        <li class=""><a href="/home/timeline">碎片</a></li> 
        <li class=""><a href="/home/feed">动态</a></li> 
       </ul> 
-      <script type="text/javascript">
-          $('.navbar li').mouseover(function(){
-              $(this).addClass('active');
-          }).mouseout(function(){
-              $(this).removeClass('active');
-          });
+      <input type="hidden" name="active" value="{{ $active or 5}}">
+      <script>
+              $('.navbar li').eq($('input[name=active]').val()).addClass('active');
+              $('.navbar li').click(function(){
+                  $('.navbar li').removeClass('active');
+                  $(this).addClass('active');
+              })
       </script>
       <div class="navbar-icon">
-          <a href="/home/ting/create">
+          <a href="/home/article/create">
          <div class="editer">
           <div>
           <img src="http://qnstatic.pianke.me/public/assets/img/edit-icon.png" width="19px" height="20px" />         
@@ -113,7 +113,7 @@
        </div> 
         @if(session('user'))
                <div class="userinfo">
-                <a href="/home/personal/{{ session('user')['id'] }}">  @if(session('user')['face'])<img src="{{ session('user')['face'] }}" alt="" class="user-icon"> @else <img src="/face.png" alt="" class="user-icon"> @endif </a> 
+                <a href="/home/personal/{{ session('user')['id'] }}">  @if(session('user')['face'])<img src="{{ session('user')['face'] }}" alt="" class="user-icon" id="face1"> @else <img src="/face.png" alt="" class="user-icon" > @endif </a> 
                 <div class="msg-menu">
                  <div class="drop-menu userinfo-drop">
                   <ul>

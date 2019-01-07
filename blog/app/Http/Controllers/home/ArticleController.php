@@ -8,40 +8,24 @@ use App\models\ArticleCate;
 use App\models\Article;
 use DB;
 use App\models\ArticleComment;
+use App\models\ArticleLike;
 class ArticleController extends Controller
 {
     
-    static protected function getComment($parent_id = 0,&$result = array())
+    static protected function getComment($aid = 0,$parent_id = 0,&$result = array())
     {       
-        $arr = ArticleComment::where('parent_id',$parent_id)->orderBy('created_at', 'desc')->get();  
+        $arr = ArticleComment::where('parent_id',$parent_id)->where('aid',$aid)->orderBy('created_at', 'desc')->get();  
         if(empty($arr)){
             return array();
         }
         foreach ($arr as $value) {  
             $thisArr = &$result[];
-            $value["children"] = static::getComment($value["id"],$thisArr);    
+            $value["children"] = static::getComment($aid,$value["id"],$thisArr);    
             $thisArr = $value;                                    
         }
         return $result;
    }
    
-    static protected function reply($children,$str)
-        {  
-           if(!empty($children['children'])){
-             foreach($children->children as $k=>$v){
-               $str .= "<div class='comment-content-others'>
-                            <a href='../user/user.html?uid=4934695' target='_blank'>　{$v->uname}:</a>{$v->content}
-                            <a class='comment-del report replySpan' onclick='dododo({$v->id},this);'>回复</a>
-                            <span class='comment-del report' style='display: none;'>举报</span>
-                            <span class='comment-del' style='display: none;'>删除</span>
-                         </div>";
-             }
-             static::reply($children['children'],$str);
-             
-           }else{
-             return $str;
-           }   
-        }
 
     /**
      * Display a listing of the resource.
@@ -52,7 +36,8 @@ class ArticleController extends Controller
     {
         $cate = ArticleCate::get();
         $article = Article::orderBy('look','desc')->paginate(3);
-        return view('home/article/index',['cate'=>$cate,'article'=>$article]);
+        $active = 1;
+        return view('home/article/index',['cate'=>$cate,'article'=>$article,'active'=>$active]);
     }
 
     /**
@@ -62,7 +47,8 @@ class ArticleController extends Controller
      */
     public function create()
     {
-        //
+        $cate = ArticleCate::get();
+        return view('home/article/create',['cate'=>$cate]);
     }
 
     /**
@@ -85,14 +71,10 @@ class ArticleController extends Controller
     public function show($id)
     {
         $article = Article::find($id);
-        $comment = static::getComment();
-        $s1 = '';
-        $s2 = '';
-        foreach ($comment as $k => $v) {
-           $s1 .= static::reply($v,$s2); 
-        }
-        $num = ArticleComment::count();
-        return view('home/article/article',['article'=>$article,'comment'=>$comment,'reply'=>$s1,'num'=>$num]);
+        $comment = static::getComment($id);
+        $num = ArticleComment::where('aid',$id)->count();
+        $active = 1;
+        return view('home/article/article',['article'=>$article,'comment'=>$comment,'num'=>$num,'active'=>$active]);
     }
 
     /**
@@ -103,7 +85,6 @@ class ArticleController extends Controller
      */
     public function edit($id)
     {
-        //
     }
 
     /**
@@ -129,11 +110,75 @@ class ArticleController extends Controller
         //
     }
 
-
-    public function showCate($id)
+    /**
+     * 显示指定类别的文章
+     * @param  Request $request [description]
+     * @param  [type]  $id      [description]
+     * @return [type]           [description]
+     */
+    public function showCate(Request $request,$id)
     {
+        $p = $request->input('p',1);
+        $num = $request->input('num',3);
         $cate = ArticleCate::find($id);
-        $article = Article::where('cid',$id)->get();
-        return view('home/article/cate',['cate'=>$cate,'article'=>$article]);
+        $active = 1;
+        $sum = Article::where('cid',$id)->count();
+        $article = Article::where('cid',$id)->offset(($p-1)*$num)->limit($num)->get();
+        return view('home/article/cate',['cate'=>$cate,'article'=>$article,'active'=>1,'sum'=>$sum]);
     }
+
+    /**
+     * 文章瀑布流
+     * @param  Request $request [description]
+     * @param  [type]  $id      [description]
+     * @return [type]           [description]
+     */
+    public function pinterest(Request $request)
+    {
+        $p = $request->input('p',2);
+        $num = $request->input('num',3);
+        $id = $request->input('id',6);
+        $article = Article::where('cid',$id)->offset(($p-1)*$num)->limit($num)->get();
+        foreach($article as $k=>$v){
+            $v->uid = $v->User->id;
+            $v->nickname = $v->User->nickname;
+        }
+        if($article){
+            echo json_encode($article);
+        }else{
+            echo json_encode(['msg'=>'error']);
+        }
+    }
+
+    public function look(Request $request)
+    {
+        $article = Article::find($request->aid);
+        $article->look = $article->look + 1;
+        $res = $article->save();
+        if($res){
+            echo json_encode(['look'=>$article->look]);
+        }else{
+            echo json_encode(['msg'=>'error']);
+        }
+    }
+
+    public function like(Request $request)
+    {
+        $like = ArticleLike::where('aid',(int)$request->aid)->where('uid',session('user')['id'])->first();
+        if(empty($like->aid)){
+                $article = Article::find($request->aid);
+                $article->like = $article->like + 1;
+                $res = $article->save();
+                if($res){
+                    $like = new ArticleLike;
+                    $like->aid = $request->aid;
+                    $like->uid = session('user')['id'];
+                    $like->save();
+                    echo json_encode(['like'=>$article->like]);
+                }
+            }else{
+                   echo json_encode(['msg'=>'error']);
+          }
+    }
+
 }
