@@ -138,6 +138,7 @@
    </div> 
    @section('content')
 
+
    @show
    <div class="back-top"></div> 
    <footer>
@@ -167,5 +168,6 @@
 
    <script src="/js/upfile.js"></script> 
   <script src="/js/timeline.js"></script> 
+
  </body>
 </html>
