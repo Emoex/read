@@ -1,4 +1,8 @@
 @extends('home/layout/index')
+
+@section('head')
+  <link rel="stylesheet" type="text/css" href="/home/css/feed.css">
+@endsection
 @section('content')
 <div class="container">
   <div class="title-cpt">最新动态&nbsp;&nbsp;|&nbsp;&nbsp;Lastest News</div>

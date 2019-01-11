@@ -1,4 +1,8 @@
 @extends('home/layout/index')
+
+@section('head')
+    <link rel="stylesheet" type="text/css" href="/home/css/read.css">
+@endsection
 @section('content')
 <div class="container">
      <!-- 轮播图 -->

@@ -1,4 +1,8 @@
 @extends('home/layout/index')
+
+@section('head')
+  <link rel="stylesheet" type="text/css" href="/home/css/index.css ">
+@endsection
 @section('content')
 
 <div class="container">

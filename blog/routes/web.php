@@ -64,15 +64,19 @@ Route::resource('/home/follow','home\FollowController');
 
 
 
-Route::resource('/admin/Conf/Slide','admin\SlideController');
-Route::post('/admin/Conf/title_update','admin\ConfController@title_update');//标题管理
-Route::post('/admin/Conf/Logo_update','admin\ConfController@Logo_update');//网站Logo管理
-Route::resource('/admin/Conf','admin\ConfController');//网站管理
-Route::resource('/admin/timeline','admin\TimelineController');//后台碎片管理
-Route::post('/admin/timeline/profile','admin\TimelineController@profile');//碎片图片上传
-Route::resource('/home/timeline','home\TimelineController');//前台碎片管理
 
 
+
+Route::resource('admin/Conf/Slide','admin\SlideController');
+Route::post('admin/Conf/title_update','admin\ConfController@title_update');//标题管理
+Route::post('admin/Conf/Logo_update','admin\ConfController@Logo_update');//网站Logo管理
+Route::resource('admin/Conf','admin\ConfController');//网站管理
+Route::resource('admin/timeline','admin\TimelineController');//后台碎片管理
+Route::post('admin/timeline/profile','admin\TimelineController@profile');//碎片图片上传
+Route::get('home/timeline/like','home\TimelineController@like');//点击喜欢
+Route::get('home/timeline/huifu','home\TimelineCommentController@huifu');//前台碎片回复
+Route::resource('home/timeline','home\TimelineController');//前台碎片管理
+Route::resource('home/timeline/comment','home\TimelineCommentController');//前台碎片评论
 
 
 

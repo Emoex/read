@@ -5,30 +5,58 @@
 @endsection
 
 @section('content')
+  <script type="text/javascript">
+    $(function(){
+      $('#comments').focus(function(){
+        $(this).parent().addClass('has-value');
+      }).blur(function(){
+        $(this).parent().removeClass('has-value');
+      })
+      $('#denglu').click(function(){
+        $('body').css('overflow','hidden');
+        $('.login').css('display','block');
+      })
+      $('.close-login-box').click(function(){
+        $('body').css('overflow','visible');
+        $('.login').css('display','none');
+      })
+
+   
+    })
+  </script>
   <div style="height: 100%" class="m-timelineInfo-container">
    <div class="container">
-    <div class="timeline-container">
-     <audio id="audiosrc" src="">
-      您的浏览器不支持 audio 标签。
-     </audio> 
+    <div class="timeline-container"> 
      <div class="left-content">
     	<div class="timeline-author">
-       <a href="../user/user.html?uid=4408715" target="_blank" class=""><img src="http://hpimg.pianke.com/cf6b447632d3f12ab276579bdfa04ee720181025.png?imageView2/2/w/90/format/jpg" /></a> 
-       <a href="../user/user.html?uid=4408715" target="_blank" class="">urnotcha</a> 
+       <a href="../user/user.html?uid=4408715"  class=""><img src="{{ $data->User->face }}" /></a> 
+       <a href="../user/user.html?uid=4408715"  class="">{{ $data->User->nickname }}</a> 
        <div>
         {{ $data->time }}
-        <div style="display: none;">
-         <div class="del-btn">
-          删除
-         </div>
-        </div> 
+        @if( isset(session('user')['id']) ) 
+          @if( session('user')['id'] == $data['uid'] )
+            <div>
+             <div class="del-btn" onclick="del_sp({{ $data->id }})">
+              删除
+             </div>
+            </div>
+          @else
+          <div>
+           <div class="del-btn">
+            举报
+           </div>
+          </div>
+          @endif
+        @else 
         <div>
          <div class="del-btn">
           举报
          </div>
         </div>
+        @endif
        </div>
-      </div>
+        </div>
+
       @if( $data->image )  
       <img width="100%" style="" src="{{ $data->image }}" />
       @endif 
@@ -45,193 +73,266 @@
        <a href="./timeline.html?tag=" target="_blank">#&nbsp;&nbsp;#</a>
       </div> 
       <div class="handles">
-       <div class="likes-cpt">
-         0 
-       </div> 
-       <div class="share-cpt">
-        <div class="share-sina"></div> 
-        <div class="share-wechat">
-         <div class="code">
-          <img width="200" src="http://api5.pianke.me/version5.0/wxshare/qrcode.php?url=http%3A%2F%2Fpianke.me%2Fversion4.0%2Fweixin02%2Fwxshare.php%23!%2Ftimeline%2F5c2eb68b257be9626160ce60" />
-         </div>
-        </div> 
-        <div class="share-qzone"></div> 
-        <div class="share-dou"></div>
+      @if( $data['like'] )
+       <div class="likes-cpt likes" onclick="like({{ $data->id }},this,1)">
+         {{ $likes }} 
        </div>
+      @else
+       <div class="likes-cpt" onclick="like({{ $data->id }},this,1)">
+         {{ $likes }} 
+       </div>
+      @endif 
       </div> 
+
       <div class="timeline-comment">
+
        <div class="is-login-cpt">
+       @if( !session('user') )
         <div class="if-no-login">
           快来
-         <a class="btn">登录</a>发表你的精彩评论啦 
-        </div> 
-        <div class="is-login" style="display: none;">
-         <textarea name="" id="" maxlength="360" placeholder="发表你的精彩评论啦"></textarea> 
-         <div class="btn">
+         <a id="denglu" class="btn">登录</a>发表你的精彩评论啦 
+        </div>
+        @else 
+        <div class="is-login">
+         <textarea name="" id="comments" maxlength="360" placeholder="发表你的精彩评论啦"></textarea> 
+         <div id="fabpl" class="btn">
           发表评论
          </div>
         </div>
-       </div> 
-       <div class="article-comment">
+        @endif
+       </div>
+
+      <div class="article-comment">
         <div class="comment-title-cpt">
          <div>
-          评论
-          <span>(0&nbsp;条)</span>
+          评论 {{ $pinglun = 1 }}
+          <span id="pinglun">(<font>{{ $pinglun }}</font>条)</span>
          </div>
         </div> 
-        <div class="comment-list-group"> 
-         <div class="common-more-btn" style="display: none;">
-          查看更多评论
-         </div> 
-         <div class="no-more-data" style="display: none;">
-          -&nbsp;已加载全部&nbsp;-
-         </div>
-        </div> 
-        <div class="no-comment" style="">
-          暂时没有评论，快和小伙伴互动吧 
+          
+          
+            <div class="comment-list-group" @if( !$pinglun ) style="display:none;" @endif>
+            @foreach( $comment as $k=>$v)
+            <div class="comment-cpt">
+              <div class="comment-user-icon">
+                <a href="" target="_blank" class=""><img src="{{ $v->User->face }}" /></a>
+              </div> 
+              <div class="comment-info">
+                <div class="comment-user-info">
+                 <a href="" target="_blank" class=""> {{ $v->User->nickname }}</a>
+                  {{ $v->time }}
+                 <span class="comment-reply" onclick="huifu(this)">回复</span>
+                  @if( isset(session('user')['id']) ) 
+                    @if( session('user')['id'] == $v['uid'] ) 
+                      <span class="comment-del" onclick="del_pl({{$v->id}},this)">删除</span> 
+                    @endif
+                  @endif
+                 <span class="comment-number">0</span>
+                  @if( isset(session('user')['id']) ) 
+                    @if( session('user')['id'] !== $v['uid'] )  
+                      <span class="comment-del report">举报</span>
+                    @endif
+                  @endif
+                </div> 
+                <div class="comment-content">
+                 {{ $v->content }}
+                </div> 
+                <div class="com-textarea hidden">
+                  <textarea name="" id="replyTextarea" maxlength="360" placeholder="请输入回复内容"></textarea> 
+                  <div class="btn-group">
+                    <div class="btn" id="fasong" onclick="fasong({{ $v->id }},{{ $v->tid }},this)">
+                      发送
+                    </div> 
+                    <div class="btn-cancle" id="quxiao" onclick="quxiao(this)">
+                      取消
+                    </div>
+                  </div>
+                </div>
+                  @foreach( $v->children as $kk => $vv )
+                    <div class="comment-content-others">
+                      <a href=" " target="_blank" class="">{{ $vv->User->nickname }}:</a>{{ $vv->content }}
+                      @if( !isset(session('user')['id']) )
+                          <span class="comment-del">举报</span>
+                      @else 
+                        @if( session('user')['id'] == $v['uid'])
+                          <span class="comment-del">删除</span>
+                        @else
+                          <span class="comment-del">举报</span>
+                        @endif
+                      @endif
+                    </div>
+                  @endforeach
+              </div>
+            </div>
+            @endforeach 
+            <div class="common-more-btn" style="display: none;">
+             查看更多评论
+            </div> 
+            <div class="no-more-data" style="display: none;">
+             -&nbsp;已加载全部&nbsp;-
+            </div>
+            </div>
+            <div class="no-comment" @if( $pinglun ) style="display:none;" @endif>
+              暂时没有评论，快和小伙伴互动吧
+            </div>
+          
         </div>
-       </div>
+        </div> 
+       
       </div>
-     </div> 
+   
+    
+
      <div class="right-content">
+
       <div class="hot-tag">
+
        <div class="title-cpt">
         热门标签
-       </div> 
-       <div class="tag-list">
-        <div class="btn-tag">
-         <a href="./timeline.html?tag=%25E6%2582%2584%25E6%2582%2584%25E8%25AF%259D" target="_blank">悄悄话</a>
-        </div>
-        <div class="btn-tag">
-         <a href="./timeline.html?tag=%25E6%2588%25B3%25E5%25BF%2583%25E6%25AD%258C%25E8%25AF%258D" target="_blank">戳心歌词</a>
-        </div>
-        <div class="btn-tag">
-         <a href="./timeline.html?tag=%25E4%25B8%2580%25E8%25A7%2581%25E9%2592%259F%25E6%2583%2585%25E7%259A%2584%25E5%258F%25A5%25E5%25AD%2590" target="_blank">一见钟情的句子</a>
-        </div>
-        <div class="btn-tag">
-         <a href="./timeline.html?tag=%25E7%2594%25B5%25E5%25BD%25B1%25E6%2588%25AA%25E5%259B%25BE%25EF%25BC%258B%25E7%25BB%258F%25E5%2585%25B8%25E5%258F%25B0%25E8%25AF%258D" target="_blank">电影截图＋经典台词</a>
-        </div>
-        <div class="btn-tag">
-         <a href="./timeline.html?tag=%25E9%25BB%2591%25E7%2599%25BD%25E5%25A4%25A7%25E7%2589%2587" target="_blank">黑白大片</a>
-        </div>
-        <div class="btn-tag">
-         <a href="./timeline.html?tag=%25E6%259C%2580%25E7%25BE%258E%25E6%2591%2598%25E6%258A%2584" target="_blank">最美摘抄</a>
-        </div>
-        <div class="btn-tag">
-         <a href="./timeline.html?tag=%25E6%2597%25A7%25E4%25B9%25A6%25E6%2591%258A" target="_blank">旧书摊</a>
-        </div>
-        <div class="btn-tag">
-         <a href="./timeline.html?tag=%25E7%259C%258B%25E7%2585%25A7%25E7%2589%2587%25E7%258C%259C%25E8%25BA%25AB%25E9%25AB%2598" target="_blank">看照片猜身高</a>
-        </div>
-        <div class="btn-tag">
-         <a href="./timeline.html?tag=%25E4%25B8%2589%25E8%25A1%258C%25E6%2583%2585%25E4%25B9%25A6" target="_blank">三行情书</a>
-        </div>
-        <div class="btn-tag">
-         <a href="./timeline.html?tag=%25E7%25BB%2599%25E5%258A%259B%25E5%25A4%25B4%25E5%2583%258F%25E9%2583%25BD%25E5%259C%25A8%25E8%25BF%2599" target="_blank">给力头像都在这</a>
-        </div>
        </div>
+
+       <div class="tag-list">
+       @foreach($cate as $k=>$v)
+        <div class="btn-tag">
+         <a href="/home/timeline?cid={{ $v->id }}">{{ $v->name }}</a>
+        </div>
+        @endforeach
+       </div>
+
       </div> 
+
       <div class="others-timeline">
        <div class="title-cpt">
         相关碎片
        </div> 
-       <div class="img-group-cpt">
-        <div class="card-timeline-cpt">
-         <div class="card-top-img">
-          <a href="./timelineInfo.html?id=5c2eb68b257be9626160ce60" target="_blank"><img src="http://hpimg.pianke.com/346b72a0b2dec88e8a45272f0960213120190104.png?imageView2/2/w/300/format/jpg" /></a>
-         </div> 
-         <div class="card-item">
-          <div class="card-content">
-           <a href="./timelineInfo.html?id=5c2eb68b257be9626160ce60" target="_blank">2019.1.4争取一上午画完鸭٩(˃̶͈̀௰˂̶͈́)و</a>
-          </div> 
-          <div class="timeline-voice" style="display: none;">
-           <a href="./timelineInfo.html?id=5c2eb68b257be9626160ce60" target="_blank">[&nbsp;语音&nbsp;]</a>
-          </div> 
-          <div class="user-sign" style="display: none;">
-           <a href="./timeline.html?tag=" target="_blank">#&nbsp;&nbsp;#</a>
-          </div> 
-          <div class="card-user">
-           <div class="card-user-info">
-            <a href="../user/user.html?uid=4408715" target="_blank" class=""><img src="http://hpimg.pianke.com/cf6b447632d3f12ab276579bdfa04ee720181025.png?imageView2/2/w/90/format/jpg" width="" />urnotcha</a>
-           </div> 
-           <div class="likes-cpt card-likes"></div>
+
+        <div class="img-group-cpt">
+          @foreach($likeness as $k=>$v)
+          <div class="card-timeline-cpt">
+            @if( $v->image )
+            <div class="card-top-img">
+              <a href="/home/timeline/{{ $v->id }}" ><img src="{{ $v->image }}" /></a>
+            </div>
+           @endif 
+           <div class="card-item">
+            <div class="card-content">
+             <a href="/home/timeline/{{ $v->id }}" >{{ $v-> content }}</a>
+            </div>  
+            <div class="card-user">
+             <div class="card-user-info">
+              <a href="" class=""><img src="{{ $v->face }}" width="" />{{ $v->nickname }}</a>
+             </div>
+             @if( $v->like ) 
+              <div class="likes-cpt card-likes likes" onclick="like({{ $v->id }},this,0)"></div>
+             @else
+              <div class="likes-cpt card-likes" onclick="like({{ $v->id }},this,0)"></div>
+             @endif
+            </div>
+           </div>
           </div>
-         </div>
+          @endforeach
+
         </div>
-        <div class="card-timeline-cpt">
-         <div class="card-top-img" style="display: none;">
-          <a href="./timelineInfo.html?id=5c2eb59c257be9720860ce65" target="_blank"><img src="" /></a>
-         </div> 
-         <div class="card-item">
-          <div class="card-content">
-           <a href="./timelineInfo.html?id=5c2eb59c257be9720860ce65" target="_blank">熬夜了一晚上，得到的又是什么，辛苦这个词远不上满意。</a>
-          </div> 
-          <div class="timeline-voice" style="display: none;">
-           <a href="./timelineInfo.html?id=5c2eb59c257be9720860ce65" target="_blank">[&nbsp;语音&nbsp;]</a>
-          </div> 
-          <div class="user-sign" style="display: none;">
-           <a href="./timeline.html?tag=" target="_blank">#&nbsp;&nbsp;#</a>
-          </div> 
-          <div class="card-user">
-           <div class="card-user-info">
-            <a href="../user/user.html?uid=3694264" target="_blank" class=""><img src="http://hpimg.pianke.com/da9f7569b0cb2ef3362a9a0ec18cf55120180707.jpg?imageView2/2/w/90/format/jpg" width="" />南寻卿</a>
-           </div> 
-           <div class="likes-cpt card-likes"></div>
-          </div>
-         </div>
-        </div>
-        <div class="card-timeline-cpt">
-         <div class="card-top-img">
-          <a href="./timelineInfo.html?id=5c2eb594257be93f6160ce60" target="_blank"><img src="http://hpimg.pianke.com/a47aa9911df6bc079dae3f3adfbf30fe20190104.jpg?imageView2/2/w/300/format/jpg" /></a>
-         </div> 
-         <div class="card-item">
-          <div class="card-content">
-           <a href="./timelineInfo.html?id=5c2eb594257be93f6160ce60" target="_blank">昨天的夜幕</a>
-          </div> 
-          <div class="timeline-voice" style="display: none;">
-           <a href="./timelineInfo.html?id=5c2eb594257be93f6160ce60" target="_blank">[&nbsp;语音&nbsp;]</a>
-          </div> 
-          <div class="user-sign" style="display: none;">
-           <a href="./timeline.html?tag=" target="_blank">#&nbsp;&nbsp;#</a>
-          </div> 
-          <div class="card-user">
-           <div class="card-user-info">
-            <a href="../user/user.html?uid=4195003" target="_blank" class=""><img src="http://hpimg.pianke.com/e0dca3f515848a9d2392650150da4bbb20181018.jpg?imageView2/2/w/90/format/jpg" width="" />灏祁</a>
-           </div> 
-           <div class="likes-cpt card-likes"></div>
-          </div>
-         </div>
-        </div>
-        <div class="card-timeline-cpt">
-         <div class="card-top-img" style="display: none;">
-          <a href="./timelineInfo.html?id=5c2eb58a257be9f95360ce60" target="_blank"><img src="" /></a>
-         </div> 
-         <div class="card-item">
-          <div class="card-content">
-           <a href="./timelineInfo.html?id=5c2eb58a257be9f95360ce60" target="_blank">又想吐了。算了。还是退回到之前算了。</a>
-          </div> 
-          <div class="timeline-voice" style="display: none;">
-           <a href="./timelineInfo.html?id=5c2eb58a257be9f95360ce60" target="_blank">[&nbsp;语音&nbsp;]</a>
-          </div> 
-          <div class="user-sign" style="display: none;">
-           <a href="./timeline.html?tag=" target="_blank">#&nbsp;&nbsp;#</a>
-          </div> 
-          <div class="card-user">
-           <div class="card-user-info">
-            <a href="../user/user.html?uid=4563291" target="_blank" class=""><img src="http://hpimg.pianke.com/1bcdc39754c26168e986ca9212c5b31520180113.png" width="" />最好点点点</a>
-           </div> 
-           <div class="likes-cpt card-likes"></div>
-          </div>
-         </div>
-        </div>
-       </div>
+
       </div>
      </div>
-    </div>
+  </div>
    </div> 
    <div class="back-top hidden"></div> 
   </div>
- 
+  <script type="text/javascript">
+    del_sp = function(id){
+      confirm('删除的内容不可找回, 确认删除?');
+      $('#confirm>div:eq(1)').click(function(){
+        $('.Confirm').addClass('hidden');
+        $.ajaxSetup({
+          headers: { 'X-CSRF-TOKEN':'{{ csrf_token() }}' }
+        })
+        $.post('/home/timeline/'+id,{'_method':'DELETE'},function(msg){
+          if( msg == 'success'){
+            window.location.href='/home/timeline';
+          }else{
+            $('.Confirm').addClass('hidden');
+            error('服务器错误,删除失败！');
+          }
+        },'html'); 
+      })
+    }
+    huifu = function(obj){
+      if( $(obj).parent().next().next().hasClass('hidden') ){
+        val = $(obj).parent().next().next().removeClass('hidden').addClass('has-value');
+      }else{
+        $(obj).parent().parent().find('#replyTextarea').val('');
+        $(obj).parent().next().next().addClass('hidden');
+      } 
+    }
+    fasong = function(id,tid,obj){
+      @if( !session('user') )
+        error('请先登录');
+        return;
+      @endif
+      content = $(obj).parent().parent().find('#replyTextarea').val();
+      $.get('/home/timeline/huifu',{'tid':tid,'parent_id':id,'content':content},function(data){
+        if(data.msg == 'empty'){
+          error('请填写内容');
+        }else if( data.msg == 'error' ){
+          error('服务器错误,回复失败');
+        }else{
+          div = '<div class="comment-content-others"><a href=" " target="_blank" class="">'+data.nickname+':</a>'+data.content+'<span class="comment-del report" style="display: none;">举报</span> <span class="comment-del">删除</span></div>';
+          $(obj).parent().parent().find('#replyTextarea').val('');
+          $(obj).parent().parent().addClass('hidden');
+          $(obj).parent().parent().after(div);
+        }
+      },'json');
+    }
+    quxiao = function(obj){
+      $(obj).parent().parent().find('#replyTextarea').val('');
+      $(obj).parent().parent().addClass('hidden');
+    }
+    del_pl = function(id,obj){
+      confirm('删除的内容不可找回, 确认删除?');
+      $('#confirm>div:eq(1)').unbind('click').click(function(){
+        $('.Confirm').addClass('hidden');
+        $.ajaxSetup({
+          headers: { 'X-CSRF-TOKEN':'{{ csrf_token() }}' }
+        })
+        $.post('/home/timeline/comment/'+id,{'_method':'DELETE'},function(msg){
+          if( msg == 'success'){
+            $(obj).parent().parent().parent().remove();
+            var num = $('#pinglun font').text();num--;
+            console.log(num);
+            if( num == 0 ){
+              $('.comment-list-group').css('display','none');
+              $('.no-comment').css('display','block');
+            }
+            $('#pinglun font').text(num);
+          }else{
+            $('.Confirm').addClass('hidden');
+            error('服务器错误,删除失败！');
+          }
+        },'html'); 
+      })
+    }
+    $('#fabpl').click(function(){
+      $.ajaxSetup({
+        headers: { 'X-CSRF-TOKEN':'{{ csrf_token() }}' }
+      })
+      $.post('/home/timeline/comment',{'content':$('#comments').val(),'tid':{{ $data['id'] }},'parent_id':'0' },function(data){
+        if( data.msg == 'error'){
+          error('服务器错误,评论失败');
+        }else if( data.msg == 'empty' ){
+          error('请输入内容');
+        }else{
+          var div = '<div class="comment-cpt"><div class="comment-user-icon"><a href="" target="_blank" class=""><img src="'+data.face+'" /></a></div><div class="comment-info"><div class="comment-user-info"><a href="" target="_blank" class="">'+data.nickname+'</a>'+data.time+'<span class="comment-reply" onclick="huifu(this)">回复</span> <span class="comment-del" onclick="del_pl('+data.id+',this)">删除</span> <span class="comment-number">0</span> <span class="comment-del report" style="display: none;">举报</span></div> <div class="comment-content">'+data.content+'</div> <div class="com-textarea hidden"><textarea name="" id="replyTextarea" maxlength="360" placeholder="请输入回复内容"></textarea> <div class="btn-group"><div class="btn" id="fasong" onclick="fasong('+data.id+',this)">发送</div> <div class="btn-cancle" id="quxiao" onclick="quxiao(this)">取消</div></div></div> </div></div>';
+          $('.no-comment').css('display','none');
+          $('.comment-list-group').css('display','block').prepend(div);
+          $('#comments').val('');
+          var num = $('#pinglun font').text();num++;
+          $('#pinglun font').text(num);
+        }
+      },'json');
+    })
+  </script>
 
 
 
