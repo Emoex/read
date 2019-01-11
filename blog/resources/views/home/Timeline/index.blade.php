@@ -6,10 +6,110 @@
 
 @section('content')
 
-</script>
+  <div class="container">
+
+  <div><div id='success' style="display:none;" class="successPrompt Prompt"></div></div>
+    {{ csrf_field() }}
+    <div class="publish-timeline">
+     <div class="now-date">
+      <span id="date">7</span>
+      <span id="mouth" class="date-English">December</span>
+     </div> 
+     <div class="publist-content">
+      <textarea name="content" id="textarea" maxlength="140" placeholder="这一刻，你想说什么？"></textarea> 
+      <div class="timeline-othres">
+       <div class="timeline-type">
+        <span id="gongkai" class="active">公开</span>
+        <span id="mimi" class="">秘密</span>
+       </div> 
+      <div id="upload-img" class="upload-img">
+        图片
+        <input id="profile" type="file" id="imgFile" /> 
+        <div id="imgDiv" class="imgDiv" style="display: none;">
+         <div id="uploadImg" class="uploadImg" style="background-image: url(&quot;&quot;);">
+         </div> 
+         <img id="closeUpImg" src="/home/images/closeUpImg.png" class="closeUp" style="display: block;" />
+        </div>
+       </div> 
+      <div class="timeline-tag">
+        <div id="addlabel" class="tag-icon">
+          添加标签
+        </div> 
+        <span id="hiddenlabel" class="hidden"></span>
+        <span id="hiddencate" class="hidden"></span>
+        <div class="tag-menu">
+         <div id="tag-drop" class="tag-drop" style="display:none;">
+         @foreach($cate as $k=>$v)
+          <div class="tag-cpt">
+           <a>{{ $v->name }}</a>
+          </div>
+          @endforeach
+         </div>
+        </div>
+      </div> 
+       <div id="fabsp" class="btn timeline-btn">
+        发布碎片
+       </div> 
+       <div class="timeline-word-number">
+        <span id="zishu">0</span> 
+        <span>/140 字</span>
+       </div>
+      </div>
+     </div>
+    </div> 
+
+
+    <div class="timeline-type">
+     <div class="title-cpt">
+      热门标签
+     </div> 
+     <div class="timeline-list">
+     @foreach($cate as $k=>$v)
+      <div class="article-type-cpt">
+       <a onclick="cate('{{ $v->name }}','{{ $v->id }}');"><img src="{{ $v->path }}" /><span class="type-bg"></span><span class="type-title">{{ $v->name }}</span><span class="type-des">{{ $v->num }}个</span></a>
+      </div>
+      @endforeach
+     </div>
+    </div> 
+    <div class="timeline-list-group">
+     <div id="all" class="title-cpt">
+      全部碎片
+     </div> 
+
+
+
+     <div class="img-group-cpt" >
+
+        <div data-index="" class="card-timeline-cpt" style="opacity: 1;display:none ;" >
+           <div class="card-top-img">
+            <a href="" target="_token"><img src="" class="lazy loaded" /></a>
+           </div>
+           <div class="card-item">
+            <div class="card-content">
+             <a href="" target="_token"></a>
+            </div>  
+            <div class="card-user">
+             <div class="card-user-info">
+              <a href="" target="_token" class=""><img src="" width="" /><span>诺xiao婉</span></a>
+             </div> 
+             <div class="likes-cpt card-likes"></div>
+            </div>
+           </div>
+           
+        </div> 
+
+     </div> 
+
+     <div class="no-more-data" style="display:none;">
+      -&nbsp;已加载全部&nbsp;-
+     </div> 
+     <div class="loading" style="display:none;"></div>
+    </div>
+   </div> 
+   <div class="back-top hidden"></div>
+
   <script type="text/javascript">
-    $(function(){
-      //公开或者秘密
+          //公开或者秘密
       $('#gongkai').click(function(){
         $(this).attr('class','active');
         $('#mimi').removeClass('active');
@@ -45,9 +145,13 @@
         $('#hiddenlabel').text($(this).text());
         $('#tag-drop').hide();
       })
-      //计算文字数量
+      //计算文字数量 聚焦,失焦事件
       $('#textarea').on('input',function(){
         $('#zishu').text($(this).val().length);
+      }).focus(function(){
+        $(this).css('border','1px solid #78bc85');
+      }).blur(function(){
+        $(this).css('border','');
       });
       //图片的展示
       $('#profile').change(function(){
@@ -83,13 +187,6 @@
           }
           return url ;
       }
-      function error(text)
-      {
-          $('#error').text(text).show();
-          setTimeout(function(){
-            $('#error').text('').hide();
-          },2000);
-      }
       function success(text)
       {
           $('#success').text(text).show();
@@ -106,16 +203,17 @@
             $('#success').text('').hide();
           },2000);
       }
-      $('#111').click(function(){
-        $('header').slideToggle();
-      })
       $('#fabsp').click(function(){
+        @if( !session('user') )
+          error('请先登录');
+          return;
+        @endif
         $.ajaxSetup({
           headers: { 'X-CSRF-TOKEN':'{{ csrf_token() }}' }
         })
         var formData = new FormData();
-        formData.append('cid','11');
-        formData.append('uid','11');
+        formData.append('cid',$('#addlabel').text());
+        formData.append('uid','session');
         formData.append('profile', $('#profile')[0].files[0]);
         formData.append('content',$('textarea').val());
         $.ajax({
@@ -125,7 +223,7 @@
           processData: false,
           contentType: false,
           success:function(msg){
-            if(msg == 'Kerror'){
+            if(msg == 'empty'){
               error('请输入内容');
             }else if(msg == 'Serror'){
               error('服务器错误');
@@ -137,7 +235,8 @@
         })
       })
       time();
-      function time(){
+      function time()
+      {
           $('#date').text((new Date).getDate());
           switch( (new Date).getMonth() ){
             case 0: $('#mouth').text('January');break;
@@ -156,17 +255,18 @@
       }
       
       
-      
       var p = 1;
       var num = 30;
       var isLoad = false;
-      getDates();
+      var id;
+
       
       $('.card-top-img>a>img').on('load',function(){
         waterfall();
       })
 
       var scrollHeight = 0;
+
       $(window).scroll(function(){
         if( $(window).scrollTop()>scrollHeight ){
           scrollHeight = $(window).scrollTop();
@@ -177,15 +277,19 @@
         }
         if(isLoad) return;
         if(checkscrollside()){
-          getDates();
+          if(id){
+            getDatas(id);
+          }else{
+            getDatas();
+          }
         }
       })
       $(window).on('beforeunload',function(){
         $(window).scrollTop(100);
       })
       
-      function getDates(){ 
-        $.get('/home/timeline',{'p':p,'num':num},function(data){
+      function getDatas(cid=0){ 
+        $.get('/home/timeline',{'p':p,'num':num,'cid':cid},function(data){
           if(data.msg != 'error'){
             $(data).each(function(key,val){
               var temp = $('.card-timeline-cpt:eq(0)').clone(true);
@@ -193,13 +297,21 @@
               temp.css('display','');
               temp.attr('data-index',key);
               if(val.image){    
-                temp.find('.card-top-img>a>img').attr('src','/uploads/'+val.image);
+                temp.find('.card-top-img>a>img').attr('src',val.image);
                 temp.find('.card-top-img>a').attr('href','/home/timeline/'+val.id);
               }else{
                 temp.find('.card-top-img').css('display','none');
               }
               temp.find('.card-content>a').attr('href','/home/timeline/'+val.id);
               temp.find('.card-content>a').text(val.content);
+              temp.find('.card-user-info>a>span').text(val.nickname);
+              temp.find('.card-user-info>a').attr('href',111);
+              temp.find('.card-user-info>a>img').attr('src',val.face);
+              if(val.like){
+                temp.find('.likes-cpt').addClass('likes').click(function(){ like(val.id,this,0) });
+              }else{
+                temp.find('.likes-cpt').click(function(){ like(val.id,this,0) });
+              }
               $('.img-group-cpt').append(temp);
             });
             p++;
@@ -210,7 +322,8 @@
           } 
         },'json');   
       }
-      function waterfall(){
+      function waterfall()
+      {
         //取得展示框对象
         var boxs = $( ".img-group-cpt>div:not(:first)" );
         // 一个块框的宽
@@ -238,10 +351,10 @@
                 hArr[ minHIndex ] += $(this).outerHeight()+11;//更新添加了块框后的列高
             }
         });
-         $('.img-group-cpt').height(Math.max.apply( null,hArr ));
-        var index = $('.img-group-cpt>div').last().attr('data-index');
+        $('.img-group-cpt').height(Math.max.apply( null,hArr ));
       }
-      function checkscrollside(){
+      function checkscrollside()
+      {
         //全文高度
         var documentHeight = $(document).height();
         //窗口高度
@@ -258,169 +371,23 @@
           return false;
         }
       }
-    })
+      function cate(text,cid)
+      {
+        $('#all').text(text);
+        $('.img-group-cpt>div:eq(0)').siblings().remove();
+        id = cid;
+        p = 1;
+        $('no-more-data').css('display','none');
+        getDatas(cid);
+      }
   </script>
-  <div class="container">
-
-  <div ><div id="error" style="display:none;" class="errorPrompt Prompt"></div></div>
-  <div><div id='success' style="display:none;" class="successPrompt Prompt"></div></div>
-    {{ csrf_field() }}
-    <div class="publish-timeline">
-     <div class="now-date">
-      <span id="date">7</span>
-      <span id="mouth" class="date-English">December</span>
-     </div> 
-     <div class="publist-content">
-      <textarea name="content" id="textarea" maxlength="140" placeholder="这一刻，你想说什么？"></textarea> 
-      <div class="timeline-othres">
-       <div class="timeline-type">
-        <span id="gongkai" class="active">公开</span>
-        <span id="mimi" class="">秘密</span>
-       </div> 
-      <div id="upload-img" class="upload-img">
-        图片
-        <input id="profile" type="file" id="imgFile" /> 
-        <div id="imgDiv" class="imgDiv" style="display: none;">
-         <div id="uploadImg" class="uploadImg" style="background-image: url(&quot;&quot;);">
-         </div> 
-         <img id="closeUpImg" src="/home/images/closeUpImg.png" class="closeUp" style="display: block;" />
-        </div>
-       </div> 
-      <div class="timeline-tag">
-        <div id="addlabel" class="tag-icon">
-          添加标签
-        </div> 
-        <span id="hiddenlabel" class="hidden"></span>
-        <div class="tag-menu">
-         <div id="tag-drop" class="tag-drop" style="display:none;">
-          <div class="tag-cpt">
-           <a>悄悄话</a>
-          </div>
-          <div class="tag-cpt">
-           <a>戳心歌词</a>
-          </div>
-          <div class="tag-cpt">
-           <a>一见钟情的句子</a>
-          </div>
-          <div class="tag-cpt">
-           <a>电影截图＋经典台词</a>
-          </div>
-          <div class="tag-cpt">
-           <a>黑白大片</a>
-          </div>
-          <div class="tag-cpt">
-           <a>最美摘抄</a>
-          </div>
-          <div class="tag-cpt">
-           <a>旧书摊</a>
-          </div>
-          <div class="tag-cpt">
-           <a>看照片猜身高</a>
-          </div>
-          <div class="tag-cpt">
-           <a>三行情书</a>
-          </div>
-          <div class="tag-cpt">
-           <a>给力头像都在这</a>
-          </div>
-          <div class="tag-cpt">
-           <a>自拍狂魔</a>
-          </div>
-          <div class="tag-cpt">
-           <a>给诗歌配图</a>
-          </div>
-         </div>
-        </div>
-      </div> 
-       <div id="fabsp" class="btn timeline-btn">
-        发布碎片
-       </div> 
-       <div class="timeline-word-number">
-        <span id="zishu">0</span> 
-        <span>/140 字</span>
-       </div>
-      </div>
-     </div>
-    </div> 
-
-
-    <div class="timeline-type">
-     <div class="title-cpt">
-      热门标签
-     </div> 
-     <div class="timeline-list">
-      <div class="article-type-cpt">
-       <a><img src="http://qnstatic.pianke.me/tagpic/978b2fe39436aca13338894a2c862f27.jpg" /><span class="type-bg"></span><span class="type-title">悄悄话</span><span class="type-des">76824个</span></a>
-      </div>
-      <div class="article-type-cpt">
-       <a><img src="http://qnstatic.pianke.me/tagpic/4a62a188b2d203cf32acf4d5b2fa9ca2.jpg" /><span class="type-bg"></span><span class="type-title">戳心歌词</span><span class="type-des">7982个</span></a>
-      </div>
-      <div class="article-type-cpt">
-       <a><img src="http://qnstatic.pianke.me/tagpic/dbbf9e47457a9858d58e1ea19d2238f6.jpg" /><span class="type-bg"></span><span class="type-title">一见钟情的句子</span><span class="type-des">65047个</span></a>
-      </div>
-      <div class="article-type-cpt">
-       <a><img src="http://qnstatic.pianke.me/tagpic/c7ecd8adcd43f125118bf66edf101d47.jpg" /><span class="type-bg"></span><span class="type-title">电影截图＋经典台词</span><span class="type-des">14495个</span></a>
-      </div>
-      <div class="article-type-cpt">
-       <a><img src="http://qnstatic.pianke.me/tagpic/77975f3100b4bcdae2672cefbc078208.jpg" /><span class="type-bg"></span><span class="type-title">黑白大片</span><span class="type-des">2600个</span></a>
-      </div>
-      <div class="article-type-cpt">
-       <a><img src="http://qnstatic.pianke.me/tagpic/ff1b00e3d2211ad5a69d58609f094a36.jpg" /><span class="type-bg"></span><span class="type-title">最美摘抄</span><span class="type-des">31091个</span></a>
-      </div>
-      <div class="article-type-cpt">
-       <a><img src="http://qnstatic.pianke.me/tagpic/a873dfff3750461e8e0ffb0f1538260a.jpg" /><span class="type-bg"></span><span class="type-title">旧书摊</span><span class="type-des">6386个</span></a>
-      </div>
-      <div class="article-type-cpt">
-       <a><img src="http://qnstatic.pianke.me/tagpic/e67ba528fa42ff9c9c596438ca8a6a66.jpg" /><span class="type-bg"></span><span class="type-title">看照片猜身高</span><span class="type-des">2871个</span></a>
-      </div>
-      <div class="article-type-cpt">
-       <a><img src="http://qnstatic.pianke.me/tagpic/1d43cf1c5353d2ab670fa8d9660356b4.jpg" /><span class="type-bg"></span><span class="type-title">三行情书</span><span class="type-des">11673个</span></a>
-      </div>
-      <div class="article-type-cpt">
-       <a><img src="http://qnstatic.pianke.me/tagpic/17369554b8a66e9fce46c4b954fee24c.jpg" /><span class="type-bg"></span><span class="type-title">给力头像都在这</span><span class="type-des">3612个</span></a>
-      </div>
-      <div class="article-type-cpt">
-       <a><img src="http://qnstatic.pianke.me/tagpic/242e213f7ace24f2c1bfb5a59a3e1f8b.jpg" /><span class="type-bg"></span><span class="type-title">自拍狂魔</span><span class="type-des">7796个</span></a>
-      </div>
-      <div class="article-type-cpt">
-       <a><img src="http://qnstatic.pianke.me/tagpic/826ad7855d2f45a6f417ab35ac2e5d22.jpg" /><span class="type-bg"></span><span class="type-title">给诗歌配图</span><span class="type-des">1120个</span></a>
-      </div>
-     </div>
-    </div> 
-    <div class="timeline-list-group">
-     <div class="title-cpt">
-      全部碎片
-     </div> 
-
-
-
-
-     <div class="img-group-cpt" >
-
-        <div data-index="" class="card-timeline-cpt" style="opacity: 1;display:none ;" >
-           <div class="card-top-img">
-            <a href="" target="_blank"><img src="" class="lazy loaded" /></a>
-           </div>
-           <div class="card-item">
-            <div class="card-content">
-             <a href="" target="_blank"></a>
-            </div>  
-            <div class="card-user">
-             <div class="card-user-info">
-              <a href="" target="_blank" class=""><img src="" width="" />诺xiao婉</a>
-             </div> 
-             <div class="likes-cpt card-likes"></div>
-            </div>
-           </div>
-        </div> 
-
-     </div> 
-
-     <div class="no-more-data" style="display:none;">
-      -&nbsp;已加载全部&nbsp;-
-     </div> 
-     <div class="loading" style="display:none;"></div>
-    </div>
-   </div> 
-   <div class="back-top hidden"></div>
+  @if( isset($cid) )
+    <script>
+        cate('{{ $name }}','{{ $cid }}')
+    </script>
+  @else
+    <script>
+        getDatas();
+    </script>
+  @endif
 @endsection
