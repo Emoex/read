@@ -77,20 +77,13 @@ class UserinfoController extends Controller
        $user->nickname = $request->nickname;
        $user->sex = $request->sex;
        $user->intro = $request->intro;
-       if($request->hasFile('face')){
+        if($request->hasFile('face')){
             $path = $request->file('face')->store('images');
             $user->face='/uploads/'.$path;
         }
-       $res = $user->save();
-       if($res){
-         session(['user'=>$user]);
-         $user->msg = 'success';
-         echo json_encode($user);
-       }else{
-        $arr = ['msg'=>'error'];
-        echo json_encode($arr);
-       }
-       
+       $user->save();
+       session(['user'=>$user]);
+       return redirect('home/userinfo');
     }
 
     /**

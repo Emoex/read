@@ -29,14 +29,8 @@
       </div>
       <div class="user-info">
         <div class="user-name">
-          <span>{{ $user->nickname or $user->uname }}</span>
-          @if(session('user')['id'] != $user->id && $follow == 'no')
-          <span class="btn-focus" style="display:inline" id="follow">关注</span>
-          <span class="btn-focus btn-focus-yes" style="display: none;" id="follow_yes">已关注</span>
-          @elseif(session('user')['id'] != $user->id && $follow == 'yes')
-          <span class="btn-focus" style="display:none" id="follow">关注</span>
-          <span class="btn-focus btn-focus-yes" style="display: inline;" id="follow_yes">已关注</span>
-          @endif
+          <span>{{ $user->nickname }}</span>
+          <span class="btn-focus" style="display: none;">关注</span>
           <span class="btn-focus btn-focus-yes" style="display: none;">已关注</span>
           <img src="http://qnstatic.pianke.me/public/assets/img/user_author.png" width="52px" style="display: none;">
           <img src="http://qnstatic.pianke.me/public/assets/img/user_craftsman.png" width="52px" style="display: none;">
@@ -46,12 +40,12 @@
           <img src="http://qnstatic.pianke.me/public/assets/img/user_anchor.png" width="52px" style="display: none;">
           <span class="pianke-mail" style="display: none;"></span>
         </div>
-        <div class="user-des">{{ $user->intro }}</div>
+        <div class="user-des">1</div>
         <div class="user-others">
-          <a class="">{{ $fans_num }}
+          <a class="">1
             <br>
             <span>粉丝</span></a>
-          <a class="">{{ $follow_num }}
+          <a class="">3
             <br>
             <span>关注</span></a>
           <a class="">8
@@ -143,29 +137,4 @@
     <div class="loading" style="display: none;"></div>
   </div>
 </div>
-{{ csrf_field() }}
-<input type="hidden" value="{{ $user->id }}" name="uid">
-<script>
-        $(function(){
-            $('#follow').click(function(){
-              $.post('/home/follow',{'_token':$('input[name=_token]').val(),'follow_user':$('input[name=uid]').val()},function(msg){
-                 if(msg == 'success'){
-                   $('#follow').css('display','none');
-                   $('#follow_yes').css('display','inline');
-                 }
-              },'html')
-            })
-
-            $('#follow_yes').click(function(){
-              $.post('/home/follow/'+$('input[name=uid]').val(),{'_token':$('input[name=_token]').val(),'_method':'DELETE'},function(msg){
-                 if(msg == 'success'){
-                   $('#follow').css('display','inline');
-                   $('#follow_yes').css('display','none');
-                 }
-              },'html')
-            })
-
-        })
-
-</script>
 @endsection

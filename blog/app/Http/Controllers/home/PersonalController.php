@@ -5,7 +5,6 @@ namespace App\Http\Controllers\home;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\Follow;
 class PersonalController extends Controller
 {
     /**
@@ -48,15 +47,7 @@ class PersonalController extends Controller
     public function show($id)
     {
         $user = User::find($id);
-        $follow = Follow::where('uid',session('user')['id'])->where('follow_user',$id)->get();
-        if($follow->isEmpty()){
-            $follow = 'no';
-        }else{
-            $follow = 'yes';   
-        }
-        $follow_num = Follow::where('uid',$id)->count();
-        $fans_num = Follow::where('follow_user',$id)->count();
-        return view('home/personal/index',['user'=>$user,'follow'=>$follow,'follow_num'=>$follow_num,'fans_num'=>$fans_num]);
+        return view('home/personal/index',['user'=>$user]);
     }
 
     /**

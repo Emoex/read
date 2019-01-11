@@ -24,17 +24,17 @@ body{
 }
 
 .Cooldog_container {
-    width: 950px;
+    width: 960px;
     height: 400px;
-    margin: 30px auto 0;
+    margin: 20px auto -50px;
     position: relative;
     overflow: hidden;
 }
 
 .Cooldog_container .Cooldog_content {
     position: absolute;
-    width: 900px;
-    height: 375px;
+    width: 960px;
+    height: 400px;
     top: 0;
     left: 50%;
     margin-left: -249px;
@@ -44,7 +44,7 @@ body{
     position: absolute;
     top: 0;
     left: 0;
-    width: 900px;
+    width: 640px;
     height: 375px;
     transition: all 0.3s ease;
 }
@@ -61,7 +61,7 @@ body{
     width: 126px;
     height: 179px;
     position: absolute;
-    top: 21px;
+    top: 110px;
     z-index: 50;
     color: #fff;
     line-height: 179px;
@@ -157,20 +157,6 @@ body{
     transform-origin: 0 50%;
     opacity: 0.8;
     z-index: 3;
-}
-
-.p6 {
-    transform: translate3d(425px, 0, 0) scale(0.81);
-    transform-origin: 0 50%;
-    opacity: 0.6;
-    z-index: 2;
-}
-
-.p7 {
-    transform: translate3d(625px, 0, 0) scale(0.81);
-    transform-origin: 0 50%;
-    opacity: 0.4;
-    z-index: 1;
 }
 
 

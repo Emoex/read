@@ -1,84 +1,103 @@
 @extends('home/layout/index')
-
-@section('head')
-    <link rel="stylesheet" type="text/css" href="/home/css/read.css">
-@endsection
 @section('content')
 <div class="container">
      <!-- 轮播图 -->
-<section class="pc-banner">
-    <div class="swiper-container">
-        <div class="swiper-wrapper">
-            <div class="swiper-slide swiper-slide-center none-effect">
-                <a href="#">
-                    <img src="/images/1.JPG">
-                </a>
-                <div class="layer-mask"></div>
-            </div>
-            <div class="swiper-slide">
-                <a href="#">
-                    <img src="/images/2.JPG">
-                </a>
-                <div class="layer-mask"></div>
-            </div>
-            <div class="swiper-slide">
-                <a href="#">
-                    <img src="/images/3.JPG">
-                </a>
-                <div class="layer-mask"></div>
-            </div>
-            <div class="swiper-slide">
-                <a href="#">
-                    <img src="/images/4.JPG">
-                </a>
-                <div class="layer-mask"></div>
-            </div>
-            <div class="swiper-slide">
-                <a href="#">
-                    <img src="/images/5.JPG">
-                </a>
-                <div class="layer-mask"></div>
-            </div>
-        </div>
-        <div class="button">
-            <div class="swiper-button-prev"></div>
-            <div class="swiper-button-next"></div>
-        </div>
-    </div>
+<section class="pc-banner" style="width:100%;">
+  <div class="swiper-container" style="width:960px;margin:auto;">
+    <div class="swiper-wrapper">
+      <div class="swiper-slide swiper-slide-center none-effect">
+        <a href="#">
+          <img src="/slideshow/img/1.jpg">
+        </a>
+        <div class="layer-mask"></div>
+      </div>
+      <div class="swiper-slide">
+        <a href="#">
+          <img src="/slideshow/img/2.jpg">
+        </a>
+        <div class="layer-mask"></div>
+      </div>
+      <div class="swiper-slide">
+        <a href="#">
+          <img src="/slideshow/img/3.jpg">
+        </a>
+        <div class="layer-mask"></div>
+      </div>
+  </div>
+    
+  </div>
+  <div class="button">
+      <div class="swiper-button-prev "><p class="banner-btn left-btn"></p></div>
+      <div class="swiper-button-next"><p class="banner-btn right-btn"></p></div>
+  </div>
 </section>
-<script type="text/javascript" src="/js/swiper.min.js"></script>
+<style type="text/css">
+   .swiper-container .swiper-slide a img{
+    height:350px;
+   }
+   .swiper-slide a img{
+    width:550px;
+
+    margin-left:-30px;
+   }
+   .swiper-slide a{
+      width:500px;
+      height:350px;
+
+   } 
+   .swiper-slide a img{
+      border: 10px solid #fff;
+   }
+   .button .swiper-button-prev{
+    background: #fff;
+    position: relative;
+    left:-1px;
+    top:50px;
+   }
+   .button .swiper-button-prev:hover{
+    background: #fff;
+   }
+   .button .swiper-button-next{
+    background: #fff;
+    position: relative;
+    left:1100px;
+    top:0px;
+   }
+   .button .swiper-button-next:hover{
+    background: #fff;
+   }
+</style>
+<script type="text/javascript" src="/slideshow/js/swiper.min.js"></script>
 <script type="text/javascript">
 
-    window.onload = function() {
-        var swiper = new Swiper('.swiper-container',{
-            autoplay: false,
-            speed: 1000,
-            autoplayDisableOnInteraction: false,
-            loop: true,
-            centeredSlides: true,
-            slidesPerView: 2,
-            pagination: '.swiper-pagination',
-            paginationClickable: true,
-            prevButton: '.swiper-button-prev',
-            nextButton: '.swiper-button-next',
-            onInit: function(swiper) {
-                swiper.slides[2].className = "swiper-slide swiper-slide-active";
-            },
-            breakpoints: {
-                668: {
-                    slidesPerView: 1,
-                }
-            }
-        });
-    }
+  window.onload = function() {
+    var swiper = new Swiper('.swiper-container',{
+      autoplay: false,
+      speed: 1000,
+      autoplayDisableOnInteraction: false,
+      loop: true,
+      centeredSlides: true,
+      slidesPerView: 2,
+      pagination: '.swiper-pagination',
+      paginationClickable: true,
+      prevButton: '.swiper-button-prev',
+      nextButton: '.swiper-button-next',
+      onInit: function(swiper) {
+        swiper.slides[2].className = "swiper-slide swiper-slide-active";
+      },
+      breakpoints: {
+        668: {
+          slidesPerView: 1,
+        }
+      }
+    });
+  }
+</script> 
 
-
-</script>
-<!-- 轮播图结束 -->
-    
+   
    <div class="index-content">
     <div class="article-type-group">
-     <div class="title-cpt">
+     <div class="title-cpt"  style="padding-top:0px;">
       分类&nbsp;|&nbsp;Classification
      </div> 
      @foreach($cate as $k=>$v)
@@ -100,9 +119,9 @@
          <a href="/home/article/{{ $v->id }}">{{ $v->title }}</a>
         </div> 
         <div class="article-author">
-         <a href="../user/user.html?uid=4325575" target="_blank">By&nbsp;/&nbsp;{{ $v->User->nickname }}</a>
+         <a href="../user/user.html?uid=4325575" target="_blank">By&nbsp;/&nbsp;{{ $v->User->uname }}</a>
         </div> 
-        <div class="article-content" style="overflow:hidden;line-height:20px">
+        <div class="article-content" style="overflow:hidden;line-height:18px">
            {{ preg_replace('/<\/?.+?\/?>/','',$v->content) }}<span class="view-all"><a href="/home/article/{{ $v->id }}" target="_blank">VIEW ALL<img src="http://qnstatic.pianke.me/public/assets/img/viewall.png" /></a></span>  
          
         </div>
@@ -119,5 +138,5 @@
      </div>
     </div> 
    </div>
-  </div>
+</div>
 @endsection

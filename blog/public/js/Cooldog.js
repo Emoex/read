@@ -15,10 +15,10 @@ $(function () {
 	
 	//点击关闭隐藏轮播图
 	$('.btn_close').on('click', function () {
-		$('.Cooldog_container').hide('1000');
+		$('.Cooldog_container').hide('2000');
 	});
 	
-	var arr = ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'p7'];
+	var arr = ['p1', 'p2', 'p3', 'p4', 'p5'];
 	var index = 0;
 	
 	//上一张
@@ -32,18 +32,18 @@ $(function () {
 	});
 	
 	//图片自动轮播
-	timer = setInterval(btn_right, 4000);
+	timer = setInterval(btn_right, 6000);
 	
 	//点击上一张的封装函数
 	function btn_left() {
-		arr.unshift(arr[6]);
+		arr.unshift(arr[4]);
 		arr.pop();
 		$('.Cooldog_content li').each(function (i, e) {
 			$(e).removeClass().addClass(arr[i]);
 		})
 		index--;
 		if (index < 0) {
-			index = 6;
+			index = 4;
 		}
 		show();
 	}
@@ -56,7 +56,7 @@ $(function () {
 			$(e).removeClass().addClass(arr[i]);
 		})
 		index++;
-		if (index > 6) {
+		if (index > 4) {
 			index = 0;
 		}
 		show();

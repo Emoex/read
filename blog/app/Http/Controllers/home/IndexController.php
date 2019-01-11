@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Ting;
 use DB;
+use App\Models\Article;
+use App\Models\User;
 
 class IndexController extends Controller
 {
@@ -16,9 +18,13 @@ class IndexController extends Controller
      */
     public function index()
     {
-        $tingid=DB::select('select * from ting order by id desc limit 3');
-        $active = 0;    
-        return view('/home/index/index',['tingid'=>$tingid,'active'=>$active]);
+        $articleq=Article::all();
+        $tingid = Ting::orderBy('id','desc')->paginate(3);
+        //dd($tingid);
+        $article = Article::orderBy('like','desc')->paginate(3);
+        $ting = Ting::orderBy('id','desc')->paginate(5);
+        //dd($article);
+        return view('/home/index/index',['tingid'=>$tingid,'article'=>$article,'articleq'=>$articleq,'ting'=>$ting]);
     }
 
     /**

@@ -22,13 +22,13 @@
 	<script src="/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
 	<script src="/assets/js/ready.min.js"></script>
 	<script src="/assets/js/demo.js"></script>
+	<script type="text/javascript" src='/js/minigrid.js'></script>
 </head>
 <body>
 	<div class="wrapper">
 		<div class="main-header">
 			<div class="logo-header">
 				<a href="index.html" class="logo">
-
 				</a>
 				<button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-controls="sidebar" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
@@ -37,6 +37,8 @@
 			</div>
 			<nav class="navbar navbar-header navbar-expand-lg">
 				<div class="container-fluid">
+
+
 					<ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
 						<li class="nav-item dropdown hidden-caret">
 							<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -124,6 +126,7 @@
 									<a class="dropdown-item" href="#"><i class="ti-settings"></i> Account Setting</a>
 									<div class="dropdown-divider"></div>
 									<a class="dropdown-item" href="/admin/logout"><i class="fa fa-power-off"></i>退出</a>
+
 								</ul>
 								<!-- /.dropdown-user -->
 							</li>
@@ -145,7 +148,6 @@
                                                              @elseif(session('admin')->auth==2)普通管理员
                                                              @endif
 									</span>
-
 
 									<span class="caret"></span>
 								</span>
@@ -180,7 +182,6 @@
 								<span>
 									
 									<i class="la la-user"></i><span class="user-level"> 管&nbsp理&nbsp员</span>
-
 									<span class="caret"></span>
 								</span>
 							</a>
@@ -191,13 +192,11 @@
 									<li>
 										<a href="/admin/admin">
 
-
 											<i class="la la-reorder"></i>
 											<p>管理员列表</p>
 										</a>
 									</li>
 										<a href="/admin/admin/create">
-
 
 											<i class="la la-user-plus"></i>
 											<p>管理员添加</p>
@@ -211,7 +210,6 @@
 						<li class="nav-item active">
 						 <div class="info">
 							<a class="" data-toggle="collapse" href="#collapseExample1" aria-expanded="true">
-
 								<span>
 									
 									<i class="la la-group"></i><span class="user-level">用戶管理</span>
@@ -225,7 +223,6 @@
 									<li>
 
 										<a href="/admin/user">
-
 											<i class="la la-reorder"></i>
 											<p>用戶列表</p>
 										</a>
@@ -233,7 +230,6 @@
 									<li>
 
 										<a href="/admin/user/create">
-
 											<i class="la la-plus-circle"></i>
 											<p>用戶添加</p>
 										</a>
@@ -249,7 +245,6 @@
 								<span>
 									
 									<i class="la la-list"></i><span class="user-level">分类管理</span>
-
 									<span class="caret"></span>
 								</span>
 							</a>
@@ -258,14 +253,12 @@
 								<ul class="nav">
 									<li>
 										<a href="/admin/cate">
-
 											<i class="la la-reorder"></i>
 											<p>分类列表</p>
 										</a>
 									</li>
 									<li>
 										<a href="/admin/cate/create">
-
 											<i class="la la-plus-circle"></i>
 											<p>分类添加</p>
 										</a>
@@ -290,14 +283,12 @@
 								<ul class="nav">
 									<li>
 										<a href="/admin/article">
-
 											<i class="la la-reorder"></i>
 											<p>文章列表</p>
 										</a>
 									</li>
 									<li>
 										<a href="/admin/article/create">
-
 											<i class="la la-plus-circle"></i>
 											<p>文章添加</p>
 										</a>
@@ -308,7 +299,6 @@
 						</li>
 						<li class="nav-item active">
 						 <div class="info">
-
 							<a class="" data-toggle="collapse" href="#collapseExample4" aria-expanded="true">
 								<span>
 									
@@ -331,108 +321,6 @@
 										<a href="/admin/ting/create">
 											<i class="la la-plus-circle"></i>
 											<p>电台添加</p>
-
-										</a>
-									</li>
-								</ul>
-							</div>
-						</div>
-						</li>
-
-
-						<li class="nav-item active">
-						<div class="info">
-							<a class="" data-toggle="collapse" href="#collapseExample5" aria-expanded="true">
-								<span>
-									
-									<i class="la la-puzzle-piece"></i><span class="user-level">碎片管理</span>
-									<span class="caret"></span>
-								</span>
-							</a>
-							<div class="clearfix"></div>
-
-
-							<div class="collapse in" id="collapseExample5" aria-expanded="true" style="">
-								<ul class="nav">
-									<li>
-										<a href="/admin/timeline">
-											<i class="la la-reorder"></i>
-											<p>碎片列表</p>
-										</a>
-									</li>
-									<li>
-
-										<a href="/admin/timeline/create">
-											<i class="la la-plus-circle"></i>
-											<p>碎片添加</p>
-										</a>
-									</li>
-								</ul>
-							</div>
-						</div>
-						</li>
-
-						<li class="nav-item active">
-						<div class="info">
-							<a class="" data-toggle="collapse" href="#collapseExample6" aria-expanded="true">
-								<span>
-									
-									<i class="la la-desktop"></i><span class="user-level">网站管理</span>
-									<span class="caret"></span>
-								</span>
-							</a>
-							<div class="clearfix"></div>
-
-
-							<div class="collapse in" id="collapseExample6" aria-expanded="true" style="">
-								<ul class="nav">
-									<li>
-										<a href="/admin/Conf">
-											<i class="la la-reorder"></i>
-											<p>网站标题管理</p>
-										</a>
-									</li>
-									<li>
-										<a href="">
-											<i class="la la-plus-circle"></i>
-											<p>网站login管理</p>
-										</a>
-									</li>
-									<li>
-										<a href="/admin/Conf/Slide">
-											<i class="la la-wrench"></i>
-											<p>轮播图管理</p>
-										</a>
-									</li>
-								</ul>
-							</div>
-						</div>
-						</li>
-
-
-						<li class="nav-item active">
-						<div class="info">
-							<a class="" data-toggle="collapse" href="#collapseExample7" aria-expanded="true">
-								<span>
-									<i class="la la-paperclip"></i><span class="user-level">友情链接</span>
-									<span class="caret"></span>
-								</span>
-							</a>
-							<div class="clearfix"></div>
-
-
-							<div class="collapse in" id="collapseExample7" aria-expanded="true" style="">
-								<ul class="nav">
-									<li>
-										<a href="/admin/Link">
-											<i class="la la-reorder"></i>
-											<p>友情链接列表</p>
-										</a>
-									</li>
-									<li>
-										<a href="index.html">
-											<i class="la la-plus-circle"></i>
-											<p>友情链接添加</p>
 										</a>
 									</li>
 								</ul>
@@ -441,28 +329,109 @@
 						</li>
 						<li class="nav-item active">
 						 <div class="info">
-							<a class="" data-toggle="collapse" href="#collapseExample8" aria-expanded="true">
+							<a class="" data-toggle="collapse" href="#collapseExample4" aria-expanded="true">
 								<span>
 									
-									<i class="la la-paperclip"></i><span class="user-level">举报管理</span>
+									<i class="la la-puzzle-piece"></i><span class="user-level">碎片管理</span>
 									<span class="caret"></span>
 								</span>
 							</a>
 							<div class="clearfix"></div>
 
-							<div class="collapse in" id="collapseExample8" aria-expanded="true" style="">
+							<div class="collapse in" id="collapseExample4" aria-expanded="true" style="">
 								<ul class="nav">
 									<li>
-										<a href="/admin/report">
+										<a href="index.html">
 											<i class="la la-reorder"></i>
-											<p>举报列表</p>
+											<p>碎片列表</p>
+										</a>
+									</li>
+									<li>
+										<a href="index.html">
+											<i class="la la-plus-circle"></i>
+											<p>碎片添加</p>
+										</a>
+									</li>
+									<li>
+										<a href="index.html">
+											<i class="la la-wrench"></i>
+											<p>碎片修改</p>
 										</a>
 									</li>
 								</ul>
 							</div>
 						</div>
 						</li>
+						<li class="nav-item active">
+						 <div class="info">
+							<a class="" data-toggle="collapse" href="#collapseExample5" aria-expanded="true">
+								<span>
+									
+									<i class="la la-desktop"></i><span class="user-level">网站管理</span>
+									<span class="caret"></span>
+								</span>
+							</a>
+							<div class="clearfix"></div>
 
+							<div class="collapse in" id="collapseExample5" aria-expanded="true" style="">
+								<ul class="nav">
+									<li>
+										<a href="index.html">
+											<i class="la la-reorder"></i>
+											<p>配置列表</p>
+										</a>
+									</li>
+									<li>
+										<a href="index.html">
+											<i class="la la-plus-circle"></i>
+											<p>配置添加</p>
+										</a>
+									</li>
+									<li>
+										<a href="index.html">
+											<i class="la la-wrench"></i>
+											<p>配置修改</p>
+										</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+						</li>
+						<li class="nav-item active">
+						 <div class="info">
+							<a class="" data-toggle="collapse" href="#collapseExample6" aria-expanded="true">
+								<span>
+									
+									<i class="la la-paperclip"></i><span class="user-level">友情链接</span>
+									<span class="caret"></span>
+								</span>
+							</a>
+							<div class="clearfix"></div>
+
+							<div class="collapse in" id="collapseExample6" aria-expanded="true" style="">
+								<ul class="nav">
+									<li>
+										<a href="/admin/blogroll">
+											<i class="la la-reorder"></i>
+											<p>友情链接列表</p>
+										</a>
+									</li>
+									<li>
+										<a href="/admin/blogroll/create">
+											<i class="la la-plus-circle"></i>
+											<p>友情链接添加</p>
+										</a>
+									</li>
+									<li>
+										<a href="index.html">
+											<i class="la la-wrench"></i>
+											<p>友情链接修改</p>
+										</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+						</li>
 					</ul>
 				</div>
 			</div>

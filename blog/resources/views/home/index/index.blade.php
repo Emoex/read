@@ -1,8 +1,4 @@
 @extends('home/layout/index')
-
-@section('head')
-  <link rel="stylesheet" type="text/css" href="/home/css/index.css ">
-@endsection
 @section('content')
 
 <div class="container">
@@ -26,31 +22,30 @@
     <div class="index-content">
     
       <div class="article-list-group">
-      <div class="title-cpt">
+      <div class="title-cpt" >
        阅读&nbsp;|&nbsp;Read
       </div> 
-      <div class="article-cpt">
-       <div class="article-info">
+      @foreach($article as $k=>$v)
+      <div class="article-cpt" >
+       <div class="article-info" style="width:100%;">
         <div class="article-info-box">
          <div class="article-title">
-          <a href="../../pages/read/articleInfo.html?id=5a236c3f4cfcf3177384d9c9" target="_blank">年华</a>
+          <a href="/home/article/{{ $v->id }}" target="_blank">{{ $v->title }}</a>
          </div> 
          <div class="article-author">
-          <a href="../../pages/user/user.html?uid=119707" target="_blank">By&nbsp;/&nbsp;盗梦的益安</a>
+          <a href="../../pages/user/user.html?uid=119707" target="_blank">By&nbsp;/&nbsp;{{ $v->User->nickname }}</a>
          </div> 
-         <div class="article-content">
-           1。再结婚一次，当下的安稳。只拍一组白纱做纪念。怀孕已三月，也不见胖，涨点年纪是韵味，挽着G先生的手，不输那些年轻男女。到这个年纪再婚，条件不用列举彼此心里都有 
-          <span class="view-all"><a href="../../pages/read/articleInfo.html?id=5a236c3f4cfcf3177384d9c9" target="_blank">VIEW ALL<img src="http://qnstatic.pianke.me/public/assets/img/viewall.png" /></a></span>
+         <div class="article-content" style="line-height: 22px">
+           {!! $v->content !!}
+          <span class="view-all"><a href="/home/article/{{ $v->id }}" target="_blank">VIEW ALL<img src="http://qnstatic.pianke.me/public/assets/img/viewall.png" /></a></span>
          </div>
         </div> 
         <div class="article-others">
-         8.8 k次阅读&nbsp;&nbsp;|&nbsp;&nbsp;评论:59&nbsp;&nbsp;|&nbsp;&nbsp;喜欢:129 
+         {{ $v->look }}k次阅读&nbsp;&nbsp;|&nbsp;&nbsp;评论:59&nbsp;&nbsp;|&nbsp;&nbsp;喜欢:{{ $v->like }} 
         </div>
        </div> 
-       <div class="article-img" style="background-image: url(&quot;http://hpimg.pianke.com/92a75c703093606dc4c0f14f7484563620170426.jpg?imageView2/2/w/640/format/jpg&quot;);">
-        <a href="../../pages/read/articleInfo.html?id=5a236c3f4cfcf3177384d9c9" target="_blank"></a>
-       </div>
       </div>
+      @endforeach
      </div> 
 
 
@@ -78,7 +73,7 @@
        </div>
        @endforeach
       </div>
-     </div>      <!-- 阅读 -->
+     </div>  
      
 
 
@@ -86,50 +81,79 @@
       <div class="title-cpt">
        人气片客&nbsp;|&nbsp;Hot Pianker
       </div> 
-      <div class="user-list">
-       <div class="user-cpt">
-        <div class="user-info">
-         <div class="user-cpt-left">
-          <a href="/pages/user/user.html?uid=4044800" target="_blank"><img src="http://tva2.sinaimg.cn/crop.0.0.996.996.50/ec39c62fjw8f6ddod449ij20ro0rp0vb.jpg" /></a> 
-          <img src="../../public/assets/img/user_musician.png" />
-         </div> 
-         <div class="user-cpt-right">
-          <div class="user-name">
-           <a href="/pages/user/user.html?uid=4044800" target="_blank">双笙子</a>
-          </div> 
-          <div class="user-des">
-           古风歌手双笙
-          </div>
-         </div>
-        </div>
-       </div>
+       <div class="user-list">
+   <div class="user-cpt">
+    <div class="user-info">
+     <div class="user-cpt-left">
+      <a href="/pages/user/user.html?uid=4044800" target="_blank"><img src="http://tva2.sinaimg.cn/crop.0.0.996.996.50/ec39c62fjw8f6ddod449ij20ro0rp0vb.jpg" /></a> 
+      <img src="../../public/assets/img/user_musician.png" />
+     </div> 
+     <div class="user-cpt-right">
+      <div class="user-name">
+       <a href="/pages/user/user.html?uid=4044800" target="_blank">双笙子</a>
+      </div> 
+      <div class="user-des">
+       古风歌手双笙
       </div>
      </div>
-    </div> 
-
-
-
-    <div class="more-botton">
-     <div class="btn-box">
-      <div class="btn btn-more">
-       查看更多精选内容
-      </div>
-     </div>
-    </div> 
-    <div class="more-content" style="">
-     <div class="past-content-title">
-      <div class="title-cpt">
-       往期精选
-      </div>
-     </div> 
-     <div class="img-group-cpt" style="height: 200px;"></div> 
-     <div class="no-more-data" style="">
-      -&nbsp;已加载全部&nbsp;-
-     </div> 
-     <div class="loading" style=""></div>
     </div>
-   </div> 
-   <div class="back-top"></div> 
+   </div>
+   <div class="user-cpt">
+    <div class="user-info">
+     <div class="user-cpt-left">
+      <a href="/pages/user/user.html?uid=3917369" target="_blank"><img src="http://tva4.sinaimg.cn/crop.0.0.512.512.180/7f71be41jw8etj0gb4oovj20e80e8mxf.jpg" /></a> 
+      <img src="../../public/assets/img/user_musician.png" />
+     </div> 
+     <div class="user-cpt-right">
+      <div class="user-name">
+       <a href="/pages/user/user.html?uid=3917369" target="_blank">MrMiss组合</a>
+      </div> 
+      <div class="user-des">
+       28届金曲奖最佳演唱組合/爵士人声组合MrMiss
+      </div>
+     </div>
+    </div>
+   </div>
+   <div class="user-cpt">
+    <div class="user-info">
+     <div class="user-cpt-left">
+      <a href="/pages/user/user.html?uid=3944421" target="_blank"><img src="http://pkicon.image.alimmdn.com/icon/20161125/126c947d4b6f525cb61ac69519450ec2.png@90w_90h_1e_1c_85Q.jpg" /></a> 
+      <img src="../../public/assets/img/user_musician.png" />
+     </div> 
+     <div class="user-cpt-right">
+      <div class="user-name">
+       <a href="/pages/user/user.html?uid=3944421" target="_blank">Muma木马</a>
+      </div> 
+      <div class="user-des">
+       摇滚音乐人 木马
+      </div>
+     </div>
+    </div>
+   </div>
+   <div class="user-cpt">
+    <div class="user-info">
+     <div class="user-cpt-left">
+      <a href="/pages/user/user.html?uid=4337098" target="_blank"><img src="http://wx.qlogo.cn/mmopen/Qo5MQt4c6EBMGzhTXq8f6VfaSwbKFUjG8gYCnBgibk5TRxUEAvDjGvUteiaHZcRHJf4icCWnicibb9x2LkwiaKovibkQLEYkpuYNicZg/0" /></a> 
+      <img src="../../public/assets/img/user_author.png" />
+     </div> 
+     <div class="user-cpt-right">
+      <div class="user-name">
+       <a href="/pages/user/user.html?uid=4337098" target="_blank">片刻小主</a>
+      </div> 
+      <div class="user-des">
+       片刻官方猫&#55357;&#56369;
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+     </div>
+    </div> 
+
+<!-- 瀑布流全部电台开始 -->
 
 
+<!-- 瀑布流全部电台结束 -->
+
+</div>
 @endsection('content')

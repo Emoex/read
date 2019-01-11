@@ -1,4 +1,5 @@
- html {
+*{margin:0px;padding: 0px;}
+html {
     -webkit-text-size-adjust: none;
     height: 100%;
 }
