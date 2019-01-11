@@ -6,7 +6,7 @@ use Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\home\timelineStore;
-use App\Models\admin\timeline;
+use App\Models\timeline;
 use DB;
 
 class TimelineController extends Controller

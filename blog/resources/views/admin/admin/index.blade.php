@@ -47,6 +47,7 @@
 			<td>
 			    <a href="/admin/admin/{{ $v->id }}/edit" class="btn btn-danger">修改</a>
 			    <a href="javascript:;" onclick="destroy({{ $v->id }},this)" class="btn btn-warning">删除</a>
+			    <a href="/admin/showSetPassword/{{ $v->id }}" class="btn btn-info">修改密码</a>
 			</td>
 		</tr>
 	@endforeach

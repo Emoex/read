@@ -32,6 +32,8 @@ Route::get('/admin/login','admin\LoginController@index');
 Route::post('/admin/doLogin','admin\LoginController@doLogin');
 Route::get('/admin/logout','admin\LoginController@Logout');
 Route::resource('/admin/admin','admin\AdminController')->middleware('App\Http\Middleware\CheckLogin::class');
+Route::get('/admin/showSetPassword/{id}','admin\AdminController@showSetPassword');
+Route::post('/admin/setPassword/{id}','admin\AdminController@setPassword');
 Route::resource('/admin/cate','admin\CateController')->middleware('App\Http\Middleware\CheckLogin::class');
 Route::resource('/admin/article','admin\ArticleController')->middleware('App\Http\Middleware\CheckLogin::class');
 Route::resource('/admin/report','admin\ReportController')->middleware('App\Http\Middleware\CheckLogin::class');
@@ -49,6 +51,7 @@ Route::get('/home/userinfo/showSetPassword','home\UserinfoController@showSetPass
 Route::post('/home/userinfo/setPassword','home\UserinfoController@setPassword');
 Route::resource('/home/userinfo','home\UserinfoController');
 Route::resource('/home/personal','home\PersonalController');
+Route::post('/home/personal/pinterest','home\PersonalController@pinterest');
 Route::resource('/home/report','home\ReportController');
 Route::resource('/home/feed','home\FeedController');
 Route::resource('/home/follow','home\FollowController');
@@ -61,42 +64,15 @@ Route::resource('/home/follow','home\FollowController');
 
 
 
+Route::resource('/admin/Conf/Slide','admin\SlideController');
+Route::post('/admin/Conf/title_update','admin\ConfController@title_update');//标题管理
+Route::post('/admin/Conf/Logo_update','admin\ConfController@Logo_update');//网站Logo管理
+Route::resource('/admin/Conf','admin\ConfController');//网站管理
+Route::resource('/admin/timeline','admin\TimelineController');//后台碎片管理
+Route::post('/admin/timeline/profile','admin\TimelineController@profile');//碎片图片上传
+Route::resource('/home/timeline','home\TimelineController');//前台碎片管理
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Route::resource('admin/Conf/Slide','admin\SlideController');
-Route::post('admin/Conf/title_update','admin\ConfController@title_update');//标题管理
-Route::post('admin/Conf/Logo_update','admin\ConfController@Logo_update');//网站Logo管理
-Route::resource('admin/Conf','admin\ConfController');//网站管理
-Route::resource('admin/timeline','admin\TimelineController');//后台碎片管理
-Route::post('admin/timeline/profile','admin\TimelineController@profile');//碎片图片上传
-Route::resource('home/timeline','home\TimelineController');//前台碎片管理
 

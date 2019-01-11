@@ -14,7 +14,7 @@
        </div> 
        <div class="article-others">
         <a href="/home/personal/{{ $article->User->id }}" target="_blank"><img src="{{ $article->User->face }}" width="40px" /> {{ $article->User->nickname }}</a> 
-        <span>{{ $article->created_at }}&nbsp;&nbsp;|&nbsp;&nbsp;阅读时间: 8min&nbsp;&nbsp;|&nbsp;&nbsp;阅读次数:&nbsp;<foot id="look">{{ $article->look }}</foot></span>
+        <span>{{ $article->created_at }}&nbsp;&nbsp;|&nbsp;&nbsp;阅读时间: {{ (int)(strlen(preg_replace('/<\/?.+?\/?>/','',$article->content))/500) }}min &nbsp;&nbsp;|&nbsp;&nbsp;阅读次数:&nbsp;<foot id="look">{{ $article->look }}</foot></span>
        </div>
       </div> 
       <div class="article-content"> 
@@ -28,18 +28,32 @@
       </style> 
        <article class="typo container"> 
         <h1>{{ $article->title }}</h1> 
-        <p class="author"><span>作者: {{ $article->User->nickname }}</span>&nbsp;&nbsp; <span>8 min read</span>&nbsp;&nbsp; </p> 
+        <p class="author"><span>作者: {{ $article->User->nickname }}</span>&nbsp;&nbsp; <span>{{ (int)(strlen(preg_replace('/<\/?.+?\/?>/','',$article->content))/500) }} min read</span>&nbsp;&nbsp; </p> 
 		{!! $article->content !!}
        </article> 
       </div> 
-      <div class="article-report"> 
-       <span class="report" onclick="report({{ $article->id }},'article')">举报</span>
-      </div>
+      @if(session('user'))
+          @if(session('user')['id'] == $article->uid)
+          <div class="article-report"> 
+            <label><span class="report"><input type="submit" style="outline:0;background:none;border:none;cursor:pointer;color:#333;" value="删除" onclick="article({{ $article->id }})" id="article_delete" ></span></label>
+          </div>
+          @else
+          <div class="article-report"> 
+           <span class="report" onclick="report({{ $article->id }},'article')">举报</span>
+          </div>
+          @endif
+      @endif
      </div> 
      <div class="article-handle">
-      <div class="likes-cpt">
+     @if(isset($article->is_like))
+        <div class="likes-cpt likes">
         {{ $article->like }} 
       </div> 
+     @else
+      <div class="likes-cpt">
+        {{ $article->like }} 
+      </div>
+     @endif 
       <div class="share-cpt">
        <div class="share-sina"></div> 
        <div class="share-wechat">
@@ -72,6 +86,20 @@
      @endif
 <script type="text/javascript">
        $(function(){
+          article = function(id){
+            confirm('删除的内容不可找回, 确认删除?');
+            $('#confirm div:eq(1)').click(function(){
+              $('.Confirm').addClass('hidden');
+              $.post('/home/article/'+id,{'_token':$('input[name=_token]').val(),'_method':'DELETE'},function(msg){
+                if( msg == 'success'){
+                  window.location.href='/home/article';
+                }else{
+                  error('删除失败！');
+                }
+              },'html'); 
+            })
+          }
+
             dododo = function (parent_id,obj)
             {
               var index = $(obj).parents('.comment-cpt').index();
@@ -83,13 +111,13 @@
                     $('.com-textarea').eq(index).addClass('hidden');
                   })
                   
-                  $('.send').eq(index).click(function(){
+                  $('.send').eq(index).unbind("click").click(function(){
                     if($('.reply').eq(index).val()){
                       var content = $('.reply').eq(index).val();
                       $.post('/home/article/comment',{'_token':$('input[name=_token]').val(),'aid':$('input[name=aid]').val(),'content':content,'parent_id':parent_id},function(data){
                      if(data['msg'] == 'success'){
                        div = '<div class="comment-content-others"><input type="hidden" name="parent_id" value="'+data['id']+'"><a href="../user/user.html?uid=4934695" target="_blank">　'+data['uname']+':</a>'+data['content']+'<span class="comment-del report" style="display: none;">举报</span><span class="comment-del" style="display:none">删除</span></div>';
-                       $('.comment-content').eq(index).after(div);
+                       $('.com-textarea').eq(index).before(div);
                        $('.com-textarea').eq(index).addClass('hidden'); 
                        $('.reply').eq(index).val('');
                      }else{
@@ -141,17 +169,20 @@
            },5000);
            
            $('.likes-cpt').click(function(){
+            if(checkLogin()){
             $.post('/home/article/like',{'_token':$('input[name=_token]').val(),'aid':$('input[name=aid]').val()},function(data){
-                      if(data['msg'] != 'error'){
+                      if(data['msg'] == 'like'){
+                        $('.likes-cpt').addClass('likes');
                         $('.likes-cpt').text(data['like']);
                       }else{
-                        error('您已经喜欢过了');
+                        $('.likes-cpt').removeClass('likes');
+                        $('.likes-cpt').text(data['like']);
                       }
                       
              },'json');
+          }
            })
-
-           $('.comment_like').click(function(){
+           $('#like').click(function(){
              click(1);
            })
    
@@ -227,6 +258,7 @@
         <span id="comment-content">({{ $num }}&nbsp;条)</span>
        </div>
       </div> 
+      @if(session('user'))
       <div class="comment-list-group">
         @foreach($comment as $k=>$v)
                  <div class="comment-cpt">
@@ -243,7 +275,7 @@
                       @else
                       <span class="comment-del report" onclick="report({{ $v->id }},'article_comment')">举报</span>
                       @endif
-                      <span class="comment-number comment_like">{{ $v->like }}</span> 
+                      <span class="comment-number comment_like" id="like">{{ $v->like }}</span> 
                      </div> 
                      <div class="comment-content">
                       {{ $v->content }}
@@ -335,6 +367,7 @@
         暂时没有评论，快和小伙伴互动吧 
       </div> -->
      </div>
+    @endif
     </div>
    </div>
   </div>

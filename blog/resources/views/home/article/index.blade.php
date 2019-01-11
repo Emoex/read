@@ -79,7 +79,7 @@
      </div> 
      @foreach($cate as $k=>$v)
      <div class="article-type-cpt">
-      <a href="/home/article/cate/{{ $v->id }}"><img src="{{ $v->path }}" /><span class="type-bg"></span><span class="type-title">{{ $v->name }}</span><span class="type-des">Story/1061篇</span></a>
+      <a href="/home/article/cate/{{ $v->id }}"><img src="{{ $v->path }}" /><span class="type-bg"></span><span class="type-title">{{ $v->name }}</span><span class="type-des">Story/{{ $v->num }}篇</span></a>
      </div>
      @endforeach
     </div> 
@@ -96,10 +96,11 @@
          <a href="/home/article/{{ $v->id }}">{{ $v->title }}</a>
         </div> 
         <div class="article-author">
-         <a href="../user/user.html?uid=4325575" target="_blank">By&nbsp;/&nbsp;{{ $v->User->nickname }}</a>
+         <a href="/home/personal/{{ $v->User->id }}">By&nbsp;/&nbsp;{{ $v->User->nickname }}</a>
         </div> 
         <div class="article-content" style="overflow:hidden;line-height:20px">
-           {{ preg_replace('/<\/?.+?\/?>/','',$v->content) }}<span class="view-all"><a href="/home/article/{{ $v->id }}" target="_blank">VIEW ALL<img src="http://qnstatic.pianke.me/public/assets/img/viewall.png" /></a></span>  
+           {{ preg_replace('/<\/?.+?\/?>/','',$v->content) }}
+           <span class="view-all"><a href="/home/article/{{ $v->id }}" target="_blank">VIEW ALL<img src="http://qnstatic.pianke.me/public/assets/img/viewall.png" /></a></span>  
          
         </div>
        </div> 
@@ -116,4 +117,6 @@
     </div> 
    </div>
   </div>
+
+
 @endsection

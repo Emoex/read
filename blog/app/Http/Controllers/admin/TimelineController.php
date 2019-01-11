@@ -5,7 +5,7 @@ namespace App\Http\Controllers\admin;
 use App\Models\admin\timeline;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\admin\timelineStore;
+use App\Http\Requests\timelineStore;
 use Illuminate\Support\Facades\Storage;
 
 class TimelineController extends Controller

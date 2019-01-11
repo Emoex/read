@@ -1,0 +1,18 @@
+修改已有的字段的默认值 alter table 表名 alter column 列名 set default 值;
+建立视图    create view 视图名字(展示的字段名) as select 视图中所选的字段 from 表名 条件
+普通索引    alter table 表名 add index 索引名字(要添加索引的字段)
+主键索引    alter table 表名 add primary key index 索引名字();
+唯一索引                                        unique
+全文索引                                            fulltext
+创建用户 create user ''@'';
+授权     grant 权限 on table 表名 to 用户 with grant option
+创建触发器  create trigger   for each row
+创建事件     create event
+赋予用户权限  
+收回用户权限  revoke
+创建存储函数 create procedure
+游标是通过select语句检索出来的结果集
+在软件开发中，需求分析阶段可以使用的工具是  DFD图
+与create databases命令相同的是create schema
+指定时间与日期的数据类型是  datatime
+调用存储         call                    select

@@ -37,9 +37,9 @@ class FollowController extends Controller
     {
         $uid = session('user')['id'];
         $follow_user = $request->input('follow_user');
-
-        $old_follow = Follow::where('uid',$uid)->where('follow_user',$follow_user)->get();
-        if($old_follow->isEmpty()){
+        if($uid != $follow_user){
+           $old_follow = Follow::where('uid',$uid)->where('follow_user',$follow_user)->get();
+         if($old_follow->isEmpty()){
             $follow = new Follow;
             $follow->uid = $uid;
             $follow->follow_user = $follow_user;
@@ -49,7 +49,9 @@ class FollowController extends Controller
             }else{
                 echo 'error';
             }
-        }
+         } 
+        }    
+        
     }
 
     /**

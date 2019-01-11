@@ -30,7 +30,7 @@
        </div>
       </div>
       @if( $data->image )  
-      <img width="100%" style="" src="/uploads/{{ $data->image }}" />
+      <img width="100%" style="" src="{{ $data->image }}" />
       @endif 
       <div class="timeline-content">
         {{ $data->content }} 

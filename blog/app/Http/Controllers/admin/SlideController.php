@@ -4,7 +4,7 @@ namespace App\Http\Controllers\admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\admin\Conf;
+use App\Models\Conf;
 
 class SlideController extends Controller
 {

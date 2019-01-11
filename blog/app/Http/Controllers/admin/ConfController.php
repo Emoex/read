@@ -5,7 +5,7 @@ namespace App\Http\Controllers\admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Config;
-use App\Models\admin\Conf;
+use App\Models\Conf;
 
 class ConfController extends Controller
 {

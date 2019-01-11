@@ -6,15 +6,19 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\models\ArticleCate;
 use App\models\Article;
-use DB;
 use App\models\ArticleComment;
 use App\models\ArticleLike;
+use DB;
 class ArticleController extends Controller
 {
     
     static protected function getComment($aid = 0,$parent_id = 0,&$result = array())
     {       
-        $arr = ArticleComment::where('parent_id',$parent_id)->where('aid',$aid)->orderBy('created_at', 'desc')->get();  
+        if($parent_id == 0){
+            $arr = ArticleComment::where('parent_id',$parent_id)->where('aid',$aid)->orderBy('created_at', 'desc')->get(); 
+        }else{
+           $arr = ArticleComment::where('parent_id',$parent_id)->where('aid',$aid)->orderBy('created_at', 'asc')->get();   
+        }
         if(empty($arr)){
             return array();
         }
@@ -37,6 +41,9 @@ class ArticleController extends Controller
         $cate = ArticleCate::get();
         $article = Article::orderBy('look','desc')->paginate(3);
         $active = 1;
+        foreach ($cate as $k => $v) {
+            $v->num = Article::where('cid',$v->id)->count();
+        }
         return view('home/article/index',['cate'=>$cate,'article'=>$article,'active'=>$active]);
     }
 
@@ -59,7 +66,20 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+       if(!$request->content){
+          return back()->withInput();
+       }
+        $article = new Article;
+        $article->cid = ArticleCate::where('name',$request->cname)->first()->id;
+        $article->uid = session('user')['id'];
+        $article->title = $request->title;
+        $article->content = $request->content;
+        $res = $article->save();
+        if($res){
+            return redirect('/home/article');
+        }else{
+            return redirect('/home/article');
+        }
     }
 
     /**
@@ -71,6 +91,9 @@ class ArticleController extends Controller
     public function show($id)
     {
         $article = Article::find($id);
+        if(session('user')){
+            $article->is_like = ArticleLike::where('aid',$id)->where('uid',session('user')['id'])->first();
+        }  
         $comment = static::getComment($id);
         $num = ArticleComment::where('aid',$id)->count();
         $active = 1;
@@ -107,7 +130,18 @@ class ArticleController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $article = Article::find($id);
+        $article_comment = ArticleComment::where('aid',$id)->get();
+        $res1 = $article->delete();
+        foreach($article_comment as $k=>$v){
+            $v->delete();
+        }
+        if($res1){
+            echo 'success';
+        }else{
+            echo 'error';
+        }
+
     }
 
     /**
@@ -165,7 +199,7 @@ class ArticleController extends Controller
     public function like(Request $request)
     {
         $like = ArticleLike::where('aid',(int)$request->aid)->where('uid',session('user')['id'])->first();
-        if(empty($like->aid)){
+        if(!$like){
                 $article = Article::find($request->aid);
                 $article->like = $article->like + 1;
                 $res = $article->save();
@@ -174,10 +208,14 @@ class ArticleController extends Controller
                     $like->aid = $request->aid;
                     $like->uid = session('user')['id'];
                     $like->save();
-                    echo json_encode(['like'=>$article->like]);
+                    echo json_encode(['like'=>$article->like,'msg'=>'like']);
                 }
             }else{
-                   echo json_encode(['msg'=>'error']);
+                $article = Article::find($request->aid);
+                $article->like = $article->like - 1;
+                $res = $article->save();
+                $like = $like->delete();
+                echo json_encode(['like'=>$article->like,'msg'=>'dislike']);
           }
     }
 

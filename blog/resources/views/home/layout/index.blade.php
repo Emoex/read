@@ -19,6 +19,7 @@
   <link type="text/css" rel="stylesheet" href="/css/style.css">
 <script type="text/javascript" src="/js/jquery.min.js"></script>
 <script type="text/javascript" src="/js/Cooldog.js"></script>
+<script type="text/javascript" src="/js/minigrid.js"></script>
   <script src="/assets/js/wsdk.js" charset="utf-8"></script>
   <script src="/js/radio.js"></script>  
   <!-- <script src="js/wsdk.js" charset="utf-8"></script>  -->
@@ -59,6 +60,30 @@
        <div class="login-btn">
         登录
        </div>
+
+       <!-- 判断是否登录 -->
+       @if(session('user'))
+       <input type="hidden" name="session" value="{{ session('user')['id'] }}">
+       @endif
+       <script>
+              function checkLogin(){
+                 if(!$('input[name=session]').val()){
+                    error('请先登录');
+                    return false;
+                 }
+                 return true;
+              } 
+              
+                //错误消息
+               function error(text)
+                {
+                  $('#error').text(text).show();
+                  setTimeout(function(){
+                    $('#error').text('').hide();
+                  },2000);
+                }        
+            
+       </script>
       </div> 
       <div class="register-content" style="display: none;">
        <img src="http://qnstatic.pianke.me/public/assets/img/pianke-code.png" />
@@ -74,8 +99,10 @@
        <li class=""><a href="/home/index">首页</a></li> 
        <li class=""><a href="/home/article">阅读</a></li> 
        <li class=""><a href="/home/ting">电台</a></li> 
-       <li class=""><a href="/home/timeline">碎片</a></li> 
-       <li class=""><a href="/home/feed">动态</a></li> 
+       <li class=""><a href="/home/timeline">碎片</a></li>
+       @if(session('user')) 
+       <li class=""><a href="/home/feed">动态</a></li>
+       @endif 
       </ul> 
       <input type="hidden" name="active" value="{{ $active or 5}}">
       <script>
@@ -136,6 +163,20 @@
      </div>
     </header>
    </div> 
+   <script>
+    $(function(){
+      var scrollHeight = 0;
+      $(window).scroll(function(){
+        if( $(window).scrollTop()>scrollHeight ){
+          scrollHeight = $(window).scrollTop();
+         $('header').attr('class','fade-leave-active');  
+        }else{
+          scrollHeight = $(window).scrollTop();
+         $('header').attr('class','fade-enter-active');
+        }
+      })
+          })
+   </script>
    @section('content')
 
 
@@ -165,7 +206,9 @@
     </div>
    </footer>
   </div> 
-
+<!-- 提示框 -->
+<div ><div id="error" style="display:none;" class="errorPrompt Prompt"></div></div>
+<div><div id='success' style="display:none;" class="successPrompt Prompt"></div></div>
    <script src="/js/upfile.js"></script> 
   <script src="/js/timeline.js"></script> 
 

@@ -4,17 +4,12 @@ namespace App\models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Ting extends Model
+class Timeline extends Model
 {
-    public $table='ting';
-   
+    public $table = 'timeline';
+
     public function User()
     {
     	return $this->belongsTo('App\models\User','uid');
-    }
-
-    public function Article()
-    {
-    	return $this->belongsTo('App\models\Article','aid');
     }
 }
