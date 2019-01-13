@@ -98,6 +98,7 @@ class TimelineController extends Controller
             $timeline = new Timeline;
             //uid为session的id
             $timeline->uid = session('user')['id'];
+            $timeline->content = $data['content']; 
             //判断是否为秘密
             if($data['cid'] == '秘密'){
                 $timeline->public = 2;
@@ -159,17 +160,16 @@ class TimelineController extends Controller
     {   
         //根据show方法传过来的id去找相对应的碎片
         $data = Timeline::find($id);
-        //喜欢的个数( 调用love()多对多方法 )
-        $likes = $data->love()->count();
         //判断是否有session 并获取用户的id 往后来查是否有喜欢的碎片
         if( session('user') ){
             $uid = session('user')['id'];
         }
         if( isset($uid) ){
-            $data['like'] = Timelinelike::where('tid',$id)->where('uid',$uid)->first();
+            $data['like_ta'] = Timelinelike::where('tid',$id)->where('uid',$uid)->first();
         }
         //查看用户评论的内容
         $comment = $data->Comment()->where('parent_id',0)->orderBy('created_at','desc')->get();
+        $pinglun = $data->Comment()->count();
         if( !$comment->isEmpty()){
             foreach ($comment as $k => $v) {
                 $v['children'] = TimeLineComment::where('parent_id',$v['id'])->orderBy('created_at','desc')->get();
@@ -187,7 +187,7 @@ class TimelineController extends Controller
            }
         }
         $cate = TimelineCate::get();
-        return view('home/Timeline/show',['data'=>$data,'comment'=>$comment,'cate'=>$cate,'likeness'=>$likeness,'likes'=>$likes]);
+        return view('home/Timeline/show',['data'=>$data,'comment'=>$comment,'cate'=>$cate,'likeness'=>$likeness,'pinglun'=>$pinglun]);
     }
 
     public function like(Request $request)

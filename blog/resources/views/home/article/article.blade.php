@@ -356,10 +356,10 @@
        <div class="no-more-data" style="display: none;">
         -&nbsp;已加载全部&nbsp;-
        </div>
-      </div> 
+      </div>  -->
       <div class="no-comment" style="display: none;">
         暂时没有评论，快和小伙伴互动吧 
-      </div> -->
+      </div>
      </div>
     @endif
     </div>

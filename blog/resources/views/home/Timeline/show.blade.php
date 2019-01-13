@@ -73,13 +73,13 @@
        <a href="./timeline.html?tag=" target="_blank">#&nbsp;&nbsp;#</a>
       </div> 
       <div class="handles">
-      @if( $data['like'] )
+      @if( $data->like_ta )
        <div class="likes-cpt likes" onclick="like({{ $data->id }},this,1)">
-         {{ $likes }} 
+         {{ $data->like }} 
        </div>
       @else
        <div class="likes-cpt" onclick="like({{ $data->id }},this,1)">
-         {{ $likes }} 
+         {{ $data->like }} 
        </div>
       @endif 
       </div> 
@@ -105,7 +105,7 @@
       <div class="article-comment">
         <div class="comment-title-cpt">
          <div>
-          评论 {{ $pinglun = 1 }}
+          评论 
           <span id="pinglun">(<font>{{ $pinglun }}</font>条)</span>
          </div>
         </div> 
