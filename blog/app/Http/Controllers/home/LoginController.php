@@ -132,7 +132,7 @@ class LoginController extends Controller
             $pwd = $user->pwd;
             if(Hash::check($request->pwd,$pwd)){
                 session(['user'=>$user]);
-                return redirect('/home/article');
+                return back();
             }
         }
         return back()->with('error','用户名或者密码错误');
@@ -141,6 +141,6 @@ class LoginController extends Controller
     public function logout()
     {
         session(['user'=>'']);
-        return redirect('/home/login');
+        return back();
     }
 }

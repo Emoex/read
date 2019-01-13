@@ -6,32 +6,13 @@
   <title>嘻嘻嘻</title> 
   <script src="/assets/js/core/jquery.3.2.1.min.js"></script>
   <link href="https://qnstatic.pianke.me/public/assets/favicon.ico" rel="icon" type="image/x-icon" /> 
-  <link rel="stylesheet" href="/css/index.css" /> 
-  <link rel="stylesheet" href="/css/client.css" /> 
-  <link href="https://qnstatic.pianke.me/public/assets/favicon.ico" rel="icon" type="image/x-icon" /> 
-  <link rel="stylesheet" href="/css/feed.css" /> 
+  <link rel="stylesheet" href="/css/client.css" />  
   <link rel="stylesheet" href="/css/radio.css" /> 
-  <link rel="stylesheet" href="/css/read.css" /> 
-  <link rel="stylesheet" href="/css/timeline.css" /> 
   <link rel="stylesheet" href="/assets/css/user.css">
   <link rel="stylesheet" href="/css/userSet.css">
   <link rel="stylesheet" href="/css/common.css">
   <link type="text/css" rel="stylesheet" href="/css/style.css">
-<script type="text/javascript" src="/js/jquery.min.js"></script>
-<script type="text/javascript" src="/js/Cooldog.js"></script>
-<script type="text/javascript" src="/js/minigrid.js"></script>
-  <script src="/assets/js/wsdk.js" charset="utf-8"></script>
-  <script src="/js/radio.js"></script>  
-  <!-- <script src="js/wsdk.js" charset="utf-8"></script>  -->
-
-  <script src="/js/client.js"></script>  
-   
-  <script src="/js/tingInfo.js"></script>
-
-  <link href="https://qnstatic.pianke.me/public/assets/favicon.ico" rel="icon" type="image/x-icon" /> 
-  <link rel="stylesheet" href="https://qnstatic.pianke.me/public/assets/css/radio.css" /> 
-  <script src="https://g.alicdn.com/aliww/h5.imsdk/2.1.5/scripts/yw/wsdk.js" charset="utf-8"></script> 
-  <script type="text/javascript" src="/home/js/jquery.3.2.1.min.js"></script>
+  <!-- 瀑布流 --><script type="text/javascript" src="/js/minigrid.js"></script>
   <style>
     input::-webkit-input-placeholder {
       /* placeholder字体大小  */
@@ -65,6 +46,10 @@
           <div class="alert alert-danger alert-dismissible" role="alert" style="background:#fff;border:0px;margin-bottom:-8px;width:200px;margin-left:200px;font-size:12px;">
             <strong>{{ session('error') }}</strong> 
           </div>
+          <script>
+                 $('.login').css('display','block'); 
+          </script>
+          {{ session(['error'=>'']) }}
         @endif
 
         @if (count($errors) > 0)
@@ -75,6 +60,9 @@
                 @endforeach  
             </ul>
          </div>
+           <script>
+                   $('.login').css('display','block'); 
+            </script>
         @endif 
 
         <div class="login-content" style="display: block;"> 
@@ -190,14 +178,8 @@
                 </div>
                </div> 
         @else
-        <a href="/home/login"><div class="login-btn"><div>登录&nbsp;<span>/</span>&nbsp;注册</div></div></a>
+        <div class="login-btn"><div>登录&nbsp;<span>/</span>&nbsp;注册</div></div>
         @endif
-       <div class="login-btn hidden">
-        <div>
-         登录&nbsp;
-         <span>/</span>&nbsp;注册
-        </div>
-       </div>
       </div>
      </div>
     </header>
@@ -214,6 +196,20 @@
          $('header').attr('class','fade-enter-active');
         }
       })
+      
+      $('.login-btn').click(function(){
+          $('.login').css('display','block');
+          $('body').css('overflow','hidden');
+      }) 
+      $('.if-no-login').click(function(){
+          $('.login').css('display','block');
+          $('body').css('overflow','hidden');
+      }) 
+      $('.close-login-box').click(function(){
+          $('.login').css('display','none');
+          $('body').css('overflow','visible');
+      })
+
           })
    </script>
    @section('content')
@@ -255,8 +251,6 @@
       <div>取消</div>
       <div>确认</div></div>
 </div>
-<script src="/js/upfile.js"></script> 
-<script src="/js/timeline.js"></script> 
 
  </body>
 <script>

@@ -77,7 +77,7 @@
     <span class="">
       <a>喜欢</a>(0)</span>
     <span class="">
-      <a>粉丝</a>(1)</span>
+      <a>粉丝</a>({{ count($fans) }})</span>
     <!-- <span class="">
       <a>片邮</a>(2)</span> -->
   </div>
@@ -203,6 +203,7 @@
                 $('.img-group-cpt').addClass('hidden');
                 $('.data-title-home').addClass('hidden');
                 $('.data-title-like').css('display','block');
+                $('.data-title-msg').css('display','none');
                 $('.user-like-list').css('display','none');
                 $('.user-like-list').eq($(this).index()).css('display','block');
                 $('.data-title-like span').removeClass('active');
@@ -222,6 +223,7 @@
                 minigrid('#articles','#article');
                 $('.data-title-like').css('display','none');
                 $('.user-like-list').css('display','none');
+                $('.data-title-msg').css('display','none');
            })
 
             // 我的主页获取数据
@@ -313,6 +315,8 @@
             $('#information').eq(0).click(function(){
                 $('.img-group-cpt').addClass('hidden');
                 $('.data-title-home').addClass('hidden');
+                $('.data-title-like').css('display','none');
+                $('.user-like-list').css('display','none');
                 $('.data-title-msg').css('display','block'); 
             }) 
 
@@ -321,46 +325,6 @@
 
     </script>
     
-
-<!--     <div class="msg-list" style="display: none;">
-      <div class="msg-mail-cpt" style="display: none;">
-        <div class="m-user-icon">
-          <a href="./user.html?uid=4265344" target="_blank">
-            <img src="https://qnimg.pianke.me/17e2291f5ec929797a30e4d0e75850c420181223.png?v=1545535081"></a>
-        </div>
-        <div class="m-info">
-          <div class="m-user-name">
-            <a href="./user.html?uid=4265344" target="_blank">来人间的猫儿</a>
-            <span class="msg-date">[2018-12-31]</span></div>
-          <div>
-            <span class="msg-title">元旦快乐</span></div>
-          <div class="msg-others">
-            <span class="msg-reply">
-              <a href="../piankeMail/piankeMail.html?touid=4265344&amp;toUname=%25E6%259D%25A5%25E4%25BA%25BA%25E9%2597%25B4%25E7%259A%2584%25E7%258C%25AB%25E5%2584%25BF&amp;touicon=https://qnimg.pianke.me/17e2291f5ec929797a30e4d0e75850c420181223.png?v=1545535081" target="_blank">回复</a></span>
-          </div>
-        </div>
-      </div>
-      <div class="msg-mail-cpt" style="display: none;">
-        <div class="m-user-icon">
-          <a href="./user.html?uid=4764921" target="_blank">
-            <img src="http://thirdwx.qlogo.cn/mmopen/vi_32/1ticCtULhM44n9f8ghgNCWcac62HEJ8UfAt3CdiaASibBxPrIJrlLtibURmlY4GIYRnn4iasouuhYlXhVAVxic3iadAWw/132"></a>
-        </div>
-        <div class="m-info">
-          <div class="m-user-name">
-            <a href="./user.html?uid=4764921" target="_blank">4764921</a>
-            <span class="msg-date">[2018-12-28]</span></div>
-          <div>
-            <span class="msg-title">我不是</span></div>
-          <div class="msg-others">
-            <span class="msg-reply">
-              <a href="../piankeMail/piankeMail.html?touid=4764921&amp;toUname=4764921&amp;touicon=http://thirdwx.qlogo.cn/mmopen/vi_32/1ticCtULhM44n9f8ghgNCWcac62HEJ8UfAt3CdiaASibBxPrIJrlLtibURmlY4GIYRnn4iasouuhYlXhVAVxic3iadAWw/132" target="_blank">回复</a></span>
-          </div>
-        </div>
-      </div>
-      <div class="no-more-data" style="display: none;">-&nbsp;已加载全部&nbsp;-</div>
-      <div class="loading" style="display: none;"></div>
-    </div> -->
-
     <!-- 关注 粉丝 -->
     <div class="user-like-list" style="display: none;margin-top:0px;" id="fans">
          @foreach($fans as $k=>$v)
@@ -405,6 +369,22 @@
           </div>
           @endforeach
     </div>
+
+<!-- 粉丝 -->
+      <div class="msg-focus-cpt">
+      <div class="m-user-icon">
+        <a href="./user.html?uid=4764921" target="_blank">
+          <img src="http://thirdwx.qlogo.cn/mmopen/vi_32/1ticCtULhM44n9f8ghgNCWcac62HEJ8UfAt3CdiaASibBxPrIJrlLtibURmlY4GIYRnn4iasouuhYlXhVAVxic3iadAWw/132"></a>
+      </div>
+      <div class="m-info">
+        <div class="m-user-name">
+          <a href="./user.html?uid=4764921" target="_blank">A52赫兹</a></div>
+        <div>
+          <span class="msg-title">关注了你。</span></div>
+        <div class="btn-focus" style="display: none;">关注</div>
+        <div class="btn-focus btn-focus-all">互相关注</div></div>
+    </div>
+<!-- 内容结束 -->
     <div class="no-more-data" style="display: none;">-&nbsp;已加载全部&nbsp;-</div>
     <div class="loading" style="display: none;"></div>
   </div>

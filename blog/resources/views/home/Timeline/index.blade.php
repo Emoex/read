@@ -66,7 +66,7 @@
      <div class="timeline-list">
      @foreach($cate as $k=>$v)
       <div class="article-type-cpt">
-       <a onclick="cate('{{ $v->name }}','{{ $v->id }}');"><img src="{{ $v->path }}" /><span class="type-bg"></span><span class="type-title">{{ $v->name }}</span><span class="type-des">{{ $v->num }}个</span></a>
+       <a onclick="cate('{{ $v->name }}','{{ $v->id }}');"><img src="{{ $v->path }}" /><span class="type-bg"></span><span class="type-title">{{ $v->name }}</span><span class="type-des">{{ $v->timeline()->count() }}个</span></a>
       </div>
       @endforeach
      </div>

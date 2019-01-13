@@ -1,4 +1,7 @@
 @extends('home/layout/index')
+@section('head')
+    <link rel="stylesheet" type="text/css" href="/home/css/read.css">
+@endsection
 @section('content')
   <div class="index-content" style="padding-top:100px;">
    <div class="article-info-box">
@@ -69,7 +72,7 @@
       @if(!session('user'))
       <div class="if-no-login">
         快来
-       <a class="btn" href="/home/login">登录</a>发表你的精彩评论啦 
+       <a class="btn" href="javascript:;">登录</a>发表你的精彩评论啦 
       </div> 
       @else
       <div class="is-login" style="">
@@ -88,7 +91,7 @@
        $(function(){
           article = function(id){
             confirm('删除的内容不可找回, 确认删除?');
-            $('#confirm div:eq(1)').click(function(){
+            $('#confirm div:eq(1)').unbind("click").click(function(){
               $('.Confirm').addClass('hidden');
               $.post('/home/article/'+id,{'_token':$('input[name=_token]').val(),'_method':'DELETE'},function(msg){
                 if( msg == 'success'){
@@ -188,7 +191,7 @@
    
            destroy = function(id,obj,bj){
               confirm('确认删除？');
-              $('#confirm div').eq(1).click(function(){
+              $('#confirm div').eq(1).unbind("click").click(function(){
                     $.post('/home/article/comment/'+id,{'_token':$('input[name=_token]').val(),'auid':$('input[name=uid]').val(),'_method':'DELETE'},function(data){
                         $('.Confirm').addClass('hidden');     
                         if(data['msg'] == 'success'){
@@ -207,7 +210,7 @@
 
           report = function(id,table){
             confirm('确认要举报吗？');
-            $('#confirm div').eq(1).click(function(){
+            $('#confirm div').eq(1).unbind("click").click(function(){
               $.post('/home/report',{'_token':$('input[name=_token]').val(),'idid':id,'table':table},function(msg){
                  $('.Confirm').addClass('hidden');
                  if(msg == 'success'){
@@ -344,16 +347,7 @@
          </div> 
         </div>
        </div>
-<!-- 提示框 -->
-<div ><div id="error" style="display:none;" class="errorPrompt Prompt"></div></div>
-<div><div id='success' style="display:none;" class="successPrompt Prompt"></div></div>
-<!-- 确认框 -->
-  <div class="Confirm hidden">
-    <div>确认要举报吗？</div>
-    <div class="btn-group" id="confirm">
-      <div>取消</div>
-      <div>确认</div></div>
-  </div>
+
 
 
 <!--        <div class="common-more-btn" style="">

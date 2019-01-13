@@ -9,7 +9,7 @@ use App\Models\Ting;
 use App\Models\Timeline;
 use App\Models\User;
 use App\Models\Follow;
-
+use DB;
 class FeedController extends Controller
 {
     /**
@@ -19,6 +19,7 @@ class FeedController extends Controller
      */
     public function index()
     {
+        $data = [];
         if(session('user')){
             $uid = session('user')['id'];
             $follow_id = Follow::where('uid',$uid)->get(['follow_user']);
@@ -28,9 +29,11 @@ class FeedController extends Controller
                 $ids[] = $v->follow_user;
             }
             $article = Article::whereIn('uid',$ids)->orderBy('created_at','desc')->get(); 
-            $timeline = Timeline::whereIn('uid',$ids)->orderBy('created_at','desc')->get(); 
+            $timeline = Timeline::whereIn('uid',$ids)->orderBy('created_at','desc')->get();
             $ting = Ting::whereIn('uid',$ids)->orderBy('created_at','desc')->get(); 
-            $data = [];
+            // $article = DB::select("SELECT * FROM article WHERE DATEDIFF(created_at,NOW())<=0 AND DATEDIFF(created_at,NOW())>-5 order by created_at desc");
+            // $timeline = DB::select("SELECT * FROM timeline WHERE DATEDIFF(created_at,NOW())<=0 AND DATEDIFF(created_at,NOW())>-5 order by created_at desc");
+            // $ting = DB::select("SELECT * FROM ting WHERE DATEDIFF(created_at,NOW())<=0 AND DATEDIFF(created_at,NOW())>-5 order by created_at desc");
             foreach($article as $k=>$v){
                 $data[] = $v;
             }
@@ -40,20 +43,18 @@ class FeedController extends Controller
             foreach($ting as $k=>$v){
                 $data[] = $v;
             }
-            for($i = 1;$i<count($data);$i++){
-                for($j = 1;$j<count($data)-$i;$j++){
-                    if($data[$j]->created_at < $data[$j+1]->created_at){
+            for($i = 0;$i<count($data);$i++){
+                for($j = 0;$j<count($data)-1-$i;$j++){
+                    if(strtotime(substr($data[$j]->created_at,0,10)) < strtotime(substr($data[$j+1]->created_at,0,10))){
                         $temp = $data[$j];
                         $data[$j] = $data[$j+1];
                         $data[$j+1] = $temp;
                     }
                 }
             }
-           return view('home/feed/index',['data'=>$data]);
-
         }
+       return view('home/feed/index',['data'=>$data]);
 
-        
     }
 
     /**

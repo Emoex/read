@@ -8,6 +8,7 @@ use App\models\ArticleCate;
 use App\models\Article;
 use App\models\ArticleComment;
 use App\models\ArticleLike;
+use App\models\Report;
 use DB;
 class ArticleController extends Controller
 {
@@ -136,6 +137,10 @@ class ArticleController extends Controller
         foreach($article_comment as $k=>$v){
             $v->delete();
         }
+        $report = Report::where('idid',$id)->where('table','article')->get();
+         foreach ($report as $k => $v) {
+             $v->delete();
+         }
         if($res1){
             echo 'success';
         }else{

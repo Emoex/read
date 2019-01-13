@@ -32,7 +32,7 @@
        <a href="../user/user.html?uid=4408715"  class=""><img src="{{ $data->User->face }}" /></a> 
        <a href="../user/user.html?uid=4408715"  class="">{{ $data->User->nickname }}</a> 
        <div>
-        {{ $data->time }}
+        {{ $data->created_at }}
         @if( isset(session('user')['id']) ) 
           @if( session('user')['id'] == $data['uid'] )
             <div>

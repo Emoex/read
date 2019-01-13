@@ -51,6 +51,7 @@ class PersonalController extends Controller
      */
     public function show($id)
     {
+        if(session('user')){
         $user = User::find($id);
         $status = Follow::where('uid',session('user')['id'])->where('follow_user',$id)->get();
         if($status->isEmpty()){
@@ -95,12 +96,28 @@ class PersonalController extends Controller
         $article_num = Article::where('uid',$id)->count();
         $ting_num = Ting::where('uid',$id)->count();
         $timeline_num = Timeline::where('uid',$id)->count();
+
+        $article_comment = ArticleComment::where('uid',session('user')['id'])->get();
+        $pid = [];
+        foreach($article_comment as $k=>$v){
+            $pid[] = $v->id;
+        }
+        $comment_info = ArticleComment::whereIn('parent_id',$pid)->orderBy('created_at','desc')->get();
+        $comment_num = ArticleComment::whereIn('parent_id',$pid)->orderBy('created_at','desc')->count();
+
+        // 粉丝
+        // $fans_info = Follow::where('follow_user',session('user')['id'])->get();
+
         return view('home/personal/index',[
             'user'=>$user,'status'=>$status,'follow_num'=>$follow_num,
             'fans_num'=>$fans_num,'article'=>$article,'article_num'=>$article_num,
             'ting'=>$ting,'timeline'=>$timeline,'ting_num'=>$ting_num,
-            'timeline_num'=>$timeline_num,'follow'=>$follow,'fans'=>$fans
+            'timeline_num'=>$timeline_num,'follow'=>$follow,'fans'=>$fans,
+            'comment_info'=>$comment_info,'comment_num'=>$comment_num,
+            
             ]);
+        }
+
     }
 
     /**

@@ -8,6 +8,7 @@
   <div class="title-cpt">最新动态&nbsp;&nbsp;|&nbsp;&nbsp;Lastest News</div>
   <div class="feed-container">
 
+    @if(isset($data))
     @foreach($data as $k=>$v)
         @if($v->content && $v->title)
         <div class="feed-item">
@@ -82,8 +83,7 @@
           </div>
         @endif    
     @endforeach
-    <!---->
-    <!---->
+  @endif  
   </div>
   <div class="loading" style="display: none;"></div>
   <div class="no-more-data" style="display: none;">-&nbsp;已加载全部&nbsp;-</div></div>
