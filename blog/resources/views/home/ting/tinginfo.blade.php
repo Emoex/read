@@ -15,7 +15,7 @@
            {{ $info->title }}
           </div> 
           <div class="ting-others">
-           {{ $info->listen }} k次播放&nbsp;&nbsp;|&nbsp;&nbsp;评论:&nbsp;33&nbsp;&nbsp;|&nbsp;&nbsp;喜欢:&nbsp;{{ $info->like }}
+           <font id="listen">{{ $info->listen }}</font>次播放&nbsp;&nbsp;|&nbsp;&nbsp;评论:&nbsp;{{ $num }}&nbsp;&nbsp;|&nbsp;&nbsp;喜欢:&nbsp;{{ $info->likes }}
           </div> 
           <div class="authors">
            <div class="ting-author">
@@ -58,24 +58,11 @@
                   }
               })
           </script>
+          @if(isset($info->is_like))
+          <div class="likes-cpt ting-like likes"></div> 
+          @else
           <div class="likes-cpt ting-like"></div> 
-          <div class="ting-share">
-           <div class="share-icon-cpt ting-share-icon"></div> 
-           <div class="share-menu">
-            <div class="drop-menu share-menu-item">
-             <div class="share-cpt">
-              <div class="share-sina"></div> 
-              <div class="share-wechat">
-               <div class="code">
-                <img src="http://api5.pianke.me/version5.0/wxshare/qrcode.php?url=http%3A%2F%2Fpianke.me%2Fversion4.0%2Fweixin02%2Fwxshare.php%23!%2Fradio%2F5b66a442257be97613cf8964" width="200" />
-               </div>
-              </div> 
-              <div class="share-qzone"></div> 
-              <div class="share-dou"></div>
-             </div>
-            </div>
-           </div>
-          </div>
+          @endif
          </div>
         </div> 
         <div class="ting-article-content">
@@ -134,17 +121,17 @@
                   $('.com-textarea').addClass('hidden');
                   $('.com-textarea').eq(index).removeClass('hidden');
 
-                  $('.btn-cancle').click(function(){
+                  $('.btn-cancle').unbind("click").click(function(){
                     $('.com-textarea').eq(index).addClass('hidden');
                   })
                   
-                  $('.send').eq(index).click(function(){
+                  $('.send').eq(index).unbind("click").click(function(){
                     if($('.reply').eq(index).val()){
                       var content = $('.reply').eq(index).val();
                       $.post('/home/ting/comment',{'_token':$('input[name=_token]').val(),'tid':{{ $info->id }},'content':content,'parent_id':parent_id},function(data){
                      if(data['msg'] == 'success'){
                        div = '<div class="comment-content-others"><input type="hidden" name="parent_id" value="'+data['id']+'"><a href="../user/user.html?uid=4934695" target="_blank">　'+data['uname']+':</a>'+data['content']+'<span class="comment-del report" style="display: none;">举报</span><span class="comment-del" style="display:none">删除</span></div>';
-                       $('.comment-content').eq(index).after(div);
+                       $('.com-textarea').eq(index).before(div);
                        $('.com-textarea').eq(index).addClass('hidden'); 
                        $('.reply').eq(index).val('');
                      }else{
@@ -162,14 +149,14 @@
                   $('.com-textarea').eq(index).addClass('hidden');
                } 
             }
-            $('#comment').click(function(e){
+            $('#comment').unbind("click").click(function(e){
                if($(this).prev().val()){
                   $.post('/home/ting/comment',{'_token':$('input[name=_token]').val(),'tid':{{ $info->id }},'content':$('[name=comment]').val(),'parent_id':0},function(data){
                      if(data['msg'] == 'success'){
                            $('.comment-cpt:last').children().first().children().first().attr('href','/home/user/');
                            $('.comment-cpt:last').children().first().children().first().children().first().attr('src',data['face']);
                            $('.comment-user-info:last').children().first().attr('href','/home/user');
-                           $('.comment-user-info:last').children().first().text(data['uname']);
+                           $('.comment-user-info:last').children().first().text(data['nickname']);
                            $('.comment-user-info:last').children().first().next().text('　'+data['time']);
                            $('.comment-content:last').text(data['content']);
                            $('.comment-number:last').text(data['like']);
@@ -185,12 +172,12 @@
                }
             })
             setTimeout(function(){
-             $.post('/home/ting/look',{'_token':$('input[name=_token]').val(),'tid':{{ $info->id }}},function(data){
-                      $('#look').text(data['look']);
+             $.post('/home/ting/listen',{'_token':$('input[name=_token]').val(),'tid':{{ $info->id }}},function(data){
+                      $('#listen').text(data['listen']);
              },'json');
            },5000);
            
-           $('.likes-cpt').click(function(){
+           $('.likes-cpt').unbind("click").click(function(){
             $.post('/home/ting/like',{'_token':$('input[name=_token]').val(),'tid':{{ $info->id }}},function(data){
                       if(data['msg'] == 'like'){
                         $('.likes-cpt').addClass('likes');
@@ -201,9 +188,6 @@
                       }
                       
              },'json');
-           })
-           $('#like').click(function(){
-             click(1);
            })
    
            destroy = function(uid,id,obj,bj){
@@ -277,7 +261,7 @@
                    <div class="comment-user-info">
                     <a href="/home/user" target="_blank">{{ $v->User->nickname }}</a><span>　{{ $v->created_at }}</span>
                     <span class="comment-reply" onclick="dododo({{ $v->id }},this);">回复</span>
-                    @if($v->uid == session('user')['id'] || session('user')['id'] == $ting->uid) 
+                    @if($v->uid == session('user')['id'] || session('user')['id'] == $info->uid) 
                     <span class="comment-del" onclick="destroy({{$v->uid}},{{ $v->id }},this,1)">删除</span>
                     @else
                     <span class="comment-del report" onclick="report({{ $v->id }},'ting_comment')">举报</span>
@@ -290,10 +274,10 @@
                          @foreach($v->children as $kk=>$vv)
                            <div class="comment-content-others">
                               <a href="../user/user.html?uid=4934695" target="_blank">　{{ $vv->User->nickname }}:</a>{{ $vv->content }}
-                              @if($vv->uid == session('user')['id'] || session('user')['id'] == $ting->uid)
+                              @if($vv->uid == session('user')['id'] || session('user')['id'] == $info->uid)
                           <span class="comment-del delete" onclick="destroy({{$vv->uid}},{{ $vv->id }},this,2)">删除</span>
                           @else
-                          <span class="comment-del report" onclick="report({{ $vv->id }},'article_ting')">举报</span>
+                          <span class="comment-del report" onclick="report({{ $vv->id }},'ting_comment')">举报</span>
                           @endif
                            </div>
                           @endforeach
@@ -319,11 +303,10 @@
         </div> 
         <div class="comment-info">
          <div class="comment-user-info">
-          <a href="../user/user.html?uid=3404651" target="_blank">吱吱1453813691</a><span>2018-12-4 13:35</span> 
+          <a href="../user/user.html?uid=3404651" target="_blank">吱吱1453813691</a><span>2018-12-4 13:35</span>  
           <span class="comment-reply">回复</span> 
           <span class="comment-del" style="display: none;">删除</span> 
-          <span class="comment-number">0</span> 
-          <span class="comment-del report">举报</span>
+          <span class="comment-del report" style="display: none;">举报</span>
          </div> 
          <div class="comment-content">
           谢谢
@@ -359,16 +342,6 @@
         </div>
        </div>
       </div>
-<!-- 提示框 -->
-<div ><div id="error" style="display:none;" class="errorPrompt Prompt"></div></div>
-<div><div id='success' style="display:none;" class="successPrompt Prompt"></div></div>   
-<!-- 确认框 -->
-<div class="Confirm hidden">
-  <div>确认要举报吗？</div>
-  <div class="btn-group" id="confirm">
-    <div>取消</div>
-    <div>确认</div></div>
-</div>
 {{ csrf_field() }}
   <div class="back-top hidden"></div> 
 }

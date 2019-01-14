@@ -3,10 +3,6 @@
 
    <div class="container">
     <div class="radio-type">
-     <div class="type-title-cpt">
-      <span class="active">精选</span> 
-      <span class="">全部电台</span>
-     </div>
     </div> 
 
   
@@ -132,10 +128,10 @@
                <a href="/home/ting/{{ $v->id }}" target="_blank">{{ $v->title }}</a>
               </div> 
               <div class="ting-author">
-               <a href="/pages/user/user.html?uid=296663" target="_blank">主播&nbsp;/&nbsp;{{$v->tname}}</a>
+               <a href="/pages/user/user.html?uid=296663" target="_blank">主播&nbsp;/&nbsp;{{ $v->User->nickname }}</a>
               </div> 
               <div class="ting-others">
-               {{ $v->listen }}k次播放&nbsp;&nbsp;|&nbsp;&nbsp;评论:32&nbsp;&nbsp;|&nbsp;&nbsp;喜欢:{{ $v->likes }}
+               {{ $v->listen }}次播放&nbsp;&nbsp;|&nbsp;&nbsp;评论:{{ $v->comment }}&nbsp;&nbsp;|&nbsp;&nbsp;喜欢:{{ $v->likes }}
               </div>
              </div>
             </div>
@@ -160,10 +156,10 @@
            <a href="/home/ting/{{ $v->id }}" target="_blank">{{ $v->title }}</a>
           </div> 
           <div class="ting-author">
-           <a href="/pages/user/user.html?uid=716849" target="_blank">主播&nbsp;/&nbsp;{{ $v->tname }}</a>
+           <a href="/pages/user/user.html?uid=716849" target="_blank">主播&nbsp;/&nbsp;{{ $v->User->nickname }}</a>
           </div> 
           <div class="ting-others">
-           {{ $v->listen }}k次播放&nbsp;&nbsp;|&nbsp;&nbsp;评论:0&nbsp;&nbsp;|&nbsp;&nbsp;喜欢:{{ $v->likes }} 
+           {{ $v->listen }}次播放&nbsp;&nbsp;|&nbsp;&nbsp;评论:{{ $v->comment }}&nbsp;&nbsp;|&nbsp;&nbsp;喜欢:{{ $v->likes }} 
           </div>
          </div>
         </div>
@@ -188,10 +184,10 @@
            <a href="/home/ting/{{ $v->id }}" target="_blank">{{ $v->title }}</a>
           </div> 
           <div class="ting-author">
-           <a href="/pages/user/user.html?uid=4255398" target="_blank">主播&nbsp;/&nbsp;{{ $v->tname }}</a>
+           <a href="/pages/user/user.html?uid=4255398" target="_blank">主播&nbsp;/&nbsp;{{ $v->User->nickname }}</a>
           </div> 
           <div class="ting-others">
-           {{ $v->listen }}次播放&nbsp;&nbsp;|&nbsp;&nbsp;评论:2&nbsp;&nbsp;|&nbsp;&nbsp;喜欢:{{ $v->likes }} 
+           {{ $v->listen }}次播放&nbsp;&nbsp;|&nbsp;&nbsp;评论:{{ $v->comment }}&nbsp;&nbsp;|&nbsp;&nbsp;喜欢:{{ $v->likes }} 
           </div>
          </div>
         </div>

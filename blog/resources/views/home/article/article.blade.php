@@ -57,16 +57,6 @@
         {{ $article->like }} 
       </div>
      @endif 
-      <div class="share-cpt">
-       <div class="share-sina"></div> 
-       <div class="share-wechat">
-        <div class="code">
-         <img width="200" src="http://api5.pianke.me/version5.0/wxshare/qrcode.php?url=http%3A%2F%2Fpianke.me%2Fversion4.0%2Fweixin02%2Fwxshare.php%23!%2Farticle%2F5a4ba0b74cfcf3be5384d9c8" />
-        </div>
-       </div> 
-       <div class="share-qzone"></div> 
-       <div class="share-dou"></div>
-      </div>
      </div> 
      <div class="is-login-cpt">
       @if(!session('user'))

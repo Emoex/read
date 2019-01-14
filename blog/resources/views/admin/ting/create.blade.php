@@ -13,7 +13,14 @@
  <form action="/admin/ting" method="post" enctype="multipart/form-data">
 
    {{ csrf_field() }}
-   
+   <div class="form-group">
+		<label for="uid">用户:</label>
+		<select class="form-control" id="uid" name="uid">
+				@foreach($user as $k=>$v)
+				   <option value="{{ $v->id }}">{{ $v->uname }}</option>
+				@endforeach
+	   </select>
+	</div>
 	<div class="form-group">
 		<label for="title">电台标题:</label>
 		<input type="text" class="form-control" id="title" value="{{ old('uname') }}" name="title" placeholder="电台标题">
@@ -21,14 +28,10 @@
 	<div class="form-group">
 			<label for="tingcate">电台类别:</label>
 			<select class="form-control" id="tingcate" name="tingcate">
-				<option value="">爱情</option>
-				<option value="">旅行</option>
-				<option value="">故事</option>
+				@foreach($tingcate as $k=>$v)
+				<option value="">{{ $v->name }}</option>
+				@endforeach
 			</select>
-	</div>
-	<div class="form-group">
-		<label for="tname">主播:</label>
-		<input type="text" class="form-control" id="tname" value="{{ old('tname') }}" name="tname" placeholder="主播">
 	</div>
 	<div class="form-group">
 		<label for="img">封面:</label>

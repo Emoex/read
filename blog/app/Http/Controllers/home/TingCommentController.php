@@ -5,6 +5,7 @@ namespace App\Http\Controllers\home;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\models\TingComment;
+use App\Models\Report;
 class TingCommentController extends Controller
 {
     /**
@@ -45,6 +46,7 @@ class TingCommentController extends Controller
         $arr = [];
         if($res){
             $arr['uname'] = $comment->User->uname;
+            $arr['nickname'] = $comment->User->nickname;
             $arr['face'] = $comment->User->face;
             $arr['time'] = $comment->created_at->format('Y-m-d H:i:s');
             $arr['like'] = $comment->like;

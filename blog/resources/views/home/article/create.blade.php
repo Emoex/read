@@ -51,7 +51,7 @@
         <div> 
          <input type="text" maxlength="20" name="title" placeholder="请输入标题" style="font-size:17px;" value="{{ old('title') }}" /> 
         </div> 
-        <div class="titleWord text-center pull-right"> 
+        <div class="titleWord text-center pull-right" style="width:100px;"> 
             最长20个字 
         </div> 
        </div> 

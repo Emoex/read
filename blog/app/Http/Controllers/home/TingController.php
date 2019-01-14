@@ -7,16 +7,22 @@ use App\Http\Controllers\Controller;
 use App\Models\Ting;
 use App\Models\TingCate;
 use App\Models\TingComment;
-use DB;
+use App\models\TingLike;
 use App\Models\User;
 use App\Models\Article;
+use App\Models\Report;
+use DB;
 
 
 class TingController extends Controller
 {
     static protected function getComment($tid = 0,$parent_id = 0,&$result = array())
-    {       
-        $arr = TingComment::where('tid',$tid)->where('parent_id',$parent_id)->orderBy('created_at', 'desc')->get();  
+    {   if($parent_id == 0){    
+            $arr = TingComment::where('tid',$tid)->where('parent_id',$parent_id)->orderBy('created_at', 'desc')->get();
+        } else{
+            $arr = TingComment::where('tid',$tid)->where('parent_id',$parent_id)->orderBy('created_at', 'asc')->get(); 
+        } 
+         
         if(empty($arr)){
             return array();
         }
@@ -35,9 +41,18 @@ class TingController extends Controller
     public function index()
     {
         $ting=Ting::all();
-        $listen=DB::select('select * from ting order by listen desc limit 3');
-        $tingid=DB::select('select * from ting order by id desc limit 3');
-        $like=DB::select('select * from ting order by likes desc limit 3');
+        $listen = Ting::orderBy('listen','desc')->offset(0)->limit(3)->get();
+        foreach($listen as $k=>$v){
+              $v->comment = TingComment::where('tid',$v->id)->count();
+        }
+        $tingid = Ting::orderBy('id','desc')->offset(0)->limit(3)->get();
+        foreach($tingid as $k=>$v){
+              $v->comment = TingComment::where('tid',$v->id)->count();
+        }
+        $like = Ting::orderBy('likes','desc')->offset(0)->limit(3)->get();
+        foreach($like as $k=>$v){
+              $v->comment = TingComment::where('tid',$v->id)->count();
+        }
         $cate=TingCate::all();
         return view('/home/ting/redio',['ting'=>$ting,'cate'=>$cate,'listen'=>$listen,'tingid'=>$tingid,'like'=>$like]);
 
@@ -101,6 +116,9 @@ class TingController extends Controller
     {
 
         $info=Ting::find($id);
+        if(session('user')){
+            $info->is_like = TingLike::where('tid',$id)->where('uid',session('user')['id'])->first();
+        }  
         $comment=static::getComment($id);
         $num = TingComment::where('tid',$id)->count();
         $article=Article::where('id',$info->aid)->first();
@@ -143,7 +161,6 @@ class TingController extends Controller
     public function destroy($id)
     {
         $ting = Ting::find($id);
-        dd($ting);
         $ting_comment = ArticleComment::where('tid',$id)->get();
         $res1 = $ting->delete();
         foreach($ting_comment as $k=>$v){
@@ -196,13 +213,13 @@ class TingController extends Controller
             echo json_encode(['msg'=>'error']);
         }
     }
-    public function look(Request $request)
+    public function listen(Request $request)
     {
-        $article = Article::find($request->aid);
-        $article->look = $article->look + 1;
-        $res = $article->save();
+        $ting = Ting::find($request->tid);
+        $ting->listen = $ting->listen + 1;
+        $res = $ting->save();
         if($res){
-            echo json_encode(['look'=>$article->look]);
+            echo json_encode(['listen'=>$ting->listen]);
         }else{
             echo json_encode(['msg'=>'error']);
         }
@@ -210,24 +227,24 @@ class TingController extends Controller
 
     public function like(Request $request)
     {
-        $like = ArticleLike::where('aid',(int)$request->aid)->where('uid',session('user')['id'])->first();
+        $like = TingLike::where('tid',(int)$request->tid)->where('uid',session('user')['id'])->first();
         if(!$like){
-                $article = Article::find($request->aid);
-                $article->like = $article->like + 1;
-                $res = $article->save();
+                $ting = Ting::find($request->tid);
+                $ting->likes = $ting->likes + 1;
+                $res = $ting->save();
                 if($res){
-                    $like = new ArticleLike;
-                    $like->aid = $request->aid;
+                    $like = new TingLike;
+                    $like->tid = $request->tid;
                     $like->uid = session('user')['id'];
                     $like->save();
-                    echo json_encode(['like'=>$article->like,'msg'=>'like']);
+                    echo json_encode(['like'=>$ting->like,'msg'=>'like']);
                 }
             }else{
-                $article = Article::find($request->aid);
-                $article->like = $article->like - 1;
-                $res = $article->save();
+                $ting = Ting::find($request->tid);
+                $ting->likes = $ting->likes - 1;
+                $res = $ting->save();
                 $like = $like->delete();
-                echo json_encode(['like'=>$article->like,'msg'=>'dislike']);
+                echo json_encode(['like'=>$ting->like,'msg'=>'dislike']);
           }
     }
 }

@@ -27,6 +27,7 @@
   @show
  </head> 
  <body  style="overflow: visible;"> 
+  <a id="top"></a>
   <div pause-scroll-trigger="true" style="height: 100%" class="m-index-container">
    <div>
 
@@ -196,7 +197,7 @@
 
 
    @show
-   <div class="back-top"></div> 
+   <label><a href="#top"><div class="back-top"></div></a></label> 
    <footer>
     <div class="foot">
      <div class="foot-logo"></div> 

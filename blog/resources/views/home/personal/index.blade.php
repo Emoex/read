@@ -115,7 +115,7 @@
                 <div class="card-others">
                   <span class="card-type">
                     <a href="/home/article/{{ $v->id }}" target="_blank">阅读</a></span>
-                  <span>{{ $v->look }}次阅读&nbsp;&nbsp;|&nbsp;&nbsp;评论:{{ $v->comment }}&nbsp;&nbsp;|&nbsp;&nbsp;喜欢:{{ $v->like }}</span></div>
+                  <span><font class="article_look">{{ $v->look }}</font>次阅读&nbsp;&nbsp;|&nbsp;&nbsp;评论:<font class="article_comment">{{ $v->comment }}</font>&nbsp;&nbsp;|&nbsp;&nbsp;喜欢:<font class="article_like">{{ $v->like }}</font></span></div>
               </div>
             </div>
     @endforeach
@@ -139,7 +139,7 @@
               <div style="padding-top: 10px" class="card-others">
                 <span class="card-type">
                   <a href="/home/timeline/{{ $v->id }}" target="_blank">碎片</a></span>
-                <span>382次阅读&nbsp;&nbsp;|&nbsp;&nbsp;评论:6&nbsp;&nbsp;|&nbsp;&nbsp;喜欢:18</span></div>
+                <span>382次阅读&nbsp;&nbsp;|&nbsp;&nbsp;评论:{{ $v->comment }}&nbsp;&nbsp;|&nbsp;&nbsp;喜欢:18</span></div>
             </div>
        </div>
     @endforeach
@@ -161,11 +161,11 @@
                 <div class="card-ting-title">
                   <a href="/home/ting/{{ $v->id }}" target="_blank">{{ $v->title }}</a></div>
                 <div class="user-sign">
-                  <a href="/home/personal/{{ $v->uid }}" target="_blank">主播&nbsp;/&nbsp;{{ $v->tname }}</a></div>
+                  <a href="/home/personal/{{ $v->uid }}" target="_blank">主播&nbsp;/&nbsp;{{ $v->User->nickname or $v->User->uname }}</a></div>
                 <div class="card-others">
                   <span class="card-type">
                     <a href="/home/ting/{{ $v->id }}" target="_blank">Ting</a></span>
-                  <span>5.6 k次播放&nbsp;&nbsp;|&nbsp;&nbsp;评论:10&nbsp;&nbsp;|&nbsp;&nbsp;喜欢:101</span></div>
+                  <span><font class="ting_listen">{{ $v->listen }}</font>次播放&nbsp;&nbsp;|&nbsp;&nbsp;评论:<font class="ting_comment">{{ $v->comment }}</font>&nbsp;&nbsp;|&nbsp;&nbsp;喜欢:<font class="ting_like">{{ $v->likes }}</font></span></div>
               </div>
          </div>
       @endforeach
@@ -265,6 +265,9 @@
                           temp.find('.card-content div').eq(0).html(val.content.replace(preg,''));
                           temp.find('.view-all a').eq(0).attr('href','/home/article/'+val.id);
                           temp.find('.card-type a').eq(0).attr('href','/home/article/'+val.id);
+                          temp.find('.article_like').text(val.like);
+                          temp.find('.article_look').text(val.look);
+                          temp.find('.article_comment').text(val.comment);
                           // 追加到内容
                           $('#articles').append(temp);
                           minigrid('#articles','#article');
@@ -292,8 +295,11 @@
                           temp.find('.card-ting-title a').attr('href','/home/ting/'+val.id);
                           temp.find('.card-ting-title a').text(val.title);
                           temp.find('.user-sign a').attr('href','/home/personal/'+val.id);
-                          temp.find('.user-sign a').html("主播&nbsp;/&nbsp;"+val.tname);
+                          temp.find('.user-sign a').html("主播&nbsp;/&nbsp;"+val.nickname);
                           temp.find('.card-type a').attr('href','/home/ting/'+val.id);
+                          temp.find('.ting_like').text(val.likes);
+                          temp.find('.ting_listen').text(val.listen);
+                          temp.find('.ting_comment').text(val.comment);
                           $('#tings').append(temp); 
                           minigrid('#tings','#ting');
                       }

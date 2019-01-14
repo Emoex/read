@@ -4,8 +4,10 @@ namespace App\Http\Controllers\admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Ting;
 use App\Http\Requests\TingStore;
+use App\Models\Ting;
+use App\Models\TingCate;
+use App\Models\User;
 use DB;
 
 class TingController extends Controller
@@ -33,7 +35,9 @@ class TingController extends Controller
      */
     public function create()
     {
-        return view('/admin/ting/create',['title'=>'添加电台']);
+        $user=User::all();
+        $tingcate=TingCate::all();
+        return view('/admin/ting/create',['title'=>'添加电台','tingcate'=>$tingcate,'user'=>$user]);
     }
 
     /**
@@ -48,7 +52,7 @@ class TingController extends Controller
         DB::beginTransaction();
         $ting=new Ting;
         $ting->title=$reqs['title'];
-        $ting->tname=$reqs['tname'];
+        $ting->uid=$reqs['uid'];
         if($request->hasFile('img')){
             $path = $request->file('img')->store('images');
             $ting->img='/uploads/'.$path;
@@ -86,26 +90,9 @@ class TingController extends Controller
      */
     public function edit($id)
     {
-
+        $tingcate=TingCate::all();
         $data=Ting::find($id);
-        return view('/admin/ting/edit',['title'=>'修改电台','data'=>$data]);
-        /*
-        
-        ///
-        $ting=Ting::find($id);
-        $ting->sex=$data['sex'];
-        $ting->face=$data['face'];
-        $ting->tel=$data['tel'];
-        $ting->email=$data['email'];
-        $res=$ting->save();
-
-        if($res){
-            DB::commit();  //提交事务
-            return redirect('/admin/user')->with('success','修改成功');
-        }else{
-            DB::rollBack();
-            return redirect('error','修改失败');
-        }*/
+        return view('/admin/ting/edit',['title'=>'修改电台','data'=>$data,'tingcate'=>$tingcate]);
     }
 
     /**
@@ -120,12 +107,17 @@ class TingController extends Controller
         //
         DB::beginTransaction();
         $data=$request->except(['_token']);
-        dd($data);
         $ting=Ting::find($id);
         $ting->title=$data['title'];
-        $ting->tname=$data['tname'];
-        $ting->img=$data['img'];
-        $ting->tingcate=$data['tingcate'];
+        if($request->hasFile('img')){
+            $path = $request->file('img')->store('images');
+            $ting->img='/uploads/'.$path;
+        }
+        if($request->hasFile('music')){
+            $music = $request->file('music')->store('music');
+            $ting->music='/uploads/'.$music;
+        }
+        $ting->cid=$data['tingcate'];
         $res=$ting->save();
         if($res){
             DB::commit();  //提交事务
