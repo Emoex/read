@@ -78,7 +78,7 @@
            </div>  
            <label>
            <div class="login-btn"> 
-            <font style="vertical-align: inherit;"><input type="submit" value="登录" style="outline:medium;display:inline-block;background:none;border:none;cursor:pointer;"></font>
+            <font style="vertical-align: inherit;"><input id="denglu" type="submit" value="登录" style="outline:medium;display:inline-block;background:none;border:none;cursor:pointer;"></font>
            </div> 
            </label>
           </form>
@@ -242,30 +242,6 @@
       $('.Confirm').addClass('hidden');
     })
   }
-  //碎片喜欢的方法
-  like = function(id,obj,type){
-    @if( !session('user') )
-      error('请先登录');
-      return;
-    @endif
-    $.get('/home/timeline/like',{'id':id},function(msg){
-      if(msg == 'success'){
-        $(obj).addClass('likes');
-        if( type ){
-          var num = $(obj).text();
-          num++;
-          $(obj).text(num);
-        }
-      }else{
-        $(obj).removeClass('likes');
-        if( type ){
-          var num = $(obj).text();
-          num--;
-          $(obj).text(num);
-        }
-      }
-    },'html');
-  }
   //失败调用的方法
   function error(text)
   {
@@ -274,7 +250,32 @@
       $('#error').text('').hide();
     },2000);
   }
-
+    //碎片喜欢的方法
+    like = function(id,obj,type){
+      @if( !session('user') )
+        error('请先登录');
+        return;
+      @endif
+      $.get('/home/timeline/like',{'id':id},function(msg){
+        if(msg == 'success1'){
+          $(obj).addClass('likes');
+          if( type ){
+            var num = $(obj).text();
+            num++;
+            $(obj).text(num);
+          }
+        }else if( msg == 'success2'){
+          $(obj).removeClass('likes');
+          if( type ){
+            var num = $(obj).text();
+            num--;
+            $(obj).text(num);
+          }
+        }else{
+          error('服务器错误！');
+        }
+      },'html');
+    }
   $('.type-title-cpt span').click(function(){
       $('.type-title-cpt span').removeClass('active');
       $(this).addClass('active');

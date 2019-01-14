@@ -28,10 +28,9 @@
 		  	</div>
 		  	<div>
 				  	<select class="form-control" name="cid" id="disabledSelect">
-						<option value="1">碎片标签</option>
-						<option>1</option>
-						<option>1</option>
-						<option>1</option>
+				  		@foreach( $cate as $k=>$v)
+							<option value="{{ $v->id }}">{{ $v->name }}</option>
+						@endforeach
 					</select>
 			</div>
 			<div class="form-group" style="float:left;">

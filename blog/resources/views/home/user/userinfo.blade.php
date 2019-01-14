@@ -59,9 +59,9 @@
 <script>
       $(function(){
           $('.radiovote input:radio').change(function(){
-                   $('.radiovote img').attr('src','/images/radioN.png');
-                   $(this).next().next().attr('src','/images/radioY.png');
-                })
+            $('.radiovote img').attr('src','/images/radioN.png');
+            $(this).next().next().attr('src','/images/radioY.png');
+          })
       function ajax(){
         $.ajax({
             url:'/home/userinfo/1',
@@ -74,7 +74,7 @@
               if(obj.msg == 'success'){
                   $('#face1').attr('src',obj.face);
                   $('#face2').attr('src',obj.face);
-                  $('input:[name=nikname]').val(obj.nickname);
+                  $('input[name=nickname]').val(obj.nickname);
                   $('[name=intro]').val(obj.intro);
               }else{
                 alert('修改失败');

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Conf;
+use Illuminate\Support\Facades\Storage;
 
 class SlideController extends Controller
 {
@@ -26,7 +27,7 @@ class SlideController extends Controller
      */
     public function create()
     {   
-        
+        return view('admin/Conf/Slide/create');
     }
 
     /**
@@ -36,8 +37,25 @@ class SlideController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        //
+    {   
+        if( $request->hasfile('content') ){
+            $path = $request->file('content')->store('images');
+            if($path){
+                $Conf = new Conf;
+                $Conf->name = 'Slide';
+                $Conf->content = $path;
+                $res = $Conf->save();
+                if($res){
+                    return redirect('admin/Conf/Slide')->with('success','添加成功');
+                }else{
+                    return back()->with('error','添加失败');
+                }
+            }else{
+                return back()->with('error','添加失败');
+            }     
+        }else{
+            return back()->with('error','请选择图片');
+        }
     }
 
     /**
@@ -60,7 +78,7 @@ class SlideController extends Controller
     public function edit($id)
     {
         $data = Conf::find($id);
-        return view('admin/Conf/Slide/create',['title'=>'轮播图修改','data'=>$data]);
+        return view('admin/Conf/Slide/edit',['title'=>'轮播图修改','data'=>$data]);
     }
 
     /**
@@ -92,7 +110,19 @@ class SlideController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    {
-        //
+    {   
+        $path = Conf::find($id)['content'];
+        $res = Conf::where('id',$id)->delete();
+        if($res){
+            $res1 = Storage::delete($path);
+            if($res1){
+                return redirect('admin/Conf/Slide')->with('success','删除成功');
+            }else{
+                return back()->with('error','删除失败');
+            }
+        }else{
+            return back()->with('error','删除失败');
+        }
+
     }
 }

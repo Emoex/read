@@ -1,9 +1,10 @@
 @extends('admin/layout/index')
 
 @section('content')
+<a href="/admin/Conf/Slide/create" class="btn btn-info" id="tianjia">添加轮播图</a><br><br>
 	<div class="card">
-		<div class="card-body">
-			<table class="table table-hover" center>
+		<div class="card-body" >
+			<table class="table table-hover" >
 				<thead>
 					<tr>
 						<th scope="col">ID</th>
@@ -15,9 +16,14 @@
 				@foreach($data as $k=>$v)
 					<tr>
 						<td>{{ $v->id }}</td>
-						<td><img src="/uploads/{{ $v->content }}"></td>
+						<td width="500px"><img src="/uploads/{{ $v->content }}" style="width:80%"></td>
 						<td>
 							<a href="/admin/Conf/Slide/{{ $v->id }}/edit" class="btn btn-warning">修改</a>
+							<form action="/admin/Conf/Slide/{{ $v->id }}" method="post" style="display:inline-block;">
+								{{ csrf_field() }}
+								{{ method_field('DELETE') }}
+								<input type="submit" value="删除" class="btn btn-danger">
+							</form>
 						</td>
 					</tr>
 				@endforeach
@@ -25,4 +31,7 @@
 			</table>
 		</div>
 	</div>
+	<script type="text/javascript">
+
+	</script>
 @endsection

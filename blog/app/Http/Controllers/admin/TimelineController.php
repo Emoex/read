@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\admin;
 
-use App\Models\admin\timeline;
+use App\Models\timeline;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\timelineStore;
 use Illuminate\Support\Facades\Storage;
+use App\Models\TimelineCate;
 
 class TimelineController extends Controller
 {
@@ -17,7 +18,7 @@ class TimelineController extends Controller
      */
     public function index(Request $request)
     {   
-        $data = timeline::get();
+        $data = timeline::orderBy('created_at','desc')->get();
         return view('admin/Timeline/index',['title'=>'碎片管理','data'=>$data]);
     }
 
@@ -27,8 +28,9 @@ class TimelineController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {
-        return view('admin/Timeline/create',['title'=>'添加碎片']);
+    {   
+        $cate = TimelineCate::get();
+        return view('admin/Timeline/create',['title'=>'添加碎片','cate'=>$cate]);
     }
 
     /**
@@ -38,21 +40,29 @@ class TimelineController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function store(timelineStore $request)
+    public function store(Request $request)
     {   
         $data = $request->except(['_token','profile']);
-        if($request->hasFile('profile')){
-            $image = $request->file('profile')->store('images');
-            $data['image'] = $image;
-        }
-        $data['uid'] = 1;
-        $data['time'] = date('Y-m-d H:i:s',time());
-        $res = timeline::insert($data);
-        if($res){
-            return redirect('admin/timeline/create')->with('success','添加成功');
+        if( $data['content'] ){
+            $timeline = new timeline;
+            $timeline->cid = $data['cid'];
+            $timeline->content = $data['content'];
+            $timeline->public = $data['public'];
+            $timeline->uid = session('user')['id'];
+            if($request->hasFile('profile')){
+                $image = $request->file('profile')->store('images');
+                $timeline->image = '/uploads/'.$image;
+            }
+            $res = $timeline->save();
+            if($res){
+                return redirect('admin/timeline/create')->with('success','添加成功');
+            }else{
+                return back()->with('error','添加失败');
+            }
         }else{
-            return back()->with('error','添加失败');
+            return back()->with('error','请填写内容');
         }
+        
     }
 
     public function profile(Request $request)

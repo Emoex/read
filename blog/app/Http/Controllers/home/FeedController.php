@@ -31,6 +31,7 @@ class FeedController extends Controller
             $article = Article::whereIn('uid',$ids)->orderBy('created_at','desc')->get(); 
             $timeline = Timeline::whereIn('uid',$ids)->orderBy('created_at','desc')->get();
             $ting = Ting::whereIn('uid',$ids)->orderBy('created_at','desc')->get(); 
+
             foreach($article as $k=>$v){
                 $data[] = $v;
             }

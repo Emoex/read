@@ -29,8 +29,8 @@
     <div class="timeline-container"> 
      <div class="left-content">
     	<div class="timeline-author">
-       <a href="../user/user.html?uid=4408715"  class=""><img src="{{ $data->User->face }}" /></a> 
-       <a href="../user/user.html?uid=4408715"  class="">{{ $data->User->nickname }}</a> 
+       <a href="/home/personal/{{ $data->uid }}"  class=""><img src="{{ $data->User->face }}" /></a> 
+       <a href="/home/personal/{{ $data->uid }}"  class="">{{ $data->User->nickname }}</a> 
        <div>
         {{ $data->created_at }}
         @if( isset(session('user')['id']) ) 
@@ -42,14 +42,14 @@
             </div>
           @else
           <div>
-           <div class="del-btn">
+           <div class="del-btn" onclick="report({{ $data->id }},'timeline')">
             举报
            </div>
           </div>
           @endif
         @else 
         <div>
-         <div class="del-btn">
+         <div class="del-btn" onclick="report( {{ $data->id }},'timeline')">
           举报
          </div>
         </div>
@@ -115,22 +115,21 @@
             @foreach( $comment as $k=>$v)
             <div class="comment-cpt">
               <div class="comment-user-icon">
-                <a href="" target="_blank" class=""><img src="{{ $v->User->face }}" /></a>
+                <a href="/home/personal/{{ $v->uid }}" target="_blank" class=""><img src="{{ $v->User->face }}" /></a>
               </div> 
               <div class="comment-info">
                 <div class="comment-user-info">
-                 <a href="" target="_blank" class=""> {{ $v->User->nickname }}</a>
+                 <a href="/home/personal/{{ $v->uid }}" target="_blank" class=""> {{ $v->User->nickname }}</a>
                   {{ $v->time }}
                  <span class="comment-reply" onclick="huifu(this)">回复</span>
                   @if( isset(session('user')['id']) ) 
                     @if( session('user')['id'] == $v['uid'] ) 
-                      <span class="comment-del" onclick="del_pl({{$v->id}},this)">删除</span> 
+                      <span class="comment-del" onclick="del_pl({{$v->id}},this,1)">删除</span> 
                     @endif
                   @endif
-                 <span class="comment-number">0</span>
                   @if( isset(session('user')['id']) ) 
                     @if( session('user')['id'] !== $v['uid'] )  
-                      <span class="comment-del report">举报</span>
+                      <span class="comment-del report" onclick="report( {{ $v->id }},'timeline_comment')">举报</span>
                     @endif
                   @endif
                 </div> 
@@ -150,14 +149,14 @@
                 </div>
                   @foreach( $v->children as $kk => $vv )
                     <div class="comment-content-others">
-                      <a href=" " target="_blank" class="">{{ $vv->User->nickname }}:</a>{{ $vv->content }}
+                      <a href="/home/personal/{{ $vv->uid }}" target="_blank" class="">{{ $vv->User->nickname }}:</a>{{ $vv->content }}
                       @if( !isset(session('user')['id']) )
-                          <span class="comment-del">举报</span>
+                          <span class="comment-del" onclick="report( {{ $vv->id }},'timeline_comment' )">举报</span>
                       @else 
                         @if( session('user')['id'] == $v['uid'])
-                          <span class="comment-del">删除</span>
+                          <span class="comment-del" onclick="del_pl({{ $vv->id }},this,0)">删除</span>
                         @else
-                          <span class="comment-del">举报</span>
+                          <span class="comment-del" onclick="report( {{ $vv->id }},'timeline_comment' )">举报</span>
                         @endif
                       @endif
                     </div>
@@ -220,7 +219,7 @@
             </div>  
             <div class="card-user">
              <div class="card-user-info">
-              <a href="" class=""><img src="{{ $v->face }}" width="" />{{ $v->nickname }}</a>
+              <a href="/home/personal/{{ $v->uid }}" class=""><img src="{{ $v->face }}" width="" />{{ $v->nickname }}</a>
              </div>
              @if( $v->like ) 
               <div class="likes-cpt card-likes likes" onclick="like({{ $v->id }},this,0)"></div>
@@ -241,6 +240,14 @@
    <div class="back-top hidden"></div> 
   </div>
   <script type="text/javascript">
+    //成功消息
+    function success(text)
+    {
+      $('#success').text(text).show();
+      setTimeout(function(){
+        $('#success').text('').hide();
+      },2000);
+    }
     del_sp = function(id){
       confirm('删除的内容不可找回, 确认删除?');
       $('#confirm>div:eq(1)').click(function(){
@@ -256,6 +263,22 @@
             error('服务器错误,删除失败！');
           }
         },'html'); 
+      })
+    }
+    report = function(id,table){
+      confirm('你确定要举报吗?');
+      $('#confirm>div:eq(1)').unbind("click").click(function(){
+        $('.Confirm').addClass('hidden');
+        $.ajaxSetup({
+          headers: { 'X-CSRF-TOKEN':'{{ csrf_token() }}' }
+        })
+        $.post('/home/report',{'idid':id,'table':table},function(msg){
+          if(msg == 'success'){
+            success('举报成功');
+          }else{
+            error('你已经举报过了');
+          }
+        },'html');
       })
     }
     huifu = function(obj){
@@ -278,10 +301,12 @@
         }else if( data.msg == 'error' ){
           error('服务器错误,回复失败');
         }else{
-          div = '<div class="comment-content-others"><a href=" " target="_blank" class="">'+data.nickname+':</a>'+data.content+'<span class="comment-del report" style="display: none;">举报</span> <span class="comment-del">删除</span></div>';
+          div = '<div class="comment-content-others"><a href="/home/personal/'+data.uid+'" target="_blank" class="">'+data.nickname+':</a>'+data.content+'<span class="comment-del report" style="display: none;">举报</span> <span class="comment-del" onclick="del_pl('+data.id+',this,0)">删除</span></div>';
           $(obj).parent().parent().find('#replyTextarea').val('');
           $(obj).parent().parent().addClass('hidden');
-          $(obj).parent().parent().after(div);
+          $(obj).parent().parent().parent().append(div);
+          var num = $('#pinglun font').text();num++;
+          $('#pinglun font').text(num);
         }
       },'json');
     }
@@ -289,18 +314,21 @@
       $(obj).parent().parent().find('#replyTextarea').val('');
       $(obj).parent().parent().addClass('hidden');
     }
-    del_pl = function(id,obj){
+    del_pl = function(id,obj,type){
       confirm('删除的内容不可找回, 确认删除?');
       $('#confirm>div:eq(1)').unbind('click').click(function(){
         $('.Confirm').addClass('hidden');
         $.ajaxSetup({
           headers: { 'X-CSRF-TOKEN':'{{ csrf_token() }}' }
         })
-        $.post('/home/timeline/comment/'+id,{'_method':'DELETE'},function(msg){
-          if( msg == 'success'){
-            $(obj).parent().parent().parent().remove();
-            var num = $('#pinglun font').text();num--;
-            console.log(num);
+        $.post('/home/timeline/comment/'+id,{'_method':'DELETE'},function(data){
+          if( data.msg !== 'error'){
+            if(type){
+              $(obj).parent().parent().parent().remove();
+            }else{
+              $(obj).parent().remove();
+            }    
+            var num = $('#pinglun font').text();num-=data.msg;
             if( num == 0 ){
               $('.comment-list-group').css('display','none');
               $('.no-comment').css('display','block');
@@ -310,7 +338,7 @@
             $('.Confirm').addClass('hidden');
             error('服务器错误,删除失败！');
           }
-        },'html'); 
+        },'json'); 
       })
     }
     $('#fabpl').click(function(){
@@ -323,9 +351,9 @@
         }else if( data.msg == 'empty' ){
           error('请输入内容');
         }else{
-          var div = '<div class="comment-cpt"><div class="comment-user-icon"><a href="" target="_blank" class=""><img src="'+data.face+'" /></a></div><div class="comment-info"><div class="comment-user-info"><a href="" target="_blank" class="">'+data.nickname+'</a>'+data.time+'<span class="comment-reply" onclick="huifu(this)">回复</span> <span class="comment-del" onclick="del_pl('+data.id+',this)">删除</span> <span class="comment-number">0</span> <span class="comment-del report" style="display: none;">举报</span></div> <div class="comment-content">'+data.content+'</div> <div class="com-textarea hidden"><textarea name="" id="replyTextarea" maxlength="360" placeholder="请输入回复内容"></textarea> <div class="btn-group"><div class="btn" id="fasong" onclick="fasong('+data.id+',this)">发送</div> <div class="btn-cancle" id="quxiao" onclick="quxiao(this)">取消</div></div></div> </div></div>';
+          var div = '<div class="comment-cpt"><div class="comment-user-icon"><a href="/home/personal/'+data.uid+'" target="_blank" class=""><img src="'+data.face+'" /></a></div><div class="comment-info"><div class="comment-user-info"><a href="/home/personal/'+data.uid+'" target="_blank" class="">'+data.nickname+'</a>'+data.time+'<span class="comment-reply" onclick="huifu(this)">回复</span> <span class="comment-del" onclick="del_pl('+data.id+',this,1)">删除</span>  <span class="comment-del report" style="display: none;">举报</span></div> <div class="comment-content">'+data.content+'</div> <div class="com-textarea hidden"><textarea name="" id="replyTextarea" maxlength="360" placeholder="请输入回复内容"></textarea> <div class="btn-group"><div class="btn" id="fasong" onclick="fasong('+data.id+','+data.tid+',this)">发送</div> <div class="btn-cancle" id="quxiao" onclick="quxiao(this)">取消</div></div></div> </div></div>';
           $('.no-comment').css('display','none');
-          $('.comment-list-group').css('display','block').prepend(div);
+          $('.comment-list-group').css('display','block').append(div);
           $('#comments').val('');
           var num = $('#pinglun font').text();num++;
           $('#pinglun font').text(num);

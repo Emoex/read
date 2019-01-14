@@ -12,6 +12,7 @@ use App\models\TimelineCate;
 use App\Models\TimelineLike; 
 use App\Models\User;
 use App\Models\TimeLineComment;
+use Illuminate\Support\Facades\Storage;
 
 class TimelineController extends Controller
 {   
@@ -30,14 +31,14 @@ class TimelineController extends Controller
             $p = $request->input('p');
             $num = $request->input('num');
             $cate = TimelineCate::find($id);
-            $data = $cate->timeline()->skip(($p-1)*$num)->take($num)->orderBy('created_at','desc')->get();
+            $data = $cate->timeline()->where('public',1)->skip(($p-1)*$num)->take($num)->orderBy('created_at','desc')->get();
             if(!$data->isEmpty()){
                 foreach ($data as $k => $v) {
                    $v['uid'] = $v->User->id;
                    $v['nickname'] = $v->User->nickname;
                    $v['face'] = $v->User->face;
                    if( isset($uid) ){
-                        $v['like'] = Timelinelike::where('tid',$v['id'])->where('uid',$uid)->first();
+                        $v['like_ta'] = Timelinelike::where('tid',$v['id'])->where('uid',$uid)->first();
                    }
                 }
                 echo json_encode($data);
@@ -46,14 +47,14 @@ class TimelineController extends Controller
             }
         }else if( $p = $request->input('p') && $num=$request->input('num') ){
             $p = $request->input('p');
-            $data = Timeline::offset(($p-1)*$num)->limit($num)->orderBy('created_at','desc')->get();
+            $data = Timeline::where('public',1)->offset(($p-1)*$num)->limit($num)->orderBy('created_at','desc')->get();
             if(!$data->isEmpty()){
                 foreach ($data as $k => $v) {
                    $v['uid'] = $v->User->id;
                    $v['nickname'] = $v->User->nickname;
                    $v['face'] = $v->User->face;
                    if( isset($uid) ){
-                        $v['like'] = Timelinelike::where('tid',$v['id'])->where('uid',$uid)->first();
+                        $v['like_ta'] = Timelinelike::where('tid',$v['id'])->where('uid',$uid)->first();
                     }
                 }
                 echo json_encode($data);
@@ -98,7 +99,9 @@ class TimelineController extends Controller
             $timeline = new Timeline;
             //uid为session的id
             $timeline->uid = session('user')['id'];
-            $timeline->content = $data['content']; 
+
+            //内容
+            $timeline->content = $data['content'];
             //判断是否为秘密
             if($data['cid'] == '秘密'){
                 $timeline->public = 2;
@@ -191,7 +194,8 @@ class TimelineController extends Controller
     }
 
     public function like(Request $request)
-    {
+    {   
+        DB::beginTransaction();
         $tid = $request->input('id');
         $uid = session('user')['id'];
         $res = TimelineLike::where('tid',$tid)->where('uid',$uid)->first();
@@ -199,12 +203,27 @@ class TimelineController extends Controller
             $timelineLike = new TimelineLike;
             $timelineLike->tid = $tid;
             $timelineLike->uid = $uid;
-            $res = $timelineLike->save();
-            echo 'success';
+            $res1 = $timelineLike->save();
+            $res2 = timeline::where('id',$tid)->increment('like');
+            if( $res1 && $res2){
+                DB::commit();
+                echo 'success1';
+            }else{
+                DB::rollBack();
+                echo 'error';
+            }
         }else{
             $id = $res['id'];
-            Timelinelike::where('id',$id)->delete();
-            echo 'error';
+            $res1 = Timelinelike::where('id',$id)->delete();
+            $res2 = timeline::where('id',$tid)->decrement('like');
+            if( $res1 && $res2){
+                DB::commit();
+                echo 'success2';
+            }else{
+                DB::rollBack();
+                echo 'error';
+            }
+            
         }
 
     }
@@ -242,14 +261,28 @@ class TimelineController extends Controller
         //开启事务
         DB::beginTransaction();
         $data = Timeline::find($id);
+        $res1 = Timeline::where('id',$id)->delete();
         //判断是否有喜欢的记录
-        $jilu = TimelineLike::where('tid',$data['id'])->first();
-        if( $jilu ){
-            //删除这个碎片
-            $res1 = Timeline::where('id',$id)->delete();
-            //删除喜欢表中所有的数据
-            $res2 = TimelineLike::where('tid',$data['id'])->delete();
-            if( $res1 && $res2 ){
+        if(TimelineLike::where('tid',$data['id'])->first()){
+            $res2 = TimelineLike::where('tid',$id)->delete();
+        }else{
+            $res2 = true;
+        }
+        //判断是否有评论
+        if(TimeLineComment::where('tid',$id)->first()){
+            $res3 = TimeLineComment::where('tid',$id)->delete();
+        }else{
+            $res3 = true;
+        }
+        if( $res1 && $res2 && $res3 ){
+            //判断是否有图片 
+            if($data->image){
+                $res4 = Storage::delete( ltrim($data->image,'/uploads/') );
+            }else{
+                $res4 = true;
+            }
+
+            if($res4){
                 DB::commit();
                 echo 'success';
             }else{
@@ -257,15 +290,8 @@ class TimelineController extends Controller
                 echo 'error';
             }
         }else{
-            //删除这个碎片
-            $res = Timeline::where('id',$id)->delete();
-            if( $res ){
-                DB::commit();
-                echo 'success';
-            }else{
-                DB::rollBack();
-                echo 'error';
-            }
+            DB::rollBack();
+            echo 'error';
         }
         
     }

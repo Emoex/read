@@ -109,7 +109,7 @@
    <div class="back-top hidden"></div>
 
   <script type="text/javascript">
-          //公开或者秘密
+      //公开或者秘密
       $('#gongkai').click(function(){
         $(this).attr('class','active');
         $('#mimi').removeClass('active');
@@ -305,9 +305,9 @@
               temp.find('.card-content>a').attr('href','/home/timeline/'+val.id);
               temp.find('.card-content>a').text(val.content);
               temp.find('.card-user-info>a>span').text(val.nickname);
-              temp.find('.card-user-info>a').attr('href',111);
+              temp.find('.card-user-info>a').attr('href','/home/personal/'+val.uid);
               temp.find('.card-user-info>a>img').attr('src',val.face);
-              if(val.like){
+              if(val.like_ta){
                 temp.find('.likes-cpt').addClass('likes').click(function(){ like(val.id,this,0) });
               }else{
                 temp.find('.likes-cpt').click(function(){ like(val.id,this,0) });

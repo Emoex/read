@@ -389,13 +389,7 @@
 									<li>
 										<a href="/admin/Conf">
 											<i class="la la-reorder"></i>
-											<p>网站标题管理</p>
-										</a>
-									</li>
-									<li>
-										<a href="">
-											<i class="la la-plus-circle"></i>
-											<p>网站login管理</p>
+											<p>网站管理</p>
 										</a>
 									</li>
 									<li>

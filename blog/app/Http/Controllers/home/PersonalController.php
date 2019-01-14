@@ -11,6 +11,7 @@ use App\Models\Ting;
 use App\Models\Timeline;
 use App\Models\ArticleComment;
 use App\Models\TingComment;
+
 class PersonalController extends Controller
 {
     /**
@@ -96,6 +97,7 @@ class PersonalController extends Controller
         foreach($ting as $k=>$v){
             $v->comment = TingComment::where('tid',$v->id)->count();
         }
+
         $article_num = Article::where('uid',$id)->count();
         $ting_num = Ting::where('uid',$id)->count();
         $timeline_num = Timeline::where('uid',$id)->count();
@@ -167,6 +169,7 @@ class PersonalController extends Controller
                     foreach($article as $k=>$v){
                         $v->comment = ArticleComment::where('aid',$v->id)->count();
                     }
+
                     echo json_encode($article);
                 }else{
                     echo json_encode(['msg'=>'error']);
@@ -187,6 +190,7 @@ class PersonalController extends Controller
                         $v->nickname = $v->User->nickname ? $v->User->nickname : $v->User->uname;
                         $v->comment = TingComment::where('tid',$v->id)->count();
                     }
+
                     echo json_encode($ting);
                 }else{
                     echo json_encode(['msg'=>'error']);

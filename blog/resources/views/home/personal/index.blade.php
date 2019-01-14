@@ -80,9 +80,8 @@
 <!--     <span class="">
       <a>评论</a>(13)</span>
     <span class="">
+<<<<<<< HEAD
       <a>喜欢</a>(0)</span> -->
-    <!-- <span class="">
-      <a>片邮</a>(2)</span> -->
   </div>
   <div class="data-title data-title-like" style="display: none;">
     <span class="active">
@@ -139,7 +138,8 @@
               <div style="padding-top: 10px" class="card-others">
                 <span class="card-type">
                   <a href="/home/timeline/{{ $v->id }}" target="_blank">碎片</a></span>
-                <span>382次阅读&nbsp;&nbsp;|&nbsp;&nbsp;评论:{{ $v->comment }}&nbsp;&nbsp;|&nbsp;&nbsp;喜欢:18</span></div>
+                <span>评论:{{ $v->comment }}&nbsp;&nbsp;|&nbsp;&nbsp;喜欢:{{ $v->like }}</span></div>
+
             </div>
        </div>
     @endforeach
@@ -268,6 +268,7 @@
                           temp.find('.article_like').text(val.like);
                           temp.find('.article_look').text(val.look);
                           temp.find('.article_comment').text(val.comment);
+
                           // 追加到内容
                           $('#articles').append(temp);
                           minigrid('#articles','#article');
@@ -355,6 +356,7 @@
 
                 }
             })
+
             
 
 
@@ -493,6 +495,7 @@
                     },'html')
                 }    
             }
+
 
             follow = function(uid,type,obj){
               var index = $(obj).parents('.user-like-cpt').index();

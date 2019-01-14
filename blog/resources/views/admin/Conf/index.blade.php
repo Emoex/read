@@ -16,7 +16,7 @@
 			</font>
 		</label>
 		<label for="logo">
-			<img src="/uploads/{{ $path }}" title="点击图片更换Logo" width="80" height="37">
+			<img src="/uploads/{{ $path }}" id="new_logo" title="点击图片更换Logo" width="80" height="37">
 		</label>
 		<form style="display: none;" id="logo_file" action="upload_file.php" method="post" ectype="multipart/form-data">
 			{{ csrf_field() }}
@@ -27,20 +27,24 @@
 <script type="text/javascript">
 	$(function(){
 		$('#logo').change(function(){
+			var logo = new FormData($('#logo_file')[0]);
+			$.ajaxSetup({
+	          headers: { 'X-CSRF-TOKEN':'{{ csrf_token() }}' }
+	        })
 		 	$.ajax({
 				type:'POST',
 				url:'/admin/Conf/Logo_update',
-				data:{'data':new FormData($('#logo_file')[0]),'_token':$('#logo_file')[1]},
+				data:logo,
 				processData:false,
 				contentType:false,
-				success:function(obj){
-					if(obj = 111){
-						alert(1);
+				success:function(msg){
+					if( msg	!== 'error'){
+						$('#new_logo').attr('src','/uploads/'+msg);
 					}else{
 						alert('头像更换失败');
 					}
 				},
-				dataType:'json',
+				dataType:'html',
 			})
 		});
 	});

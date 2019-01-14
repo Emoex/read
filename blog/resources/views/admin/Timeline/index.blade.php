@@ -19,10 +19,9 @@
 						<td>{{ $v->id }}</td>
 						<td>{{ $v->id }}</td>
 						<td>{{ $v->uid }}</td>
-						<td>{{ $v->time }}</td>
+						<td>{{ $v->created_at }}</td>
 						<td>
 							<a href="/admin/timeline/{{ $v->id }}" class="badge badge-info" >信息</a>	
-							<a href="" class="badge badge-warning">修改</a>
 							<a href="javscript:;" class="badge badge-danger" onclick="delete1({{ $v->id }},this)">删除</a>
 						</td>
 					</tr>

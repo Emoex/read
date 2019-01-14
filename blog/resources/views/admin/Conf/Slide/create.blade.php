@@ -1,13 +1,9 @@
 @extends('admin/layout/index')
 
 @section('content')
-	<div class="card">
-		<form action="/admin/Conf/Slide/{{$data->id}}" method="post" enctype="multipart/form-data">
-			{{ csrf_field() }}
-			{{ method_field('PUT') }}
-			<img src="/uploads/{{ $data['content'] }}"><br><br>
-			<input type="file" name="content"><br><br>
-			<input class="btn btn-warning" type="submit" value="修改">
-		<form>
-	<div>
+	<form action="/admin/Conf/Slide" method="post" enctype="multipart/form-data">
+		{{ csrf_field() }}
+		<input type="file" name="content">
+		<input type="submit" value="提交" class="btn btn-info">
+	</form>
 @endsection

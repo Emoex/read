@@ -92,24 +92,23 @@ class ConfController extends Controller
     }
     public function logo_update(Request $request)
     {   
-        echo 111;
-        // if($request->hasFile('logo')){
-        //     $logo = $request->file('logo');
-        //     $ext = $profile->extension();
-        //     $name = 'Logo'.'.'.$ext;
-        //     $path = $profile->storeAs('images',$name);
-        //     echo 111;
-        // }else{
-        //     return back()->with('error','请选择文件');
-        // }
-        // $data = Conf::find(2);
-        // $data->content = $path;
-        // $res = $data->save();
-        // if($res){
-        //     echo 'success';
-        // }else{
-        //     echo 'error';
-        // }
+        if($request->hasFile('logo')){
+            $path = $request->file('logo')->store('images');
+            if($path){
+                $data = Conf::find(2);
+                $data->content = $path;
+                $res = $data->save();
+                if($res){
+                    echo $path;
+                }else{
+                    echo 'error';
+                }
+            }else{
+                echo 'error';
+            }
+        }else{
+            return back()->with('error','请选择文件');
+        }
     }
     /**
      * Remove the specified resource from storage.

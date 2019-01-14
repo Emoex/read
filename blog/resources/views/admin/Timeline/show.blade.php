@@ -6,20 +6,20 @@
 			<div style="width:100%; height:40px;margin-bottom:40px;">
 				<div style="float:left;">
 					<a href="#">
-						<img src="/uploads/1.png" style="width:40px;height:40px;"></img>
+						<img src="{{ $data->User->face}}" style="width:40px;height:40px;"></img>
 					</a>
-					<a href="#">1111</a>
+					<a href="#">{{ $data->User->nickname }}</a>
 				</div>
 				<div style="float:right;height:40px;line-height:40px;">
 					<font style="vertical-align: inherit;">
-						{{ $data->time }}
+						{{ $data->created_at }}
 					</font>	
 				</div>
 			</div>
 
 			@if($data->image)
 				<div style="width:100%;">
-					<img width="100%" src="/uploads/{{ $data->image }}"></img>
+					<img width="100%" src="{{ $data->image }}"></img>
 				</div>
 				<div style="padding-top:40px;padding-bottom:20px;">
 					<font style="vertical-align: inherit;">{{ $data->content }}</font>
@@ -37,7 +37,7 @@
 					<font>{{ $data->like }}</font>
 				</div>
 				<div style="float:right;height:30px;line-height:30px;">
-					<font size="5px;">评论：</font><font size="3px;">{{ $data->like }}</font>
+					<font size="5px;">评论：</font><font size="3px;">{{ $data->comment()->count() }}</font>
 				</div>
 			</div>
 		</div>

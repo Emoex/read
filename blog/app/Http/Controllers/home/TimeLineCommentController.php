@@ -121,11 +121,11 @@ class TimeLineCommentController extends Controller
      */
     public function destroy($id)
     {
-        $res = TimeLineComment::where('id',$id)->delete();
+        $res = TimeLineComment::where('id',$id)->orwhere('parent_id',$id)->delete();
         if( $res ){
-            echo 'success';
+            echo json_encode(['msg'=>$res]);
         }else{
-            echo 'error';
+            echo json_encode(['msg'=>$res]);
         }
     }
 }

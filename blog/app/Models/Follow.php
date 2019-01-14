@@ -4,17 +4,17 @@ namespace App\models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Ting extends Model
+class Follow extends Model
 {
-    public $table='ting';
-   
+    protected $table = 'follow';
+
     public function User()
     {
     	return $this->belongsTo('App\models\User','uid');
     }
 
-    public function Article()
+    public function Follow_user()
     {
-    	return $this->belongsTo('App\models\Article','aid');
+    	return $this->belongsTo('App\models\User','follow_user');
     }
 }
