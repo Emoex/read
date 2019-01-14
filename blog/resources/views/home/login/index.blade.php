@@ -8,9 +8,9 @@
   <!-- <script src="js/wsdk.js" charset="utf-8"></script>  --> 
  </head> 
  <body> 
-  <div class="login" style=""> 
-   <a href="/home/index"><div class="close-login-box"></div></a> 
-   <div class="login-box"> 
+<div class="login" style="display:none;"> 
+  <a href="/home/index"><div class="close-login-box"></div></a> 
+  <div class="login-box"> 
     <div class="pianke-text"> 
      <font style="vertical-align: inherit;"><font style="vertical-align: inherit;">世界很美，而你正好有空</font></font> 
     </div> 
@@ -20,75 +20,73 @@
     </div> 
 
     @if (session('error'))
-                <div class="alert alert-danger alert-dismissible" role="alert" style="background:#fff;border:0px;margin-bottom:-8px;width:200px;margin-left:200px;font-size:12px;">
-                <strong>{{ session('error') }}</strong> 
-              </div>
+      <div class="alert alert-danger alert-dismissible" role="alert" style="background:#fff;border:0px;margin-bottom:-8px;width:200px;margin-left:200px;font-size:12px;">
+        <strong>{{ session('error') }}</strong> 
+      </div>
     @endif
 
-   @if (count($errors) > 0)
-    <div class="alert alert-danger" style="background:#fff;border:0px;margin-bottom:-8px;width:100px;margin-left:220px;font-size:12px;">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach  
-        </ul>
-    </div>
-   @endif  
-    <div class="login-content" style="display: block;"> 
-     <div class="login-warn"></div> 
-     <form action="/home/doLogin" method="post">
-     {{ csrf_field() }}
-     <div class="login-input"> 
-      <input type="text" name="uname" placeholder="输入用户名" /> 
-     </div> 
-     <div class="login-input"> 
-      <input type="password" name="pwd" placeholder="密码" /> 
-     </div> 
-     <div class="forget-psw"> 
-      <a href="../../pages/set/getCaptcha.html?type=2"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">忘记密码？</font></font></a> 
-     </div> 
-     <label>
-     <div class="login-btn"> 
-      <font style="vertical-align: inherit;"><input type="submit" value="登录" style="outline:medium;display:inline-block;background:none;border:none;cursor:pointer;"></font>
-     </div> 
-     </label>
-     </form>
-    </div> 
-
-    
-    <div class="login-content" style="display: none;"> 
-      <form action="/home/login" method="post">
-     {{ csrf_field() }}
-     <div class="login-input" style="margin-top:-20px;"> 
-       <label for=""><span style="font-size:12px;">用户名</span><input type="text"  name="uname" placeholder="4-10位字母开头字母数字组合" style="width:150px;"/> </label>
-       <span class="info"></span>
-     </div> 
-     <div class="login-input" style="margin-top:-10px;"> 
-       <label for=""><span style="font-size:12px;">手机号</span><input type="text" id="tel" name="tel" placeholder="请输入手机号" style="width:150px;"/> </label>
-       <span class="info"></span>
-     </div> 
-     <div class="login-input" style="margin-top:-10px;"> 
-      <label for=""><span style="font-size:12px;">密　码</span><input type="password" placeholder="6-15位字母数字下划线" name="pwd" style="width:150px;" /></label>
-      <span class="info"></span>
-     </div> 
-     <div class="login-input" style="margin-top:-10px;"> 
-      <label for=""><span style="font-size:12px;">验证码</span><input type="name" placeholder="验证码" name="code" style="width:80px;" /></label>
-      <input type="button" style="width:100px;background:#eee;text-align:center;line-height:30px;font-size:14px;" id="yzm" value="获取" disabled="disabled">
-      <span class="info"></span>
-     </div> 
-     <div style="clear:both"></div>
-     <label>
-     <div class="login-btn"> 
-      <font style="vertical-align: inherit;"><input type="submit" id="register" value="注册" style="outline:medium;display:inline-block;background:none;border:none;cursor:pointer;"></font>
-     </div> 
-     </label>
-     </div> 
-     </form>
+    @if (count($errors) > 0)
+      <div class="alert alert-danger" style="background:#fff;border:0px;margin-bottom:-8px;width:100px;margin-left:220px;font-size:12px;">
+          <ul>
+              @foreach ($errors->all() as $error)
+                  <li>{{ $error }}</li>
+              @endforeach  
+          </ul>
+      </div>
+    @endif  
+      <div class="login-content" style="display: block;"> 
+       <div class="login-warn"></div> 
+       <form action="/home/doLogin" method="post">
+         {{ csrf_field() }}
+         <div class="login-input"> 
+          <input type="text" name="uname" placeholder="输入用户名" /> 
          </div> 
+         <div class="login-input"> 
+          <input type="password" name="pwd" placeholder="密码" /> 
+         </div> 
+         <div class="forget-psw"> 
+          <a href="../../pages/set/getCaptcha.html?type=2"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">忘记密码？</font></font></a> 
+         </div> 
+         <label>
+         <div class="login-btn"> 
+          <font style="vertical-align: inherit;"><input type="submit" value="登录" style="outline:medium;display:inline-block;background:none;border:none;cursor:pointer;"></font>
+         </div> 
+         </label>
+       </form>
+      </div> 
 
-
-   </div> 
-  </div>  
+      <div class="login-content" style="display: none;"> 
+        <form action="/home/login" method="post">
+         {{ csrf_field() }}
+         <div class="login-input" style="margin-top:-20px;"> 
+           <label for=""><span style="font-size:12px;">用户名</span><input type="text"  name="uname" placeholder="4-10位字母开头字母数字组合" style="width:150px;"/> </label>
+           <span class="info"></span>
+         </div> 
+         <div class="login-input" style="margin-top:-10px;"> 
+           <label for=""><span style="font-size:12px;">手机号</span><input type="text" id="tel" name="tel" placeholder="请输入手机号" style="width:150px;"/> </label>
+           <span class="info"></span>
+         </div> 
+         <div class="login-input" style="margin-top:-10px;"> 
+          <label for=""><span style="font-size:12px;">密　码</span><input type="password" placeholder="6-15位字母数字下划线" name="pwd" style="width:150px;" /></label>
+          <span class="info"></span>
+         </div> 
+         <div class="login-input" style="margin-top:-10px;"> 
+          <label for=""><span style="font-size:12px;">验证码</span><input type="name" placeholder="验证码" name="code" style="width:80px;" /></label>
+          <input type="button" style="width:100px;background:#eee;text-align:center;line-height:30px;font-size:14px;" id="yzm" value="获取" disabled="disabled">
+          <span class="info"></span>
+         </div> 
+         <div style="clear:both"></div>
+         <label>
+         <div class="login-btn"> 
+          <font style="vertical-align: inherit;"><input type="submit" id="register" value="注册" style="outline:medium;display:inline-block;background:none;border:none;cursor:pointer;"></font>
+         </div> 
+         </label>
+        </form>
+      </div> 
+     
+  </div> 
+</div> 
+  </div> 
   <style>
          input::-webkit-input-placeholder {
         /* placeholder字体大小  */

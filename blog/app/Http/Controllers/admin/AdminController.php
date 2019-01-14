@@ -9,6 +9,7 @@ use App\Http\Requests\AdminStore;
 use App\Http\Requests\AdminEdit;
 use Hash;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\admin\PasswordEdit;
 class AdminController extends Controller
 {
     /**
@@ -133,5 +134,25 @@ class AdminController extends Controller
         }else{
             echo 'error';
         }
+    }
+    
+    public function showSetPassword($id)
+    {
+        $admin = Admin::find($id);
+        return view('admin/admin/setPassword',['admin'=>$admin]);
+    }
+
+    public function setPassword($id,PasswordEdit $request)
+    {
+       $admin = Admin::find($id);
+       if(!Hash::check($request->oldPwd,$admin->pwd)){
+          return back()->with('error','原密码错误');  
+            }
+       $admin->pwd = Hash::make($request->newPwd);
+       $admin->save();
+       if(session('admin')['id'] == $admin->id){
+         session(['admin'=>'']);
+       }
+       return redirect('admin/admin');  
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\home;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\models\ArticleComment;
+use App\models\Report;
 class ArticleCommentController extends Controller
 {
     /**
@@ -44,6 +45,8 @@ class ArticleCommentController extends Controller
         $res = $comment->save();
         $arr = [];
         if($res){
+            $arr['id'] = $comment->id;
+            $arr['uid'] = $comment->uid;
             $arr['uname'] = $comment->User->uname;
             $arr['face'] = $comment->User->face;
             $arr['time'] = $comment->created_at->format('Y-m-d H:i:s');
@@ -96,8 +99,27 @@ class ArticleCommentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request,$id)
     {
-        //
+        $auid = $request->auid;
+        $uid = session('user')['id'];
+        $comment = ArticleComment::find($id);
+        if($auid == $uid || $uid == $comment->uid){
+             $report = Report::where('idid',$id)->where('table','article_comment')->get();
+             foreach ($report as $k => $v) {
+                 $v->delete();
+             }
+             $children = ArticleComment::where('parent_id',$id)->get();
+             foreach($children as $k => $v){
+                $v->delete();
+             }
+             $res = $comment->delete();
+             if($res){
+                echo json_encode(['msg'=>'success']);
+             }   
+        }else{
+          echo json_encode(['msg'=>'error']);  
+        }
+        
     }
 }

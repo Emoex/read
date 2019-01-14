@@ -3,70 +3,120 @@
  <head> 
   <meta charset="UTF-8" /> 
   <meta type="" /> 
-  <title>片刻网-用文字交换世界</title> 
+  <title>嘻嘻嘻</title> 
   <script src="/assets/js/core/jquery.3.2.1.min.js"></script>
   <link href="https://qnstatic.pianke.me/public/assets/favicon.ico" rel="icon" type="image/x-icon" /> 
-  <link rel="stylesheet" href="/css/index.css" /> 
-  <link rel="stylesheet" href="/css/client.css" /> 
-  <link href="https://qnstatic.pianke.me/public/assets/favicon.ico" rel="icon" type="image/x-icon" /> 
-  <link rel="stylesheet" href="/css/feed.css" /> 
+  <link rel="stylesheet" href="/css/client.css" />  
   <link rel="stylesheet" href="/css/radio.css" /> 
-  <link rel="stylesheet" href="/css/read.css" /> 
-  <link rel="stylesheet" href="/css/timeline.css" /> 
   <link rel="stylesheet" href="/assets/css/user.css">
   <link rel="stylesheet" href="/css/userSet.css">
   <link rel="stylesheet" href="/css/common.css">
-  <link rel="stylesheet" href="/css/Cooldog.css">
-<link rel="stylesheet" href="/css/iconfont.css">
-<link type="text/css" rel="stylesheet" href="/slideshow/css/style.css">
-<script type="text/javascript" src="/js/jquery.min.js"></script>
-<script type="text/javascript" src="/js/Cooldog.js"></script>
-  <script src="/assets/js/wsdk.js" charset="utf-8"></script>
-  <script src="/js/radio.js"></script>  
-  <!-- <script src="js/wsdk.js" charset="utf-8"></script>  -->
-
-  <script src="/js/client.js"></script>  
-   
-  <script src="/js/tingInfo.js"></script>
-
-  <link href="https://qnstatic.pianke.me/public/assets/favicon.ico" rel="icon" type="image/x-icon" /> 
-  <link rel="stylesheet" href="https://qnstatic.pianke.me/public/assets/css/radio.css" /> 
-  <script src="https://g.alicdn.com/aliww/h5.imsdk/2.1.5/scripts/yw/wsdk.js" charset="utf-8"></script> 
-
+  <link type="text/css" rel="stylesheet" href="/css/style.css">
+  <!-- 瀑布流 --><script type="text/javascript" src="/js/minigrid.js"></script>
+  <style>
+    input::-webkit-input-placeholder {
+      /* placeholder字体大小  */
+      font-size: 8px;
+    }
+    .info{
+      font-size: 5px;
+    }
+  </style>
+  @section('head')
+    
+  @show
  </head> 
- <body> 
+ <body  style="overflow: visible;"> 
   <div pause-scroll-trigger="true" style="height: 100%" class="m-index-container">
    <div>
+
     <div class="login" style="display: none;">
-     <div class="close-login-box"></div> 
-     <div class="login-box">
-      <div class="pianke-text">
-       世界很美, 而你正好有空
-      </div> 
-      <div class="type-title-cpt">
-       <span class="active">登录</span> 
-       <span class="">注册</span>
-      </div> 
-      <div class="login-content">
-       <div class="login-warn"></div> 
-       <div class="login-input">
-        <input type="text" placeholder="输入邮箱或手机号" />
-       </div> 
-       <div class="login-input">
-        <input type="password" placeholder="密码" />
-       </div> 
-       <div class="forget-psw">
-        <a href="../../pages/set/getCaptcha.html?type=2">忘记密码?</a>
-       </div> 
-       <div class="login-btn">
-        登录
-       </div>
-      </div> 
-      <div class="register-content" style="display: none;">
-       <img src="http://qnstatic.pianke.me/public/assets/img/pianke-code.png" />
-      </div> 
-     </div>
-    </div> 
+      <div class="close-login-box"></div> 
+      <div class="login-box">
+        <div class="pianke-text"> 
+          <font style="vertical-align: inherit;"><font style="vertical-align: inherit;">世界很美，而你正好有空</font></font> 
+        </div>
+
+        <div class="type-title-cpt"> 
+         <span class="active"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">登录</font></font></span> 
+         <span class=""><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">注册</font></font></span> 
+        </div> 
+
+        @if (session('error'))
+          <div class="alert alert-danger alert-dismissible" role="alert" style="background:#fff;border:0px;margin-bottom:-8px;width:200px;margin-left:200px;font-size:12px;">
+            <strong>{{ session('error') }}</strong> 
+          </div>
+          <script>
+                 $('.login').css('display','block'); 
+          </script>
+          {{ session(['error'=>'']) }}
+        @endif
+
+        @if (count($errors) > 0)
+         <div class="alert alert-danger" style="background:#fff;border:0px;margin-bottom:-8px;width:100px;margin-left:220px;font-size:12px;">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach  
+            </ul>
+         </div>
+           <script>
+                   $('.login').css('display','block'); 
+            </script>
+        @endif 
+
+        <div class="login-content" style="display: block;"> 
+          <div class="login-warn"></div> 
+          <form action="/home/doLogin" method="post">
+           {{ csrf_field() }}
+           <div class="login-input"> 
+            <input type="text" name="uname" placeholder="输入用户名" /> 
+           </div> 
+           <div class="login-input"> 
+            <input type="password" name="pwd" placeholder="密码" /> 
+           </div> 
+           <div class="forget-psw"> 
+            <a href="../../pages/set/getCaptcha.html?type=2"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">忘记密码？</font></font></a> 
+           </div> 
+           <label>
+           <div class="login-btn"> 
+            <font style="vertical-align: inherit;"><input id="denglu" type="submit" value="登录" style="outline:medium;display:inline-block;background:none;border:none;cursor:pointer;"></font>
+           </div> 
+           </label>
+          </form>
+        </div> 
+
+        <div class="login-content" style="display: none;"> 
+            <form action="/home/login" method="post">
+           {{ csrf_field() }}
+           <div class="login-input" style="margin-top:-20px;"> 
+             <label for=""><span style="font-size:12px;">用户名</span><input type="text"  name="uname" placeholder="4-10位字母开头字母数字组合" style="width:140px;"/> </label>
+             <span class="info"></span>
+           </div> 
+           <div class="login-input" style="margin-top:-10px;"> 
+             <label for=""><span style="font-size:12px;">手机号</span><input type="text" id="tel" name="tel" placeholder="请输入手机号" style="width:130px;"/> </label>
+             <span class="info"></span>
+           </div> 
+           <div class="login-input" style="margin-top:-10px;"> 
+            <label for=""><span style="font-size:12px;">密　码</span><input type="password" placeholder="6-15位字母数字下划线" name="pwd" style="width:140px;" /></label>
+            <span class="info"></span>
+           </div> 
+           <div class="login-input" style="margin-top:-10px;"> 
+            <label for=""><span style="font-size:12px;">验证码</span><input type="name" placeholder="验证码" name="code" style="width:80px;" /></label>
+            <input type="button" style="width:100px;background:#eee;text-align:center;line-height:30px;font-size:14px;" id="yzm" value="获取" disabled="disabled">
+            <span class="info"></span>
+           </div> 
+           <div style="clear:both"></div>
+           <label>
+           <div class="login-btn"> 
+            <font style="vertical-align: inherit;"><input type="submit" id="register" value="注册" style="outline:medium;display:inline-block;background:none;border:none;cursor:pointer;"></font>
+           </div> 
+           </label>
+           </form>
+        </div> 
+      </div>
+    </div>
+
     <header class="" style="">
      <div class="head">
       <div class="head-logo">
@@ -76,15 +126,18 @@
        <li class=""><a href="/home/index">首页</a></li> 
        <li class=""><a href="/home/article">阅读</a></li> 
        <li class=""><a href="/home/ting">电台</a></li> 
-       <li class=""><a href="/home/timeline">碎片</a></li> 
-       <li class=""><a href="/home/feed">动态</a></li> 
+       <li class=""><a href="/home/timeline">碎片</a></li>
+       @if(session('user')) 
+       <li class=""><a href="/home/feed">动态</a></li>
+       @endif 
       </ul> 
-      <script type="text/javascript">
-          $('.navbar li').mouseover(function(){
-              $(this).addClass('active');
-          }).mouseout(function(){
-              $(this).removeClass('active');
-          });
+      <input type="hidden" name="active" value="{{ $active or 5}}">
+      <script>
+              $('.navbar li').eq($('input[name=active]').val()).addClass('active');
+              $('.navbar li').click(function(){
+                  $('.navbar li').removeClass('active');
+                  $(this).addClass('active');
+              })
       </script>
       <div class="navbar-icon">
           <a href="/home/article/create">
@@ -114,7 +167,7 @@
        </div> 
         @if(session('user'))
                <div class="userinfo">
-                <a href="/home/personal/{{ session('user')['id'] }}">  @if(session('user')['face'])<img src="{{ session('user')['face'] }}" alt="" class="user-icon"> @else <img src="/face.png" alt="" class="user-icon"> @endif </a> 
+                <a href="/home/personal/{{ session('user')['id'] }}">  @if(session('user')['face'])<img src="{{ session('user')['face'] }}" alt="" class="user-icon" id="face1"> @else <img src="/face.png" alt="" class="user-icon" > @endif </a> 
                 <div class="msg-menu">
                  <div class="drop-menu userinfo-drop">
                   <ul>
@@ -125,19 +178,43 @@
                 </div>
                </div> 
         @else
-        <a href="/home/login"><div class="login-btn"><div>登录&nbsp;<span>/</span>&nbsp;注册</div></div></a>
+        <div class="login-btn"><div>登录&nbsp;<span>/</span>&nbsp;注册</div></div>
         @endif
-       <div class="login-btn hidden">
-        <div>
-         登录&nbsp;
-         <span>/</span>&nbsp;注册
-        </div>
-       </div>
       </div>
      </div>
     </header>
    </div> 
+   <script>
+    $(function(){
+      var scrollHeight = 0;
+      $(window).scroll(function(){
+        if( $(window).scrollTop()>scrollHeight ){
+          scrollHeight = $(window).scrollTop();
+         $('header').attr('class','fade-leave-active');  
+        }else{
+          scrollHeight = $(window).scrollTop();
+         $('header').attr('class','fade-enter-active');
+        }
+      })
+      
+      $('.login-btn').click(function(){
+          $('.login').css('display','block');
+          $('body').css('overflow','hidden');
+      }) 
+      $('.if-no-login').click(function(){
+          $('.login').css('display','block');
+          $('body').css('overflow','hidden');
+      }) 
+      $('.close-login-box').click(function(){
+          $('.login').css('display','none');
+          $('body').css('overflow','visible');
+      })
+
+          })
+   </script>
    @section('content')
+
+
 
    @show
    <div class="back-top"></div> 
@@ -165,8 +242,171 @@
     </div>
    </footer>
   </div> 
+<!-- 提示框 -->
+<div ><div id="error" style="display:none;" class="errorPrompt Prompt"></div></div>
+<div><div id='success' style="display:none;" class="successPrompt Prompt"></div></div>
+  <div class="Confirm hidden">
+<div></div>
+    <div class="btn-group" id="confirm">
+      <div>取消</div>
+      <div>确认</div></div>
+</div>
 
-   <script src="/js/upfile.js"></script> 
-  <script src="/js/timeline.js"></script> 
  </body>
+<script>
+  //确认删除框
+  function confirm(text){
+    $('.Confirm>div:eq(0)').text(text);
+    $('.Confirm').removeClass('hidden');
+    $('#confirm>div:eq(0)').click(function(){
+      $('.Confirm').addClass('hidden');
+    })
+  }
+  //失败调用的方法
+  function error(text)
+  {
+    $('#error').text(text).show();
+    setTimeout(function(){
+      $('#error').text('').hide();
+    },2000);
+  }
+    //碎片喜欢的方法
+    like = function(id,obj,type){
+      @if( !session('user') )
+        error('请先登录');
+        return;
+      @endif
+      $.get('/home/timeline/like',{'id':id},function(msg){
+        if(msg == 'success1'){
+          $(obj).addClass('likes');
+          if( type ){
+            var num = $(obj).text();
+            num++;
+            $(obj).text(num);
+          }
+        }else if( msg == 'success2'){
+          $(obj).removeClass('likes');
+          if( type ){
+            var num = $(obj).text();
+            num--;
+            $(obj).text(num);
+          }
+        }else{
+          error('服务器错误！');
+        }
+      },'html');
+    }
+  $('.type-title-cpt span').click(function(){
+      $('.type-title-cpt span').removeClass('active');
+      $(this).addClass('active');
+      var index = $(this).index();
+      $('.login-content').css('display','none');
+      $('.login-content').eq(index).css('display','block');
+  })
+
+  $(document).ready(function(){
+   var isuname,ispwd,iscode = false;
+
+    var uname = $("input[name='uname']").eq(0);
+    var pwd = $("input[name='pwd']");
+    var code = $("input[name='code']");
+
+    uname.keyup(function(){
+      var uname = $(this).val();
+      // var uname_preg = /^[a-zA-Z\d\u4e00-\u9fa5]{4,10}$/;
+      var uname_preg = /^[a-zA-Z]{1}[a-zA-Z\d]{3,9}$/;
+      if(uname_preg.test(uname)){
+        $('.info').eq(0).html('用户名格式正确');
+        isuname = true;
+      }else{
+        $('.info').eq(0).html('用户名格式不正确');
+      }
+    });
+   
+   pwd.keyup(function(){
+      var pwd = $(this).val();
+      var pwd_preg = /^[\w]{6,15}$/;
+
+      var arr = [];
+      var number_preg = /[0-9]+/g;
+      if(number_preg.test(pwd)){
+        arr.push('数字');
+      }
+
+      var small_str_preg = /[a-z]+/g;
+      if(small_str_preg.test(pwd)){
+        arr.push('小写字母');
+      }
+      var big_str_preg = /[A-Z]+/g;
+      if(big_str_preg.test(pwd)){
+        arr.push('大写字母');
+      }
+
+      if(pwd_preg.test(pwd)){
+        var str = '';
+        switch(arr.length){
+          case 1:str = '弱';break;
+          case 2:str = '中';break;
+          case 3:str = '强';
+        }
+        $('.info').eq(2).html('密码格式正确  '+str);
+        ispwd = true;
+      }else{
+        $('.info').eq(2).html('密码格式不正确');
+      }
+    });
+
+    var ordertime=60;  
+    var timeleft=ordertime;
+    var btn=$("#yzm");
+    var tel=$("#tel");
+    var reg = /^1[0-9]{10}$/;  
+    tel.keyup(function(){
+      if (reg.test(tel.val())){
+        $('.info').eq(1).html('手机号格式正确');
+        btn.removeAttr("disabled");  
+        btn.click(function(){
+          $.get('/home/login/code',{'tel':tel.val()},function(msg){
+            console.log(msg);
+        },'json');
+
+        })
+        }
+      else{
+        $('.info').eq(1).html('手机号格式不正确');
+        btn.attr("disabled",true);
+      }
+    })
+    $('#register').click(function(){
+      if(code.val()){
+      iscode = true;
+    }
+      if(isuname && ispwd){
+        return true;
+      }else{
+        return false;
+      }
+    })
+
+    //计时函数
+    function timeCount(){
+       timeleft-=1;
+       if (timeleft>0){
+       btn.val(timeleft+" 秒后重发");
+       setTimeout(timeCount,1000);
+       }
+       else {
+        btn.val("重新发送");
+        timeleft=ordertime;   
+        btn.removeAttr("disabled");
+       }
+     }
+
+    //事件处理函数
+    btn.on("click",function(){
+      $(this).attr("disabled",true); 
+      timeCount(this);
+      })
+    })
+</script>
 </html>
