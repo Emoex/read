@@ -86,7 +86,7 @@
             p++;
             isLoad = false;
           }else{
-            $('.no-more-data').css('display','block');
+            // $('.no-more-data').css('display','block');
           }
         },'json');
     }

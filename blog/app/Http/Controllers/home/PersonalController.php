@@ -105,9 +105,6 @@ class PersonalController extends Controller
         $comment_info = ArticleComment::whereIn('parent_id',$pid)->orderBy('created_at','desc')->get();
         $comment_num = ArticleComment::whereIn('parent_id',$pid)->orderBy('created_at','desc')->count();
 
-        // 粉丝
-        // $fans_info = Follow::where('follow_user',session('user')['id'])->get();
-
         return view('home/personal/index',[
             'user'=>$user,'status'=>$status,'follow_num'=>$follow_num,
             'fans_num'=>$fans_num,'article'=>$article,'article_num'=>$article_num,

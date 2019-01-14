@@ -31,9 +31,6 @@ class FeedController extends Controller
             $article = Article::whereIn('uid',$ids)->orderBy('created_at','desc')->get(); 
             $timeline = Timeline::whereIn('uid',$ids)->orderBy('created_at','desc')->get();
             $ting = Ting::whereIn('uid',$ids)->orderBy('created_at','desc')->get(); 
-            // $article = DB::select("SELECT * FROM article WHERE DATEDIFF(created_at,NOW())<=0 AND DATEDIFF(created_at,NOW())>-5 order by created_at desc");
-            // $timeline = DB::select("SELECT * FROM timeline WHERE DATEDIFF(created_at,NOW())<=0 AND DATEDIFF(created_at,NOW())>-5 order by created_at desc");
-            // $ting = DB::select("SELECT * FROM ting WHERE DATEDIFF(created_at,NOW())<=0 AND DATEDIFF(created_at,NOW())>-5 order by created_at desc");
             foreach($article as $k=>$v){
                 $data[] = $v;
             }

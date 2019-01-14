@@ -119,7 +119,7 @@
                       var content = $('.reply').eq(index).val();
                       $.post('/home/article/comment',{'_token':$('input[name=_token]').val(),'aid':$('input[name=aid]').val(),'content':content,'parent_id':parent_id},function(data){
                      if(data['msg'] == 'success'){
-                       div = '<div class="comment-content-others"><input type="hidden" name="parent_id" value="'+data['id']+'"><a href="../user/user.html?uid=4934695" target="_blank">　'+data['uname']+':</a>'+data['content']+'<span class="comment-del report" style="display: none;">举报</span><span class="comment-del" style="display:none">删除</span></div>';
+                       div = '<div class="comment-content-others"><input type="hidden" name="parent_id" value="'+data['id']+'"><a href="/home/personal/'+data['uid']+'" target="_blank">　'+data['uname']+':</a>'+data['content']+'<span class="comment-del report" style="display: none;">举报</span><span class="comment-del" style="display:none">删除</span></div>';
                        $('.com-textarea').eq(index).before(div);
                        $('.com-textarea').eq(index).addClass('hidden'); 
                        $('.reply').eq(index).val('');
@@ -144,9 +144,9 @@
                   $.post('/home/article/comment',{'_token':$('input[name=_token]').val(),'aid':$('input[name=aid]').val(),'content':$('[name=comment]').val(),'parent_id':0},function(data){
                      $('[name=comment]').val('');
                      if(data['msg'] == 'success'){
-                           $('.comment-cpt:last').children().first().children().first().attr('href','/home/user/');
+                           $('.comment-cpt:last').children().first().children().first().attr('href','/home/personal/'+data['uid']);
                            $('.comment-cpt:last').children().first().children().first().children().first().attr('src',data['face']);
-                           $('.comment-user-info:last').children().first().attr('href','/home/user');
+                           $('.comment-user-info:last').children().first().attr('href','/home/personal/'+data['uid']);
                            $('.comment-user-info:last').children().first().text(data['uname']);
                            $('.comment-user-info:last').children().first().next().text('　'+data['time']);
                            $('.comment-content:last').text(data['content']);
@@ -172,7 +172,6 @@
            },5000);
            
            $('.likes-cpt').click(function(){
-            if(checkLogin()){
             $.post('/home/article/like',{'_token':$('input[name=_token]').val(),'aid':$('input[name=aid]').val()},function(data){
                       if(data['msg'] == 'like'){
                         $('.likes-cpt').addClass('likes');
@@ -183,7 +182,6 @@
                       }
                       
              },'json');
-          }
            })
            $('#like').click(function(){
              click(1);
@@ -267,18 +265,17 @@
                  <div class="comment-cpt">
                     <input type="hidden" name="parent_id" value="{{ $v->id }}">
                     <div class="comment-user-icon">
-                     <a href="/home/user" target="_blank"><img src="{{ $v->User->face }}" /></a>
+                     <a href="/home/personal/{{ $v->uid }}"><img src="{{ $v->User->face }}" /></a>
                     </div> 
                     <div class="comment-info">
                      <div class="comment-user-info">
-                      <a href="/home/user" target="_blank">{{ $v->User->uname }}</a><span>　{{ $v->created_at }}</span> 
+                      <a href="/home/personal/{{ $v->uid }}">{{ $v->User->uname }}</a><span>　{{ $v->created_at }}</span> 
                       <span class="comment-reply" onclick="dododo({{ $v->id }},this);">回复</span> 
                       @if($v->uid == session('user')['id'] || session('user')['id'] == $article->uid)
                       <span class="comment-del" onclick="destroy({{ $v->id }},this,1)">删除</span> 
                       @else
                       <span class="comment-del report" onclick="report({{ $v->id }},'article_comment')">举报</span>
                       @endif
-                      <span class="comment-number comment_like" id="like">{{ $v->like }}</span> 
                      </div> 
                      <div class="comment-content">
                       {{ $v->content }}
@@ -320,16 +317,15 @@
 
        <div class="comment-cpt" style="display:none">
         <div class="comment-user-icon">
-         <a href="../user/user.html?uid=3404651" target="_blank"><img src="http://q.qlogo.cn/qqapp/100339551/8F7A508551FF3247337B3665F290B595/100" /></a>
+         <a href="../user/user.html?uid=3404651"><img src="http://q.qlogo.cn/qqapp/100339551/8F7A508551FF3247337B3665F290B595/100" /></a>
         </div> 
         <div class="comment-info">
          <div class="comment-user-info">
-          <a href="../user/user.html?uid=3404651" target="_blank">吱吱1453813691</a><span>2018-12-4 13:35</span> 
+          <a href="../user/user.html?uid=3404651">吱吱1453813691</a><span>2018-12-4 13:35</span> 
           <span class="comment-reply">回复</span>
           <span class="comment-del" style="display: none;">删除</span> 
 
-          <span class="comment-number">0</span> 
-          <span class="comment-del report">举报</span>
+          <span class="comment-del report" style="display: none;">举报</span>
          </div> 
          <div class="comment-content">
           谢谢
@@ -357,9 +353,11 @@
         -&nbsp;已加载全部&nbsp;-
        </div>
       </div>  -->
-      <div class="no-comment" style="display: none;">
+      @if(!$comment)
+      <div class="no-comment" style="">
         暂时没有评论，快和小伙伴互动吧 
       </div>
+      @endif
      </div>
     @endif
     </div>

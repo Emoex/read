@@ -44,6 +44,8 @@ Route::post('/home/article/look','home\ArticleController@look');
 Route::post('/home/article/like','home\ArticleController@like');
 Route::resource('/home/article','home\ArticleController');
 Route::get('/home/login/code','home\LoginController@sendMobileCode');
+Route::get('/home/login/isCode','home\LoginController@isCode');
+Route::get('/home/login/isUname','home\LoginController@isUname');
 Route::resource('/home/login','home\LoginController');
 Route::post('/home/doLogin','home\LoginController@doLogin');
 Route::get('/home/logout','home\LoginController@logout');

@@ -182,7 +182,7 @@ class ArticleController extends Controller
             $v->uid = $v->User->id;
             $v->nickname = $v->User->nickname;
         }
-        if($article){
+        if(!$article->isEmpty()){
             echo json_encode($article);
         }else{
             echo json_encode(['msg'=>'error']);

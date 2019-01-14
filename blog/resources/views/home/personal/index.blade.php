@@ -60,7 +60,10 @@
     <div class="user-menu">
       <div class="type-title-cpt">
         <span class="active" id="homepage">我的主页</span>
-        <span class="" id="information">消息中心</span></div>
+        @if(session('user')['id'] == $user['id'])
+        <span class="" id="information">消息中心</span>
+        @endif
+        </div>
     </div>
   </div>
   <div class="data-title data-title-home" style="">
@@ -73,11 +76,11 @@
   </div>
   <div class="data-title  data-title-msg" style="display: none;">
     <span class="active">
+      <a>粉丝</a>({{ count($fans) }})</span>
+<!--     <span class="">
       <a>评论</a>(13)</span>
     <span class="">
-      <a>喜欢</a>(0)</span>
-    <span class="">
-      <a>粉丝</a>({{ count($fans) }})</span>
+      <a>喜欢</a>(0)</span> -->
     <!-- <span class="">
       <a>片邮</a>(2)</span> -->
   </div>
@@ -176,7 +179,9 @@
             var num = 5;
             var isLoad = false;
             var preg = /<\/?.+?\/?>/g;
-            minigrid('#articles','#article');
+            if($('#article').length){
+              minigrid('#articles','#article');
+            }
             // 切换文章、碎片、Ting
             $('.data-title-home span').click(function(){
                 index =  $(this).index();
@@ -184,16 +189,22 @@
                 $('.img-group-cpt').eq(index).removeClass('hidden');
                 $('.data-title-home span').removeClass('active');
                 if(index == 0){
-                  minigrid('#articles','#article');
+                  if($('#article').length){
+              minigrid('#articles','#article');
+            }
                 }else if(index == 1){
                   p = 2;
                   getData();
-                  minigrid('#timelines','#timeline');
+                  if($('#timeline').length){
+                      minigrid('#timelines','#timeline');
+                    }
                 }else if(index == 2){
                   p = 2;
                   num = 5;
                   getData();
-                  minigrid('#tings','#ting');
+                  if($('#ting').length){
+                      minigrid('#tings','#ting');
+                    }
                 }
                 $(this).addClass('active');
             })
@@ -205,6 +216,8 @@
                 $('.data-title-like').css('display','block');
                 $('.data-title-msg').css('display','none');
                 $('.user-like-list').css('display','none');
+                $('.msg-focus-cpt').css('display','none'); 
+                $('.msg-list').css('display','none'); 
                 $('.user-like-list').eq($(this).index()).css('display','block');
                 $('.data-title-like span').removeClass('active');
                 $('.data-title-like span').eq($(this).index()).addClass('active');
@@ -220,10 +233,14 @@
            $('#homepage').eq(0).click(function(){
                 $('.img-group-cpt').eq(0).removeClass('hidden');
                 $('.data-title-home').removeClass('hidden');
-                minigrid('#articles','#article');
+                if($('#article').length){
+                  minigrid('#articles','#article');
+                }
                 $('.data-title-like').css('display','none');
                 $('.user-like-list').css('display','none');
                 $('.data-title-msg').css('display','none');
+                $('.msg-focus-cpt').css('display','none');
+                $('.msg-list').css('display','none');  
            })
 
             // 我的主页获取数据
@@ -318,8 +335,20 @@
                 $('.data-title-like').css('display','none');
                 $('.user-like-list').css('display','none');
                 $('.data-title-msg').css('display','block'); 
+                $('.msg-list').css('display','block'); 
+                $('.msg-focus-cpt').css('display','block'); 
             }) 
+            $('.data-title-msg span').click(function(){
+                var index = $(this).index();
+                $('.data-title-msg span').removeClass('active');
+                $('.data-title-msg span').eq(index).addClass('active');
+                switch(index){
+                  case 0 : $('.msg-focus-cpt').css('display','block');break;
+                  case 1 : $('.msg-focus-cpt').css('display','none');break;
+                  case 2 : $('.msg-focus-cpt').css('display','none');break;
 
+                }
+            })
             
 
 
@@ -371,19 +400,29 @@
     </div>
 
 <!-- 粉丝 -->
-      <div class="msg-focus-cpt">
+    <div class="msg-list" style="display:none;">
+     @foreach($fans as $k=>$v)
+      <div class="msg-focus-cpt" style="display:none;">
       <div class="m-user-icon">
-        <a href="./user.html?uid=4764921" target="_blank">
-          <img src="http://thirdwx.qlogo.cn/mmopen/vi_32/1ticCtULhM44n9f8ghgNCWcac62HEJ8UfAt3CdiaASibBxPrIJrlLtibURmlY4GIYRnn4iasouuhYlXhVAVxic3iadAWw/132"></a>
+        <a href="/home/personal/{{ $v->uid }}" target="_blank">
+          <img src="{{ $v->User->face }}"></a>
       </div>
       <div class="m-info">
         <div class="m-user-name">
-          <a href="./user.html?uid=4764921" target="_blank">A52赫兹</a></div>
+          <a href="/home/personal/{{ $v->uid }}" target="_blank">{{ $v->User->uname }}</a></div>
         <div>
           <span class="msg-title">关注了你。</span></div>
-        <div class="btn-focus" style="display: none;">关注</div>
-        <div class="btn-focus btn-focus-all">互相关注</div></div>
+        @if($v->status == 3 && $user->id == session('user')['id'])
+                  <div class="btn-focus btn-focus-all fans__yes"  onclick="fans_info({{ $v->uid }},1,this)">互相关注</div>
+                  <div class="btn-focus fans__no" style="display:none;" onclick="fans_info({{ $v->uid }},2,this)">关注</div>
+         @elseif($v->status == 1 && $user->id == session('user')['id'])
+                  <div class="btn-focus btn-focus-all fans__yes" style="display:none;" onclick="fans_info({{ $v->uid }},1,this)">互相关注</div>
+                  <div class="btn-focus fans__no" onclick="fans_info({{ $v->uid }},2,this)">关注</div>
+         @endif
+      </div>
     </div>
+    @endforeach
+  </div>
 <!-- 内容结束 -->
     <div class="no-more-data" style="display: none;">-&nbsp;已加载全部&nbsp;-</div>
     <div class="loading" style="display: none;"></div>
@@ -412,7 +451,7 @@
             })
 
             fans = function(uid,type,obj){
-                   var index = $(obj).parents('.user-like-cpt').index();
+                   var index = $(obj).parents('.msg-list').index();
                 if(type == 1){
                      $.post('/home/follow/'+uid,{'_token':$('input[name=_token]').val(),'_method':'DELETE'},function(msg){
                        if(msg == 'success'){
@@ -425,6 +464,25 @@
                        if(msg == 'success'){
                          $('.user-like-cpt .fans__yes').eq(index).css('display','block');
                          $('.user-like-cpt .fans__no').eq(index).css('display','none');
+                       }
+                    },'html')
+                }    
+            }
+
+            fans_info = function(uid,type,obj){
+                   var index = $(obj).parents('.msg-focus-cpt').index();
+                if(type == 1){
+                     $.post('/home/follow/'+uid,{'_token':$('input[name=_token]').val(),'_method':'DELETE'},function(msg){
+                       if(msg == 'success'){
+                         $('.m-info .fans__no').eq(index).css('display','block');
+                         $('.m-info .fans__yes').eq(index).css('display','none');
+                       }
+                    },'html')
+                }else{
+                    $.post('/home/follow',{'_token':$('input[name=_token]').val(),'follow_user':uid},function(msg){
+                       if(msg == 'success'){
+                         $('.m-info .fans__yes').eq(index).css('display','block');
+                         $('.m-info .fans__no').eq(index).css('display','none');
                        }
                     },'html')
                 }    
