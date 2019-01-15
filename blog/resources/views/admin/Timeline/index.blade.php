@@ -17,8 +17,8 @@
 					@foreach($data as $k=>$v)
 					<tr>
 						<td>{{ $v->id }}</td>
-						<td>{{ $v->id }}</td>
-						<td>{{ $v->uid }}</td>
+						<td>@if( $v->cate ){{ $v->cate }}@else{{ '添加标签' }}@endif</td>
+						<td>{{ $v->User->nickname }}</td>
 						<td>{{ $v->created_at }}</td>
 						<td>
 							<a href="/admin/timeline/{{ $v->id }}" class="badge badge-info" >信息</a>	
@@ -28,6 +28,9 @@
 					@endforeach
 				</tbody>
 			</table>
+			<div id="paging">
+				{{ $data->links() }}	
+			</div>
 		</div>
 		<div class="hidden">
 			{{ csrf_field() }}
@@ -45,4 +48,32 @@
 			}
 		</script>
 	</div>
+<style type="text/css">
+	#paging{
+		margin-left:40%;
+	}
+	#paging .active{
+			background: blue;
+		}
+	#paging .active span{
+		color:#fff;
+	}
+	#paging li{
+		width:30px;
+		height:30px;
+		border:1px solid #ccc;
+		border-radius: 100%;
+		text-align: center;
+		line-height: 30px;
+		margin:13px 6px;
+	}
+	#paging li:hover{
+		background: #eee;
+		color:blue;
+	}
+	#paging .disabled{
+		background: #eee;
+	}
+
+</style>
 @endsection

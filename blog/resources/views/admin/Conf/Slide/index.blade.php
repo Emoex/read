@@ -16,7 +16,7 @@
 				@foreach($data as $k=>$v)
 					<tr>
 						<td>{{ $v->id }}</td>
-						<td width="500px"><img src="/uploads/{{ $v->content }}" style="width:80%"></td>
+						<td width="500px"><img src="{{ $v->content }}" style="width:80%"></td>
 						<td>
 							<a href="/admin/Conf/Slide/{{ $v->id }}/edit" class="btn btn-warning">修改</a>
 							<form action="/admin/Conf/Slide/{{ $v->id }}" method="post" style="display:inline-block;">

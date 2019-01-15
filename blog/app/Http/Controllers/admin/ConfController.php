@@ -16,11 +16,10 @@ class ConfController extends Controller
      */
     public function index()
     {   
-        $data = Conf::find(1);
-        $data1 = Conf::find(2);
-        $title1 = $data->content;
-        $path = $data1->content;
-        return view('admin/Conf/index',['title'=>'网站管理','title1'=>$title1,'path'=>$path]);
+
+        $WZ_title = Conf::where('name','title')->first();
+        $logo = Conf::where('name','logo')->first();
+        return view('admin/Conf/index',['title'=>'网站管理','WZ_title'=>$WZ_title,'logo'=>$logo]);
     }
 
     /**
@@ -78,10 +77,24 @@ class ConfController extends Controller
         //
     }
 
+    public function title_store(Request $request)
+    {
+        $WZ_title = $request->only('title');
+        $Conf = new Conf;
+        $Conf->name = 'title';
+        $Conf->content = $WZ_title['title'];
+        $res = $Conf->save();
+        if($res){
+            return redirect('admin/Conf')->with('success','添加成功');
+        }else{
+            return back()->with('error','添加失败');
+        }
+    }
+
     public function title_update(Request $request)
     {   
         $title1 = $request->only('title');
-        $data = Conf::find(1);
+        $data = Conf::where('name','title')->first();
         $data->content = $title1['title'];
         $res = $data->save();
         if($res){
@@ -90,24 +103,49 @@ class ConfController extends Controller
              return back()->with('error','修改失败');
         }
     }
-    public function logo_update(Request $request)
+
+    public function logo_store(Request $request)
     {   
-        if($request->hasFile('logo')){
+        if( $request->hasFile('logo') ){
             $path = $request->file('logo')->store('images');
             if($path){
-                $data = Conf::find(2);
-                $data->content = $path;
-                $res = $data->save();
+                $Conf = new Conf;
+                $Conf->name = 'logo';
+                $Conf->content = '/uploads/'.$path;
+                $res = $Conf->save();
+                if($res){
+                    return redirect('admin/Conf')->with('success','添加成功');
+                }else{
+                    return back()->with('添加失败');
+                } 
+            }else{
+                return back()->with('error','添加失败');
+            }
+        }else{
+            return back()->with('error','请选择文件');
+        }
+        
+    }
+
+    public function logo_update(Request $request)
+    {   
+        if( $request->hasFile('logo') ){
+            $path = $request->file('logo')->store('images');
+            if( $path ){
+                $Conf = Conf::where('name','logo')->first();
+                $Conf->name = 'logo';
+                $Conf->content = '/uploads/'.$path;
+                $res = $Conf->save();
                 if($res){
                     echo $path;
                 }else{
                     echo 'error';
-                }
+                } 
             }else{
                 echo 'error';
             }
         }else{
-            return back()->with('error','请选择文件');
+            echo 'error';
         }
     }
     /**

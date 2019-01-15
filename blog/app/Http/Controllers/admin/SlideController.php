@@ -43,7 +43,7 @@ class SlideController extends Controller
             if($path){
                 $Conf = new Conf;
                 $Conf->name = 'Slide';
-                $Conf->content = $path;
+                $Conf->content = '/uploads/'.$path;
                 $res = $Conf->save();
                 if($res){
                     return redirect('admin/Conf/Slide')->with('success','添加成功');
@@ -92,9 +92,15 @@ class SlideController extends Controller
     {
         if( $request->hasfile('content') ){
             $path = $request->file('content')->store('images');
-            $res = Conf::where('id',$id)->update(['content'=>$path]);
-            if($res){
-                return redirect('admin/Conf/Slide')->with('success','修改成功');
+            if($path){
+                $Conf = Conf::where('id',$id)->first();
+                $Conf->content = '/uploads/'.$path;
+                $res = $Conf->save();
+                if($res){
+                    return redirect('admin/Conf/Slide')->with('success','修改成功');
+                }else{
+                    return back()->with('error','修改失败');
+                }
             }else{
                 return back()->with('error','修改失败');
             }
