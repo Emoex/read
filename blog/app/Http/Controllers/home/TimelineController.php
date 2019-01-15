@@ -99,6 +99,7 @@ class TimelineController extends Controller
             $timeline = new Timeline;
             //uid为session的id
             $timeline->uid = session('user')['id'];
+
             //内容
             $timeline->content = $data['content'];
             //判断是否为秘密
@@ -267,21 +268,27 @@ class TimelineController extends Controller
         }else{
             $res2 = true;
         }
+        //判断举报记录
+        if(Report::where('idid',$id)->where('table','timeline')->orwhere('table','timeline_comment')->first()){
+            $res3 = Report::where('idid',$id)->where('table','timeline')->orwhere('table','timeline_comment')->delete();
+        }else{
+            $res3 = true; 
+        } 
         //判断是否有评论
         if(TimeLineComment::where('tid',$id)->first()){
-            $res3 = TimeLineComment::where('tid',$id)->delete();
+            $res4 = TimeLineComment::where('tid',$id)->delete();
         }else{
-            $res3 = true;
+            $res4 = true;
         }
-        if( $res1 && $res2 && $res3 ){
+        if( $res1 && $res2 && $res3 && $res4){
             //判断是否有图片 
             if($data->image){
-                $res4 = Storage::delete( ltrim($data->image,'/uploads/') );
+                $res5 = Storage::delete( ltrim($data->image,'/uploads/') );
             }else{
-                $res4 = true;
+                $res5 = true;
             }
 
-            if($res4){
+            if($res5){
                 DB::commit();
                 echo 'success';
             }else{
@@ -289,7 +296,7 @@ class TimelineController extends Controller
                 echo 'error';
             }
         }else{
-            DB::rollBack();
+            DB::rollBack(); 
             echo 'error';
         }
         

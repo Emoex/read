@@ -20,7 +20,10 @@ Route::get('/', function () {
 Route::resource('/admin/user','admin\UserController');
 Route::resource('/admin/ting','admin\TingController');
 Route::resource('/admin/blogroll','admin\BlogrollController');
+Route::post('/home/ting/listen','home\TingController@listen');
+Route::post('/home/ting/like','home\TingController@like');
 Route::resource('/home/ting','home\TingController');
+Route::resource('/home/ting/comment','home\TingCommentController');
 Route::resource('/home/index','home\IndexController');
 
 
@@ -44,6 +47,8 @@ Route::post('/home/article/look','home\ArticleController@look');
 Route::post('/home/article/like','home\ArticleController@like');
 Route::resource('/home/article','home\ArticleController');
 Route::get('/home/login/code','home\LoginController@sendMobileCode');
+Route::get('/home/login/isCode','home\LoginController@isCode');
+Route::get('/home/login/isUname','home\LoginController@isUname');
 Route::resource('/home/login','home\LoginController');
 Route::post('/home/doLogin','home\LoginController@doLogin');
 Route::get('/home/logout','home\LoginController@logout');

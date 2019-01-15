@@ -7,6 +7,10 @@ use App\Http\Controllers\Controller;
 use App\models\Report;
 use App\models\Article;
 use App\models\ArticleComment;
+use App\models\Ting;
+use App\models\TingComment;
+use App\models\Timeline;
+use App\models\TimelineComment;
 class ReportController extends Controller
 {
     /**
@@ -25,6 +29,18 @@ class ReportController extends Controller
                case 'article_comment':
                 $v->table = '文章评论';
                 $v->content = ArticleComment::find($v->idid)->content;break;
+                case 'ting':
+                $v->table = '电台';
+                $v->content = Ting::find($v->idid)->content;break;
+                case 'ting_comment':
+                $v->table = '电台评论';
+                $v->content = TingComment::find($v->idid)->content;break;
+                case 'timeline':
+                $v->table = '碎片';
+                $v->content = Timeline::find($v->idid)->content;break;
+                case 'timeline_comment':
+                $v->table = '碎片评论';
+                $v->content = TimelineComment::find($v->idid)->content;break;
             }
         }
         return view('admin/report/index',['reports'=>$reports]);

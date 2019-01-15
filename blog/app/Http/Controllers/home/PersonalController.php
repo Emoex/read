@@ -10,6 +10,8 @@ use App\Models\Article;
 use App\Models\Ting;
 use App\Models\Timeline;
 use App\Models\ArticleComment;
+use App\Models\TingComment;
+
 class PersonalController extends Controller
 {
     /**
@@ -92,7 +94,10 @@ class PersonalController extends Controller
         foreach($article as $k=>$v){
             $v->comment = ArticleComment::where('aid',$v->id)->count();
         }
-        
+        foreach($ting as $k=>$v){
+            $v->comment = TingComment::where('tid',$v->id)->count();
+        }
+
         $article_num = Article::where('uid',$id)->count();
         $ting_num = Ting::where('uid',$id)->count();
         $timeline_num = Timeline::where('uid',$id)->count();
@@ -104,9 +109,6 @@ class PersonalController extends Controller
         }
         $comment_info = ArticleComment::whereIn('parent_id',$pid)->orderBy('created_at','desc')->get();
         $comment_num = ArticleComment::whereIn('parent_id',$pid)->orderBy('created_at','desc')->count();
-
-        // 粉丝
-        // $fans_info = Follow::where('follow_user',session('user')['id'])->get();
 
         return view('home/personal/index',[
             'user'=>$user,'status'=>$status,'follow_num'=>$follow_num,
@@ -164,6 +166,10 @@ class PersonalController extends Controller
          case 0 :
                 $article = Article::where('uid',$id)->offset(($p-1)*$num)->limit($num)->get();
                 if(!$article->isEmpty()){
+                    foreach($article as $k=>$v){
+                        $v->comment = ArticleComment::where('aid',$v->id)->count();
+                    }
+
                     echo json_encode($article);
                 }else{
                     echo json_encode(['msg'=>'error']);
@@ -180,6 +186,11 @@ class PersonalController extends Controller
         case 2 :
                 $ting = Ting::where('uid',$id)->offset(($p-1)*$num)->limit($num)->get();
                 if(!$ting->isEmpty()){
+                    foreach($ting as $k=>$v){
+                        $v->nickname = $v->User->nickname ? $v->User->nickname : $v->User->uname;
+                        $v->comment = TingComment::where('tid',$v->id)->count();
+                    }
+
                     echo json_encode($ting);
                 }else{
                     echo json_encode(['msg'=>'error']);

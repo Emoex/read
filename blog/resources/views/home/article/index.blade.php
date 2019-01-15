@@ -41,8 +41,8 @@
             </div>
         </div>
         <div class="button">
-            <div class="swiper-button-prev"></div>
-            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev hidden"></div>
+            <div class="swiper-button-next hidden"></div>
         </div>
     </div>
 </section>

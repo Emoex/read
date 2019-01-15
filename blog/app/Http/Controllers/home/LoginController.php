@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Userinfo;
 use Hash;
-use App\Http\Requests\admin\Login;
 class LoginController extends Controller
 {
     /**
@@ -17,7 +16,7 @@ class LoginController extends Controller
      */
     public function index()
     {
-       return view('home/login/index');
+       
     }
 
     /**
@@ -39,9 +38,9 @@ class LoginController extends Controller
     public function store(Request $request)
     {
         $user=new User;
-
-        $user->uname=$request->uname;
-        $user->pwd=Hash::make($request->pwd);
+        DB::beginTransaction();
+        $user->uname=$request->reuname;
+        $user->pwd=Hash::make($request->repwd);
         $user->tel=$request->tel;
         $res=$user->save();
 
@@ -50,8 +49,10 @@ class LoginController extends Controller
         $res1=$userinfo->save();
 
         if($res && $res1){
-            return redirect('/home/article')->with('success','注册成功');
+            DB::commit();
+            return redirect('/home/index')->with('success','注册成功');
         }else{
+            DB::rollBack();
             return redirect('error','注册失败');
         }
 
@@ -110,7 +111,7 @@ class LoginController extends Controller
         session(['mobile_code'=>$mobile_code]);
         //短信接口地址
         $target = "http://106.ihuyi.com/webservice/sms.php?method=Submit&";
-        $target .= "account=C07291094&password=862156b552ee08119081a574455a584a&mobile=".$tel."&format=json&content=".rawurlencode("您的验证码是：".$mobile_code."。请不要把验证码泄露给其他人。");
+        $target .= "account=C55836513&password=b0791c45bb06eb3184e468432f94ce54&mobile=".$tel."&format=json&content=".rawurlencode("您的验证码是：".$mobile_code."。请不要把验证码泄露给其他人。");
         //请求接口 get/post
         //CURL 通过代码模拟浏览器请求
         $ch = curl_init();
@@ -125,7 +126,28 @@ class LoginController extends Controller
         echo $res;
     }
 
-    public function doLogin(Login $request)
+    public function isCode(Request $request)
+    {
+        $code = $request->code;
+        if($code == session('mobile_code')){
+            echo 'success';
+        }else{
+            echo 'error';
+        }
+    }
+
+    public function isUname(Request $request)
+    {
+        $uname  = $request->uname;
+        $user = User::where('uname',$uname)->get();
+        if($user->isEmpty()){
+            echo 'success';
+        }else{
+            echo 'error';
+        }
+    }
+
+    public function doLogin(Request $request)
     {
         $user = User::where('uname',$request->uname)->first();
         if($user){
@@ -141,6 +163,8 @@ class LoginController extends Controller
     public function logout()
     {
         session(['user'=>'']);
-        return back();
+        return redirect('/home/index');
+
     }
+
 }

@@ -27,6 +27,7 @@
   @show
  </head> 
  <body  style="overflow: visible;"> 
+  <a id="top"></a>
   <div pause-scroll-trigger="true" style="height: 100%" class="m-index-container">
    <div>
 
@@ -74,10 +75,7 @@
            </div> 
            <div class="login-input"> 
             <input type="password" name="pwd" placeholder="密码" /> 
-           </div> 
-           <div class="forget-psw"> 
-            <a href="../../pages/set/getCaptcha.html?type=2"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">忘记密码？</font></font></a> 
-           </div> 
+           </div>  
            <label>
            <div class="login-btn"> 
             <font style="vertical-align: inherit;"><input id="denglu" type="submit" value="登录" style="outline:medium;display:inline-block;background:none;border:none;cursor:pointer;"></font>
@@ -87,10 +85,10 @@
         </div> 
 
         <div class="login-content" style="display: none;"> 
-            <form action="/home/login" method="post">
+            <form action="/home/login" method="post" onsubmit="return false;" id="register_form">
            {{ csrf_field() }}
            <div class="login-input" style="margin-top:-20px;"> 
-             <label for=""><span style="font-size:12px;">用户名</span><input type="text"  name="uname" placeholder="4-10位字母开头字母数字组合" style="width:140px;"/> </label>
+             <label for=""><span style="font-size:12px;">用户名</span><input type="text"  name="reuname" placeholder="4-10位字母开头字母数字" style="width:140px;"/> </label>
              <span class="info"></span>
            </div> 
            <div class="login-input" style="margin-top:-10px;"> 
@@ -98,7 +96,7 @@
              <span class="info"></span>
            </div> 
            <div class="login-input" style="margin-top:-10px;"> 
-            <label for=""><span style="font-size:12px;">密　码</span><input type="password" placeholder="6-15位字母数字下划线" name="pwd" style="width:140px;" /></label>
+            <label for=""><span style="font-size:12px;">密　码</span><input type="password" placeholder="6-15位字母数字下划线" name="repwd" style="width:140px;" /></label>
             <span class="info"></span>
            </div> 
            <div class="login-input" style="margin-top:-10px;"> 
@@ -147,24 +145,6 @@
           </div>
          </div> 
          </a> 
-       <div class="massage">
-        <div class="msg-icon">
-         <img src="http://qnstatic.pianke.me/public/assets/img/msg.png" width="44px" /> 
-         <div class="msgnum">
-          4
-         </div>
-        </div> 
-        <div class="msg-menu">
-         <div class="drop-menu msg-drop">
-          <ul>
-           <li><a href="../../pages/user/user.html?uid=4764921&amp;msgType=0">评论 <span>0</span></a></li> 
-           <li><a href="../../pages/user/user.html?uid=4764921&amp;msgType=1">喜欢 <span>1</span></a></li> 
-           <li><a href="../../pages/user/user.html?uid=4764921&amp;msgType=2">粉丝 <span>0</span></a></li> 
-           <li><a href="../../pages/user/user.html?uid=4764921&amp;msgType=3">片邮 <span>3</span></a></li>
-          </ul>
-         </div>
-        </div>
-       </div> 
         @if(session('user'))
                <div class="userinfo">
                 <a href="/home/personal/{{ session('user')['id'] }}">  @if(session('user')['face'])<img src="{{ session('user')['face'] }}" alt="" class="user-icon" id="face1"> @else <img src="/face.png" alt="" class="user-icon" > @endif </a> 
@@ -217,7 +197,7 @@
 
 
    @show
-   <div class="back-top"></div> 
+   <label><a href="#top"><div class="back-top"></div></a></label> 
    <footer>
     <div class="foot">
      <div class="foot-logo"></div> 
@@ -305,44 +285,50 @@
   })
 
   $(document).ready(function(){
-   var isuname,ispwd,iscode = false;
+    var isuname,ispwd,iscode = false;
 
-    var uname = $("input[name='uname']").eq(0);
-    var pwd = $("input[name='pwd']");
+    var uname = $("input[name='reuname']").eq(0);
+    var pwd = $("input[name='repwd']");
     var code = $("input[name='code']");
-
+    var uname_val,pwd_val;
     uname.keyup(function(){
-      var uname = $(this).val();
-      // var uname_preg = /^[a-zA-Z\d\u4e00-\u9fa5]{4,10}$/;
+      uname_val = $(this).val();
       var uname_preg = /^[a-zA-Z]{1}[a-zA-Z\d]{3,9}$/;
-      if(uname_preg.test(uname)){
+      if(uname_preg.test(uname_val)){
         $('.info').eq(0).html('用户名格式正确');
-        isuname = true;
+        $.get('/home/login/isUname',{'uname':uname_val},function(msg){
+            if(msg == 'success'){
+               isuname = true;
+            }else{
+              isuname = false;
+               $('.info').eq(0).html('用户名已存在');
+            }
+         },'html')
       }else{
         $('.info').eq(0).html('用户名格式不正确');
       }
     });
    
    pwd.keyup(function(){
-      var pwd = $(this).val();
+      pwd_val = $(this).val();
       var pwd_preg = /^[\w]{6,15}$/;
 
       var arr = [];
       var number_preg = /[0-9]+/g;
-      if(number_preg.test(pwd)){
+      if(number_preg.test(pwd_val)){
         arr.push('数字');
       }
 
       var small_str_preg = /[a-z]+/g;
-      if(small_str_preg.test(pwd)){
+      if(small_str_preg.test(pwd_val)){
         arr.push('小写字母');
       }
       var big_str_preg = /[A-Z]+/g;
-      if(big_str_preg.test(pwd)){
+      if(big_str_preg.test(pwd_val)){
         arr.push('大写字母');
       }
 
-      if(pwd_preg.test(pwd)){
+      if(pwd_preg.test(pwd_val)){
         var str = '';
         switch(arr.length){
           case 1:str = '弱';break;
@@ -356,11 +342,23 @@
       }
     });
 
+    code.keyup(function(){
+       if(code.val().length == 4){
+         $.get('/home/login/isCode',{'code':code.val()},function(msg){
+            if(msg == 'success'){
+               iscode = true;
+            }else{
+               $('.info').eq(3).html('填写错误');
+            }
+         },'html')
+       }
+    })
+
     var ordertime=60;  
     var timeleft=ordertime;
     var btn=$("#yzm");
     var tel=$("#tel");
-    var reg = /^1[0-9]{10}$/;  
+    var reg = /^1[34578]\d{9}$/;  
     tel.keyup(function(){
       if (reg.test(tel.val())){
         $('.info').eq(1).html('手机号格式正确');
@@ -375,18 +373,17 @@
       else{
         $('.info').eq(1).html('手机号格式不正确');
         btn.attr("disabled",true);
-      }
+         $('form').eq(1).attr('onsubmit','return true');
+        }
     })
+
     $('#register').click(function(){
-      if(code.val()){
-      iscode = true;
-    }
-      if(isuname && ispwd){
-        return true;
-      }else{
-        return false;
-      }
+        if(isuname && ispwd && iscode){
+          $('#register_form').attr('onsubmit','return true');
+          $('#register_form').submit();
+        }
     })
+
 
     //计时函数
     function timeCount(){

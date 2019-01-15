@@ -8,6 +8,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\timelineStore;
 use Illuminate\Support\Facades\Storage;
 use App\Models\TimelineCate;
+use App\models\Report;
+use App\models\TimelineComment;
+use App\models\TimelineLike;
+use DB;
 
 class TimelineController extends Controller
 {
@@ -120,15 +124,46 @@ class TimelineController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    {
+    {   
+        //开启事务
+        DB::beginTransaction();
         $data = timeline::find($id);
-        $image = $data['image'];
-        $res = timeline::where('id',$id)->delete();
-        if($res){
-            Storage::delete($image);
-            echo 'success';exit;
+        $res1 = Timeline::where('id',$id)->delete();
+        //判断是否有喜欢的记录
+        if(TimelineLike::where('tid',$data['id'])->first()){
+            $res2 = TimelineLike::where('tid',$id)->delete();
         }else{
-            echo 'error';exit;
+            $res2 = true;
         }
+        //判断举报记录
+        if(Report::where('idid',$id)->where('table','timeline')->orwhere('table','timeline_comment')->first()){
+            $res3 = Report::where('idid',$id)->where('table','timeline')->orwhere('table','timeline_comment')->delete();
+        }else{
+            $res3 = true; 
+        } 
+        //判断是否有评论
+        if(TimeLineComment::where('tid',$id)->first()){
+            $res4 = TimeLineComment::where('tid',$id)->delete();
+        }else{
+            $res4 = true;
+        }
+        if( $res1 && $res2 && $res3 && $res4){
+            //判断是否有图片 
+            if($data->image){
+                $res5 = Storage::delete( ltrim($data->image,'/uploads/') );
+            }else{
+                $res5 = true;
+            }
+            if($res5){
+                DB::commit();
+                echo 'success';
+            }else{
+                DB::rollBack();
+                echo 'error';
+            }
+        }else{
+            DB::rollBack(); 
+            echo 'error';
+        }    
     }
 }

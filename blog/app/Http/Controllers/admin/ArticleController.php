@@ -6,10 +6,12 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\models\Article;
 use App\models\ArticleCate;
+use App\models\ArticleComment;
 use App\models\User;
 use App\Http\Requests\ArticleStore;
 use App\Http\Requests\ArticleEdit;
 use Illuminate\Support\Facades\Storage;
+use App\models\Report;
 class ArticleController extends Controller
 {
     /**
@@ -131,9 +133,17 @@ class ArticleController extends Controller
     public function destroy($id)
     {
         $article = Article::find($id);
+        $article_comment = ArticleComment::where('aid',$id)->get();
         if($article->image){
         $res = Storage::delete(ltrim($article->image,'/uploads/'));
      }
+       foreach($article_comment as $k=>$v){
+            $v->delete();
+        }
+        $report = Report::where('idid',$id)->where('table','article')->get();
+         foreach ($report as $k => $v) {
+             $v->delete();
+         }
         $res = $article->delete();
         if($res){
             echo 'success';
