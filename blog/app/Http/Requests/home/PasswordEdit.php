@@ -24,19 +24,19 @@ class PasswordEdit extends FormRequest
     public function rules()
     {
        return [
-           'oldPwd'=>'required',
-           'newPwd'=>'required',
-           'renewPwd'=>'required|same:newPwd',
+           'oldPwd_edit'=>'required',
+           'newPwd_edit'=>'required',
+           'renewPwd_edit'=>'required|same:newPwd_edit',
         ];
     }
 
    public function messages()
    {
        return [
-        'oldPwd.required' => '旧密码不能为空',
-        'newPwd.required' => '请输入新密码',
-        'renewPwd.required' => '请再次输入密码',
-        'renewPwd.same' => '两次密码不一致',
+        'oldPwd_edit.required' => '旧密码不能为空',
+        'newPwd_edit.required' => '请输入新密码',
+        'renewPwd_edit.required' => '请再次输入密码',
+        'renewPwd_edit.same' => '两次密码不一致',
     ];
    }
 }

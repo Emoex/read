@@ -122,6 +122,10 @@ class TimeLineCommentController extends Controller
     public function destroy($id)
     {
         $res = TimeLineComment::where('id',$id)->orwhere('parent_id',$id)->delete();
+        $report = Report::where('idid',$id)->where('table','timeline_comment')->get();
+             foreach ($report as $k => $v) {
+                 $v->delete();
+        }
         if( $res ){
             echo json_encode(['msg'=>$res]);
         }else{

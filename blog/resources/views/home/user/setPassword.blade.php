@@ -19,11 +19,11 @@
 
     <div class="set-title set-title-chengepwd">修改密码</div>
     <div class="login-input">
-      <input type="password" placeholder="输入旧密码" name="oldPwd" value="{{ old('oldPwd') }}"></div>
+      <input type="password" placeholder="输入旧密码" name="oldPwd_edit" value="{{ old('oldPwd') }}"></div>
     <div class="login-input">
-      <input type="password" placeholder="新密码" name="newPwd" value="{{ old('newPwd') }}"></div>
+      <input type="password" placeholder="新密码" name="newPwd_edit" value="{{ old('newPwd') }}"></div>
     <div class="login-input">
-      <input type="password" placeholder="确认密码" name="renewPwd" value="{{ old('renewPwd') }}"></div>
+      <input type="password" placeholder="确认密码" name="renewPwd_edit" value="{{ old('renewPwd') }}"></div>
     <label><div class="btn">
 	  <input type="submit" value="修改">
     </div></label>

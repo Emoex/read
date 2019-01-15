@@ -24,7 +24,6 @@ class UserController extends Controller
             $condition[]=['uname','like','%'.$req['content'].'%'];
         }
         $data=User::where($condition)->paginate(3);
-        //$data=User::all();
         return view('/admin/user/index',['title'=>'用户列表','data'=>$data]);
     }
 
@@ -46,9 +45,6 @@ class UserController extends Controller
      */
     public function store(UserStore $request)
     {
-        
-
-
         $user=new User;
 
         if($request->hasFile('face')){

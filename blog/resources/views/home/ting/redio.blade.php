@@ -128,7 +128,7 @@
                <a href="/home/ting/{{ $v->id }}" target="_blank">{{ $v->title }}</a>
               </div> 
               <div class="ting-author">
-               <a href="/pages/user/user.html?uid=296663" target="_blank">主播&nbsp;/&nbsp;{{ $v->User->nickname }}</a>
+               <a href="/pages/user/{{ $v->uid }}" target="_blank">主播&nbsp;/&nbsp;{{ $v->User->nickname }}</a>
               </div> 
               <div class="ting-others">
                {{ $v->listen }}次播放&nbsp;&nbsp;|&nbsp;&nbsp;评论:{{ $v->comment }}&nbsp;&nbsp;|&nbsp;&nbsp;喜欢:{{ $v->likes }}

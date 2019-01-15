@@ -162,7 +162,6 @@
            },5000);
            
            $('.likes-cpt').click(function(){
-            if(checkLogin()){
             $.post('/home/article/like',{'_token':$('input[name=_token]').val(),'aid':$('input[name=aid]').val()},function(data){
                       if(data['msg'] == 'like'){
                         $('.likes-cpt').addClass('likes');
@@ -173,7 +172,6 @@
                       }
                       
              },'json');
-          }
            })
            $('#like').click(function(){
              click(1);

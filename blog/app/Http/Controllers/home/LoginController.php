@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Userinfo;
 use Hash;
+use DB;
 class LoginController extends Controller
 {
     /**
@@ -38,7 +39,7 @@ class LoginController extends Controller
     public function store(Request $request)
     {
         $user=new User;
-
+        DB::beginTransaction();
         $user->uname=$request->reuname;
         $user->pwd=Hash::make($request->repwd);
         $user->tel=$request->tel;
@@ -49,8 +50,10 @@ class LoginController extends Controller
         $res1=$userinfo->save();
 
         if($res && $res1){
+            DB::commit();
             return redirect('/home/index')->with('success','注册成功');
         }else{
+            DB::rollBack();
             return redirect('error','注册失败');
         }
 

@@ -61,9 +61,9 @@
                 @endforeach  
             </ul>
          </div>
-           <script>
+           <!-- <script>
                    $('.login').css('display','block'); 
-            </script>
+            </script> -->
         @endif 
 
         <div class="login-content" style="display: block;"> 

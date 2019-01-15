@@ -9,7 +9,8 @@ use App\Models\Ting;
 use App\Models\TingCate;
 use App\Models\User;
 use DB;
-
+use App\models\Report;
+use App\models\TingComment;
 class TingController extends Controller
 {
     /**
@@ -136,8 +137,19 @@ class TingController extends Controller
      */
     public function destroy($id)
     {
-        $res=Ting::destroy($id);
-       // $res1=Userinfo::where('uid',$id)->delete();
+        $ting = Ting::find($id);
+        $ting_comment = TingComment::where('tid',$id)->get();
+        if($ting->img){
+        $res = Storage::delete(ltrim($ting->img,'/uploads/'));
+     }
+       foreach($ting_comment as $k=>$v){
+            $v->delete();
+        }
+        $report = Report::where('idid',$id)->where('table','ting')->get();
+         foreach ($report as $k => $v) {
+             $v->delete();
+         }
+        $res = $ting->delete();
         DB::beginTransaction();
         if($res){
             DB::commit();  //提交事务

@@ -161,12 +161,12 @@ class TingController extends Controller
     public function destroy($id)
     {
         $ting = Ting::find($id);
-        $ting_comment = ArticleComment::where('tid',$id)->get();
+        $ting_comment = TingComment::where('tid',$id)->get();
         $res1 = $ting->delete();
         foreach($ting_comment as $k=>$v){
             $v->delete();
         }
-        $report = Report::where('idid',$id)->where('table','article')->get();
+        $report = Report::where('idid',$id)->where('table','ting')->get();
          foreach ($report as $k => $v) {
              $v->delete();
          }

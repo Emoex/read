@@ -8,7 +8,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\timelineStore;
 use Illuminate\Support\Facades\Storage;
 use App\Models\TimelineCate;
-
+use App\models\Report;
+use App\models\TimelineComment;
 class TimelineController extends Controller
 {
     /**
@@ -122,10 +123,19 @@ class TimelineController extends Controller
     public function destroy($id)
     {
         $data = timeline::find($id);
-        $image = $data['image'];
+        if($data->image){
+            $res = Storage::delete(ltrim($data->image,'/uploads/'));
+         }
+        $timeline_comment = TimelineComment::where('tid',$id)->get();
+        foreach($timeline_comment as $k=>$v){
+            $v->delete();
+        }
+        $report = Report::where('idid',$id)->where('table','timeline')->get();
+         foreach ($report as $k => $v) {
+             $v->delete();
+         }
         $res = timeline::where('id',$id)->delete();
         if($res){
-            Storage::delete($image);
             echo 'success';exit;
         }else{
             echo 'error';exit;

@@ -114,10 +114,11 @@ class UserinfoController extends Controller
     {
        $request->flash();
        $user = User::find(session('user')['id']);
-       if(!Hash::check($request->newPwd,$user->pwd)){
+       if(!Hash::check($request->oldPwd_edit,$user->pwd)){
           return back()->with('error','原密码错误');  
             }
-       $user->pwd = Hash::make($request->pwd);
+       $user->pwd = Hash::make($request->newPwd_edit);
+       $user->save();
        session(['user'=>'']);
        return redirect('home/article');     
     }

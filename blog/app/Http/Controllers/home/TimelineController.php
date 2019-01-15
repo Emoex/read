@@ -274,6 +274,10 @@ class TimelineController extends Controller
         }else{
             $res3 = true;
         }
+        $report = Report::where('idid',$id)->where('table','timeline')->get();
+         foreach ($report as $k => $v) {
+             $v->delete();
+         }
         if( $res1 && $res2 && $res3 ){
             //判断是否有图片 
             if($data->image){
@@ -290,7 +294,7 @@ class TimelineController extends Controller
                 echo 'error';
             }
         }else{
-            DB::rollBack();
+            DB::rollBack(); 
             echo 'error';
         }
         
