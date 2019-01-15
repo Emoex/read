@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Userinfo;
 use Hash;
 use DB;
+
 class LoginController extends Controller
 {
     /**

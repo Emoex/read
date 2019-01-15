@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\TimelineCate;
 use App\models\Report;
 use App\models\TimelineComment;
+use App\models\TimelineLike;
+use DB;
 class TimelineController extends Controller
 {
     /**
@@ -121,24 +123,54 @@ class TimelineController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    {
+    {   
+        //开启事务
+        DB::beginTransaction();
         $data = timeline::find($id);
-        if($data->image){
-            $res = Storage::delete(ltrim($data->image,'/uploads/'));
-         }
-        $timeline_comment = TimelineComment::where('tid',$id)->get();
-        foreach($timeline_comment as $k=>$v){
-            $v->delete();
-        }
-        $report = Report::where('idid',$id)->where('table','timeline')->get();
-         foreach ($report as $k => $v) {
-             $v->delete();
-         }
-        $res = timeline::where('id',$id)->delete();
-        if($res){
-            echo 'success';exit;
+        $res1 = Timeline::where('id',$id)->delete();
+        //判断是否有喜欢的记录
+        if(TimelineLike::where('tid',$id)->first()){
+            $res2 = TimelineLike::where('tid',$id)->delete();
         }else{
-            echo 'error';exit;
+            $res2 = true;
         }
+        //判断举报记录
+        if(Report::where('idid',$id)->where('table','timeline')->first()){
+            $res3 = Report::where('idid',$id)->where('table','timeline')->delete();
+        }else{
+            $res3 = true; 
+        } 
+        //判断是否有评论
+        if(TimeLineComment::where('tid',$id)->first()){
+            $res4 = TimeLineComment::where('tid',$id)->get();
+            foreach($res4 as $k=>$v){
+                $temp = $v->$id;
+                $report = Report::where('idid',$temp)->where('table','timeline_comment')->get();
+                foreach ($report as $kk => $vv) {
+                 $vv->delete();
+                 }
+                $v->delete();
+            }
+        }else{
+            $res4 = true;
+        }
+        if( $res1 && $res2 && $res3 && $res4){
+            //判断是否有图片 
+            if($data->image){
+                $res5 = Storage::delete( ltrim($data->image,'/uploads/') );
+            }else{
+                $res5 = true;
+            }
+            if($res5){
+                DB::commit();
+                echo 'success';
+            }else{
+                DB::rollBack();
+                echo 'error';
+            }
+        }else{
+            DB::rollBack(); 
+            echo 'error';
+        }    
     }
 }

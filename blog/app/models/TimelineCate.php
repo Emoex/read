@@ -8,6 +8,7 @@ class TimelineCate extends Model
 {
     protected $table = 'timeline_cate';
     
+
     public $primaryKey = 'id';
 
    	public function timeline()

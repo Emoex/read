@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\TimeLineComment;
 use App\MOdels\User;
-
+use App\models\Report;
 class TimeLineCommentController extends Controller
 {
     /**

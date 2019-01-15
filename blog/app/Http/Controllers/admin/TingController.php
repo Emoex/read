@@ -143,6 +143,11 @@ class TingController extends Controller
         $res = Storage::delete(ltrim($ting->img,'/uploads/'));
      }
        foreach($ting_comment as $k=>$v){
+            $temp = $v->id;
+            $report = Report::where('idid',$temp)->where('table','ting_comment')->get();
+            foreach ($report as $kk => $vv) {
+                 $vv->delete();
+             }
             $v->delete();
         }
         $report = Report::where('idid',$id)->where('table','ting')->get();

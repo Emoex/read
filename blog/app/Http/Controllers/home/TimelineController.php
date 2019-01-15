@@ -13,7 +13,7 @@ use App\Models\TimelineLike;
 use App\Models\User;
 use App\Models\TimeLineComment;
 use Illuminate\Support\Facades\Storage;
-
+use App\models\Report;
 class TimelineController extends Controller
 {   
     /**
@@ -268,25 +268,35 @@ class TimelineController extends Controller
         }else{
             $res2 = true;
         }
+        //判断举报记录
+        if(Report::where('idid',$id)->where('table','timeline')->first()){
+            $res3 = Report::where('idid',$id)->where('table','timeline')->delete();
+        }else{
+            $res3 = true; 
+        } 
         //判断是否有评论
         if(TimeLineComment::where('tid',$id)->first()){
-            $res3 = TimeLineComment::where('tid',$id)->delete();
+            $res4 = TimeLineComment::where('tid',$id)->get();
+            foreach($res4 as $k=>$v){
+                $temp = $v->$id;
+                $report = Report::where('idid',$temp)->where('table','timeline_comment')->get();
+                foreach ($report as $kk => $vv) {
+                 $vv->delete();
+                 }
+                $v->delete();
+            }
         }else{
-            $res3 = true;
+            $res4 = true;
         }
-        $report = Report::where('idid',$id)->where('table','timeline')->get();
-         foreach ($report as $k => $v) {
-             $v->delete();
-         }
-        if( $res1 && $res2 && $res3 ){
+        if( $res1 && $res2 && $res3 && $res4){
             //判断是否有图片 
             if($data->image){
-                $res4 = Storage::delete( ltrim($data->image,'/uploads/') );
+                $res5 = Storage::delete( ltrim($data->image,'/uploads/') );
             }else{
-                $res4 = true;
+                $res5 = true;
             }
 
-            if($res4){
+            if($res5){
                 DB::commit();
                 echo 'success';
             }else{

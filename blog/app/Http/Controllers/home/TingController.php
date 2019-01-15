@@ -94,7 +94,7 @@ class TingController extends Controller
         $ting->title=$req['title'];
         $ting->cid=$req['cate'];
         $ting->aid=$article->id;
-        $ting->tname=$user->nickname;
+        $ting->uid=session('user')['id'];
         $res=$ting->save();
 
         if($res){
@@ -162,18 +162,29 @@ class TingController extends Controller
     {
         $ting = Ting::find($id);
         $ting_comment = TingComment::where('tid',$id)->get();
-        $res1 = $ting->delete();
-        foreach($ting_comment as $k=>$v){
+        if($ting->img){
+        $res = Storage::delete(ltrim($ting->img,'/uploads/'));
+     }
+       foreach($ting_comment as $k=>$v){
+            $temp = $v->id;
+            $report = Report::where('idid',$temp)->where('table','ting_comment')->get();
+            foreach ($report as $kk => $vv) {
+                 $vv->delete();
+             }
             $v->delete();
         }
         $report = Report::where('idid',$id)->where('table','ting')->get();
          foreach ($report as $k => $v) {
              $v->delete();
          }
-        if($res1){
-            echo 'success';
+        $res = $ting->delete();
+        DB::beginTransaction();
+        if($res){
+            DB::commit();  //提交事务
+            echo 'success';exit;
         }else{
-            echo 'error';
+            DB::rollBack();
+            echo 'error';exit;
         }
     }
     public function showCate(Request $request,$id)

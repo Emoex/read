@@ -184,7 +184,6 @@
                   $.post('/home/tingArticle',{'_token':$('input[name=_token]').val(),'username':$('input[name=username]').val(),'title1':$('input[name=title1]').val()},function(msg){
                       if(msg=='success'){
                         $('#form').attr('onsubmit','return true');
-                          $('#form').submit();
                       }else{
                         error('没找到对应的文章');
                       }

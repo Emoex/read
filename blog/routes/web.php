@@ -22,6 +22,7 @@ Route::resource('/admin/ting','admin\TingController');
 Route::resource('/admin/blogroll','admin\BlogrollController');
 Route::post('/home/ting/listen','home\TingController@listen');
 Route::post('/home/ting/like','home\TingController@like');
+Route::post('/home/tingArticle','home\TingController@tingArticle');
 Route::resource('/home/ting','home\TingController');
 Route::resource('/home/ting/comment','home\TingCommentController');
 Route::resource('/home/index','home\IndexController');

@@ -138,10 +138,15 @@ class ArticleController extends Controller
         $res = Storage::delete(ltrim($article->image,'/uploads/'));
      }
        foreach($article_comment as $k=>$v){
+            $temp = $v->id;
+            $report = Report::where('idid',$temp)->where('table','article_comment')->get();
+            foreach ($report as $kk => $vv) {
+                 $vv->delete();
+             }
             $v->delete();
         }
         $report = Report::where('idid',$id)->where('table','article')->get();
-         foreach ($report as $k => $v) {
+        foreach ($report as $k => $v) {
              $v->delete();
          }
         $res = $article->delete();
