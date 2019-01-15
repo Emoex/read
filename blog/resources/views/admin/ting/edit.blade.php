@@ -26,6 +26,14 @@
 				@endforeach
 			</select>
 	</div>
+	<div class='form-group'>
+		  <label for="tingtext">修改文章:</label>
+	          <select class="form-control" id="tingtext" name="aid">
+				@foreach($article as $k=>$v)
+				<option @if($data->aid == $v->id) selected @endif value="{{ $v->id }}">{{ $v->title }}</option>
+				@endforeach
+			</select>
+	</div>
 	<div class="form-group">
 		<label for="img">封面:</label>
 		<div><input type="file" name="img"></div>

@@ -61,9 +61,9 @@
                 @endforeach  
             </ul>
          </div>
-           <!-- <script>
+           <script>
                    $('.login').css('display','block'); 
-            </script> -->
+            </script>
         @endif 
 
         <div class="login-content" style="display: block;"> 
@@ -202,7 +202,12 @@
     <div class="foot">
      <div class="foot-logo"></div> 
      <div class="foot-link">
-      <span><a href="http://old.pianke.me/public/aboutus.php" target="_blank">关于我们</a> <a href="http://old.pianke.me/public/link.php" target="_blank">友情链接</a> <a href="http://old.pianke.me/public/help.php" target="_blank">片刻帮助</a> <a href="http://old.pianke.me/public/feedback.php" target="_blank">意见反馈</a> <a href="http://old.pianke.me/album/52a83abd7f8b9ab50d00000d" target="_blank">成长记忆</a><br /></span> 
+      <span>
+          @foreach($blogroll as $k=>$v)
+          <a href="{{ $v->url }}" target="_blank">{{ $v->name }}</a>
+          @endforeach
+          <br />
+      </span> 
       <span>All rights reserved &copy; 2016 pianke.me /黔ICP备17008875号-1</span>
      </div> 
      <div class="foot-icon">

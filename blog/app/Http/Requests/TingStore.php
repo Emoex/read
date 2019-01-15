@@ -25,8 +25,6 @@ class TingStore extends FormRequest
     {
         return [
 
-            'tname'=>'required',
-
             'img'=>'required',
             'title'=>'required',
             'music'=>'required',
@@ -37,8 +35,6 @@ class TingStore extends FormRequest
     {
         return [
             'title.required'=>'标题不能为空',
-            'tname.required'=>'请输入主播名',
-
             'img.required'=>'请选择封面',
             'music.required'=>'请添加电台音乐',
         ];

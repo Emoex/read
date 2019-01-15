@@ -18,10 +18,16 @@ class IndexController extends Controller
      */
     public function index()
     {
-        $articleq=Article::all();
+        $article_all=Article::all();
+        $articleq = [];
+        foreach($article_all as $k=>$v){
+            if($v->image){
+                $articleq[] = $v;
+            }
+        }
         $tingid = Ting::orderBy('id','desc')->paginate(3);
         $article = Article::orderBy('like','desc')->paginate(3);
-        $ting = Ting::orderBy('id','desc')->paginate(5);
+        $ting = Ting::orderBy('id','desc')->paginate(5);      
         return view('/home/index/index',['tingid'=>$tingid,'article'=>$article,'articleq'=>$articleq,'ting'=>$ting]);
     }
 

@@ -438,7 +438,7 @@
 							<a class="" data-toggle="collapse" href="#collapseExample8" aria-expanded="true">
 								<span>
 									
-									<i class="la la-paperclip"></i><span class="user-level">举报管理</span>
+									<i class="la la-gavel"></i><span class="user-level">举报管理</span>
 									<span class="caret"></span>
 								</span>
 							</a>

@@ -8,9 +8,9 @@ use App\Http\Requests\TingStore;
 use App\Models\Ting;
 use App\Models\TingCate;
 use App\Models\User;
+use App\Models\Article;
 use DB;
-use App\models\Report;
-use App\models\TingComment;
+
 class TingController extends Controller
 {
     /**
@@ -36,9 +36,10 @@ class TingController extends Controller
      */
     public function create()
     {
+        $article=Article::all();
         $user=User::all();
         $tingcate=TingCate::all();
-        return view('/admin/ting/create',['title'=>'添加电台','tingcate'=>$tingcate,'user'=>$user]);
+        return view('/admin/ting/create',['title'=>'添加电台','tingcate'=>$tingcate,'user'=>$user,'article'=>$article]);
     }
 
     /**
@@ -54,6 +55,7 @@ class TingController extends Controller
         $ting=new Ting;
         $ting->title=$reqs['title'];
         $ting->uid=$reqs['uid'];
+        $ting->aid=$reqs['aid'];
         if($request->hasFile('img')){
             $path = $request->file('img')->store('images');
             $ting->img='/uploads/'.$path;
@@ -91,9 +93,10 @@ class TingController extends Controller
      */
     public function edit($id)
     {
+        $article=Article::all();
         $tingcate=TingCate::all();
         $data=Ting::find($id);
-        return view('/admin/ting/edit',['title'=>'修改电台','data'=>$data,'tingcate'=>$tingcate]);
+        return view('/admin/ting/edit',['title'=>'修改电台','data'=>$data,'tingcate'=>$tingcate,'article'=>$article]);
     }
 
     /**
@@ -119,6 +122,7 @@ class TingController extends Controller
             $ting->music='/uploads/'.$music;
         }
         $ting->cid=$data['tingcate'];
+        $ting->aid=$data['aid'];
         $res=$ting->save();
         if($res){
             DB::commit();  //提交事务
@@ -137,24 +141,8 @@ class TingController extends Controller
      */
     public function destroy($id)
     {
-        $ting = Ting::find($id);
-        $ting_comment = TingComment::where('tid',$id)->get();
-        if($ting->img){
-        $res = Storage::delete(ltrim($ting->img,'/uploads/'));
-     }
-       foreach($ting_comment as $k=>$v){
-            $temp = $v->id;
-            $report = Report::where('idid',$temp)->where('table','ting_comment')->get();
-            foreach ($report as $kk => $vv) {
-                 $vv->delete();
-             }
-            $v->delete();
-        }
-        $report = Report::where('idid',$id)->where('table','ting')->get();
-         foreach ($report as $k => $v) {
-             $v->delete();
-         }
-        $res = $ting->delete();
+        $res=Ting::destroy($id);
+       // $res1=Userinfo::where('uid',$id)->delete();
         DB::beginTransaction();
         if($res){
             DB::commit();  //提交事务

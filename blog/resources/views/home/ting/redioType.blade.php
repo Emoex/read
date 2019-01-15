@@ -32,10 +32,10 @@
           <a href="/home/ting/{{ $v->id }}" target="_blank">{{$v->title}}</a>
          </div> 
          <div class="ting-author">
-          <a href="/home/personal/{{ $v->uid }}" target="_blank">主播&nbsp;/&nbsp;{{ $v->tname }}</a>
+          <a href="/home/personal/{{ $v->uid }}" target="_blank">主播&nbsp;/&nbsp;{{ $v->User->nickname }}</a>
          </div> 
          <div class="ting-others">
-          {{ $v->listen }}k次播放&nbsp;&nbsp;|&nbsp;&nbsp;评论:9&nbsp;&nbsp;|&nbsp;&nbsp;喜欢:{{ $v->like }}
+          {{ $v->listen }}k次播放&nbsp;&nbsp;|&nbsp;&nbsp;评论:&nbsp;&nbsp;|&nbsp;&nbsp;喜欢:{{ $v->likes }}
          </div>
         </div>
         
@@ -72,8 +72,8 @@
               temp.find('.ting-img a img').eq(0).attr('src',val.img);
               temp.find('.ting-title a').eq(0).attr('href','/home/ting/'+val.id);
               temp.find('.ting-title a').eq(0).html(val.title);
-              temp.find('.ting-author a').eq(0).attr('href','home/personal/'+val.tname);
-              temp.find('.ting-author a').eq(0).html('主播&nbsp;/&nbsp;'+val.tname);
+              temp.find('.ting-author a').eq(0).attr('href','home/personal/'+val.uid);
+              temp.find('.ting-author a').eq(0).html('主播&nbsp;/&nbsp;'+val.nickname);
               temp.find('.ting-others').eq(0).html(val.listen+'k次播放&nbsp;&nbsp;|&nbsp;&nbsp;评论:9&nbsp;&nbsp;|&nbsp;&nbsp;喜欢:'+val.like);
               // 追加到内容
               $('.ting-list').append(temp);

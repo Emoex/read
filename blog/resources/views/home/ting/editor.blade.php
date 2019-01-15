@@ -127,8 +127,12 @@
            文件暂时只支持MP3, 单个文件请不要超过30M 
           </div> 
               <h3 style="color:#666">添加文章</h3>
-              <span>用户名：</span><input type="text" name="username">
-              <span>文章标题：</span><input type="text" name="title1">
+              <div style="height:35px;line-height: 35px;">
+                  <span>用&nbsp户&nbsp名&nbsp：</span><input type="text" name="username" style="border:1px solid #ccc;width:860px">
+              </div>
+              <div style="height:35px;line-height: 35px;margin-top:10px;">
+                  <span>文章标题：</span><input type="text" name="title1" style="border:1px solid #ccc;width:858px">
+              </div>
               <br>
           <style type="text/css">
           </style>

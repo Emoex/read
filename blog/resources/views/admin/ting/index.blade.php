@@ -28,7 +28,7 @@
 				<tr>
 					<td>{{$v->id}}</td>
 					<td>{{$v->title}}</td>
-					<td>{{$v->tname}}</td>				
+					<td>{{$v->User->nickname}}</td>				
 					<td><img src='{{$v->img}}' style="width:100px;height:100px;border-radius: 10px;" /></td>
 					<td><audio controls="" src="{{$v->music}}" class='audio'></td>
 
@@ -40,17 +40,21 @@
 			@endforeach
 			<script type="text/javascript">
 
-						$('audio').each(function(){
-							$(this).mouseover(function(){
-								$('.audio').pause();
-								//$(this).play();
+				var audios = document.getElementsByTagName("audio");
+				// 暂停函数
+				function pauseAll() {
+				    var self = this;
+				    [].forEach.call(audios, function (i) {
+				        // 将audios中其他的audio全部暂停
+				        i !== self && i.pause();
+				    })
+				}
+				// 给play事件绑定暂停函数
+				[].forEach.call(audios, function (i) {
+				    i.addEventListener("play", pauseAll.bind(i));
+				})
 
-							})
-							
-							
-
-						})
-					</script>
+			</script>
 			</tbody>
 		</table>
 	</div>

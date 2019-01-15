@@ -56,6 +56,7 @@ class UserController extends Controller
         $user->sex=$request->sex;
         $user->tel=$request->tel;
         $user->email=$request->email;
+        $user->nickname = $request->uname;
         $res=$user->save();
 
         $userinfo=new Userinfo;

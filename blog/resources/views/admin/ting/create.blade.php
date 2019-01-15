@@ -29,7 +29,15 @@
 			<label for="tingcate">电台类别:</label>
 			<select class="form-control" id="tingcate" name="tingcate">
 				@foreach($tingcate as $k=>$v)
-				<option value="">{{ $v->name }}</option>
+				<option value="{{ $v->name }}">{{ $v->name }}</option>
+				@endforeach
+			</select>
+	</div>
+	<div class='form-group'>
+		  <label for="tingtext">添加文章:</label>
+	          <select class="form-control" id="tingtext" name="aid">
+				@foreach($article as $k=>$v)
+				<option value="{{ $v->id }}">{{ $v->title }}</option>
 				@endforeach
 			</select>
 	</div>

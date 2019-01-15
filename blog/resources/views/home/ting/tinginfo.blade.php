@@ -20,7 +20,7 @@
           <div class="authors">
            <div class="ting-author">
             主播:&nbsp;
-            <a href="/home/personal/{{ $info->uid }}" target="_blank">{{ $info->tname }}</a>
+            <a href="/home/personal/{{ $info->uid }}" target="_blank">{{ $info->User->nickname }}</a>
            </div> 
            
           </div> 
@@ -255,11 +255,11 @@
           @foreach($comment as $k=>$v)
                  <div class="comment-cpt">
                   <div class="comment-user-icon">
-                   <a href="../user/user.html?uid=166757" target="_blank"><img src="{{ $v->User->face }}" /></a>
+                   <a href="/home/personal/{{ $v->uid }}" target="_blank"><img src="{{ $v->User->face }}" /></a>
                   </div> 
                   <div class="comment-info">
                    <div class="comment-user-info">
-                    <a href="/home/user" target="_blank">{{ $v->User->nickname }}</a><span>　{{ $v->created_at }}</span>
+                    <a href="/home/personal/{{ $v->uid }}" target="_blank">{{ $v->User->nickname }}</a><span>　{{ $v->created_at }}</span>
                     <span class="comment-reply" onclick="dododo({{ $v->id }},this);">回复</span>
                     @if($v->uid == session('user')['id'] || session('user')['id'] == $info->uid) 
                     <span class="comment-del" onclick="destroy({{$v->uid}},{{ $v->id }},this,1)">删除</span>
@@ -276,9 +276,9 @@
                               <a href="../user/user.html?uid=4934695" target="_blank">　{{ $vv->User->nickname }}:</a>{{ $vv->content }}
                               @if($vv->uid == session('user')['id'] || session('user')['id'] == $info->uid)
                           <span class="comment-del delete" onclick="destroy({{$vv->uid}},{{ $vv->id }},this,2)">删除</span>
-                          @else
+                              @else
                           <span class="comment-del report" onclick="report({{ $vv->id }},'ting_comment')">举报</span>
-                          @endif
+                              @endif
                            </div>
                           @endforeach
                      @endif
@@ -305,8 +305,8 @@
          <div class="comment-user-info">
           <a href="../user/user.html?uid=3404651" target="_blank">吱吱1453813691</a><span>2018-12-4 13:35</span>  
           <span class="comment-reply">回复</span> 
-          <span class="comment-del" style="display: none;">删除</span> 
-          <span class="comment-del report" style="display: none;">举报</span>
+          <span class="comment-del" >删除</span> 
+          <span class="comment-del report">举报</span>
          </div> 
          <div class="comment-content">
           谢谢

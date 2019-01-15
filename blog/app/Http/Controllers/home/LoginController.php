@@ -44,6 +44,7 @@ class LoginController extends Controller
         $user->uname=$request->reuname;
         $user->pwd=Hash::make($request->repwd);
         $user->tel=$request->tel;
+        $user->nickname = $request->reuname;
         $res=$user->save();
 
         $userinfo=new Userinfo;

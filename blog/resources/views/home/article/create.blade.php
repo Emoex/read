@@ -22,7 +22,7 @@
   <body>
    <div class="menuBar hidden-xs"> 
    <div class="logo"> 
-    <a href="http://pianke.me/"> <img width="18px" src="http://pianke.image.alimmdn.com/webUeditor/assets/img/logo.png" /></a> 
+    <a href="/home/index"> <img width="18px" src="http://pianke.image.alimmdn.com/webUeditor/assets/img/logo.png" /></a> 
    </div> 
    <div class="menuItem"> 
     <a href="/home/article/create" class="active">文章</a> 

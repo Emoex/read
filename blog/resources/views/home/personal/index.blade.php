@@ -459,7 +459,7 @@
             })
 
             fans = function(uid,type,obj){
-                   var index = $(obj).parents('.msg-list').index();
+                   var index = $(obj).parents('.user-like-cpt').index();
                 if(type == 1){
                      $.post('/home/follow/'+uid,{'_token':$('input[name=_token]').val(),'_method':'DELETE'},function(msg){
                        if(msg == 'success'){
