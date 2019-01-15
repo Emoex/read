@@ -22,7 +22,12 @@ class TimelineController extends Controller
      */
     public function index(Request $request)
     {   
-        $data = timeline::orderBy('created_at','desc')->get();
+        $data = timeline::orderBy('created_at','desc')->paginate(10);
+        foreach ($data as $k => $v) {
+            if($v['cid']){
+                $v['cate'] = $v->Cate->name;
+            }
+        }
         return view('admin/Timeline/index',['title'=>'碎片管理','data'=>$data]);
     }
 

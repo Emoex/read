@@ -73,8 +73,10 @@ Route::resource('/home/follow','home\FollowController');
 
 
 Route::resource('admin/Conf/Slide','admin\SlideController');
-Route::post('admin/Conf/title_update','admin\ConfController@title_update');//标题管理
-Route::post('admin/Conf/Logo_update','admin\ConfController@Logo_update');//网站Logo管理
+Route::post('admin/Conf/title_update','admin\ConfController@title_update');//修改网站标题
+Route::post('admin/Conf/title_store','admin\ConfController@title_store');//添加网站标题
+Route::post('admin/Conf/Logo_update','admin\ConfController@Logo_update');//修改网站Logo
+Route::post('admin/Conf/Logo_store','admin\ConfController@Logo_store');//添加网站Logo
 Route::resource('admin/Conf','admin\ConfController');//网站管理
 Route::resource('admin/timeline','admin\TimelineController');//后台碎片管理
 Route::post('admin/timeline/profile','admin\TimelineController@profile');//碎片图片上传
