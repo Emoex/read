@@ -120,7 +120,7 @@ class SlideController extends Controller
         $path = Conf::find($id)['content'];
         $res = Conf::where('id',$id)->delete();
         if($res){
-            $res1 = Storage::delete($path);
+            $res1 = Storage::delete( ltrim($path,'/uploads/') );
             if($res1){
                 return redirect('admin/Conf/Slide')->with('success','删除成功');
             }else{

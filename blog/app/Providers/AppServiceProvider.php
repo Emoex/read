@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\Models\Blogroll;
+use App\Models\Conf;
 use Illuminate\Support\Facades\View;
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,7 +16,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         $blogroll=Blogroll::orderBy('id','desc')->paginate(4);
-        View::share('blogroll',$blogroll);
+        $title = Conf::where('name','title')->first()->content;
+        $logo = Conf::where('name','logo')->first();
+        $slide = Conf::where('name','slide')->get();
+        View::share(['blogroll'=>$blogroll,'title'=>$title,'logo'=>$logo,'slide'=>$slide]);
     }
 
     /**

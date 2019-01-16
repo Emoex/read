@@ -53,10 +53,12 @@ class TimelineController extends Controller
         $data = $request->except(['_token','profile']);
         if( $data['content'] ){
             $timeline = new timeline;
-            $timeline->cid = $data['cid'];
+            if( isset($data['cid']) ){
+                $timeline->cid = $data['cid'];
+            }
             $timeline->content = $data['content'];
             $timeline->public = $data['public'];
-            $timeline->uid = session('user')['id'];
+            $timeline->uid = session('user') ? session('user')['id'] : 3;
             if($request->hasFile('profile')){
                 $image = $request->file('profile')->store('images');
                 $timeline->image = '/uploads/'.$image;
@@ -149,7 +151,7 @@ class TimelineController extends Controller
         if(TimeLineComment::where('tid',$id)->first()){
             $res4 = TimeLineComment::where('tid',$id)->get();
             foreach($res4 as $k=>$v){
-                $temp = $v->$id;
+                $temp = $v->id;
                 $report = Report::where('idid',$temp)->where('table','timeline_comment')->get();
                 foreach ($report as $kk => $vv) {
                  $vv->delete();

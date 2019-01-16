@@ -9,6 +9,16 @@
     <section class="pc-banner" style="width:100%;">
       <div class="swiper-container" style="width:960px;margin:auto;">
         <div class="swiper-wrapper">
+         @if(!$slide->isEmpty())
+             @foreach($slide as $k=>$v)
+             <div class="swiper-slide swiper-slide-center none-effect">
+                <a href="#">
+                  <img src="{{ $v->content }}">
+                </a>
+                <div class="layer-mask"></div>
+            </div>
+            @endforeach
+         @else
           <div class="swiper-slide swiper-slide-center none-effect">
             <a href="#">
               <img src="/slideshow/img/1.jpg">
@@ -27,6 +37,7 @@
             </a>
             <div class="layer-mask"></div>
           </div>
+          @endif
         </div>
         
       </div>
@@ -127,7 +138,7 @@
         <div class="article-author">
          <a href="/home/personal/{{ $v->User->id }}">By&nbsp;/&nbsp;{{ $v->User->nickname }}</a>
         </div> 
-        <div class="article-content" style="overflow:hidden;line-height:20px">
+        <div class="article-content" style="overflow:hidden;line-height:22px">
            {{ preg_replace('/<\/?.+?\/?>/','',$v->content) }}
            <span class="view-all"><a href="/home/article/{{ $v->id }}" target="_blank">VIEW ALL<img src="http://qnstatic.pianke.me/public/assets/img/viewall.png" /></a></span>  
          

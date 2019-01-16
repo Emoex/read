@@ -2,7 +2,7 @@
   
   <head>
     <meta charset="UTF-8">
-    <title>片刻</title>
+    <title>{{ $title or '嘻嘻嘻' }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/common.css">
     <link href="https://qnstatic.pianke.me/editor/assets/favicon.ico" rel="icon" type="image/x-icon">
@@ -19,7 +19,7 @@
     <link rel="stylesheet" type="text/css" href="https://qnstatic.pianke.me/editor/assets/php/third-party/codemirror/codemirror.css">
     <script src="https://qnstatic.pianke.me/editor/assets/php/third-party/zeroclipboard/ZeroClipboard.js" type="text/javascript" defer="defer"></script>
   </head>
-  <body>
+  <body style="background:#fff">
    <div class="menuBar hidden-xs"> 
    <div class="logo"> 
     <a href="/home/index"> <img width="18px" src="http://pianke.image.alimmdn.com/webUeditor/assets/img/logo.png" /></a> 
@@ -44,9 +44,13 @@
   </div> 
   <form action="/home/article" method="post" id="form">
   <!-- 发表 --> 
-  <div class="articlecontent" style="padding-left: 65px;padding-right:30px;margin-top:-35px;"> 
+  <div class="articlecontent" style="padding-left:65px;padding-right:30px;margin-top:-35px;width:100%"> 
    
        {{ csrf_field() }}
+       <div class="text-center ueditoButton pull-right" style="padding-top:30px;"> 
+
+        <input type="submit" value='立即发布' style="background-color:#5BAD6B;border: 0px;color:#fff;width:90px;height:39px;" id="create">
+       </div> 
        <div class="articleTitle"> 
         <div> 
          <input type="text" maxlength="20" name="title" placeholder="请输入标题" style="font-size:17px;" value="{{ old('title') }}" /> 
@@ -71,12 +75,10 @@
 
        </div> 
        <!-- 发表结束 --> 
-       <div style="padding-left: 65px;"> 
+       <div style=""> 
         <script id="container" name="content" type="text/plain" style="height:400px"></script> 
        </div>
-          <div class="text-center pull-right ueditoButton"> 
-            <label><span style="background-color:#5BAD6B;border: 0px;color:#fff;margin-left:30px;position:absolute;left:1368px;top:44px;"><input type="submit" value="立即发布" id="create" style="outline:0;background:none;border:none;cursor:pointer;"></span> </label>
-           </div>
+         
       </div> 
    </form> 
    <script src="https://qnstatic.pianke.me/editor/editorBuild/common.js?v=37"></script> 

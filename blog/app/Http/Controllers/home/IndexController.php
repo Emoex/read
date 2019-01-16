@@ -20,9 +20,14 @@ class IndexController extends Controller
     {
         $article_all=Article::all();
         $articleq = [];
+        $i = 0;
         foreach($article_all as $k=>$v){
             if($v->image){
                 $articleq[] = $v;
+                $i++;
+                if($i == 5){
+                    break;
+                }
             }
         }
         $tingid = Ting::orderBy('id','desc')->paginate(3);

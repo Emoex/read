@@ -12,8 +12,8 @@ use App\Models\User;
 use App\Models\Article;
 use App\Models\Report;
 use DB;
-
-
+use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\TingStore;
 class TingController extends Controller
 {
     static protected function getComment($tid = 0,$parent_id = 0,&$result = array())
@@ -218,6 +218,9 @@ class TingController extends Controller
         $num=$request->num;
         $id=$request->cid;
         $ting=Ting::where('cid',$id)->offset(($p-1)*$num)->limit($num)->get();
+        foreach($ting as $k=>$v){
+          $v->nickname = $v->User->nickname;
+        }
         if($ting){
             echo json_encode($ting);
         }else{

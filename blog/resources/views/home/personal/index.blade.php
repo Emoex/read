@@ -190,7 +190,7 @@
                 $('.data-title-home span').removeClass('active');
                 if(index == 0){
                   if($('#article').length){
-              minigrid('#articles','#article');
+                  minigrid('#articles','#article');
             }
                 }else if(index == 1){
                   p = 2;

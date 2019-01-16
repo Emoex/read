@@ -278,7 +278,7 @@ class TimelineController extends Controller
         if(TimeLineComment::where('tid',$id)->first()){
             $res4 = TimeLineComment::where('tid',$id)->get();
             foreach($res4 as $k=>$v){
-                $temp = $v->$id;
+                $temp = $v->id;
                 $report = Report::where('idid',$temp)->where('table','timeline_comment')->get();
                 foreach ($report as $kk => $vv) {
                  $vv->delete();

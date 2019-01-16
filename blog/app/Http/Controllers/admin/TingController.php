@@ -10,7 +10,9 @@ use App\Models\TingCate;
 use App\Models\User;
 use App\Models\Article;
 use DB;
-
+use App\models\TingComment;
+use Illuminate\Support\Facades\Storage;
+use App\models\Report;
 class TingController extends Controller
 {
     /**
@@ -48,7 +50,7 @@ class TingController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(TingStore $request)
+    public function store(Request $request)
     {
         $reqs=$request->except(['_token']);
         DB::beginTransaction();
@@ -56,6 +58,7 @@ class TingController extends Controller
         $ting->title=$reqs['title'];
         $ting->uid=$reqs['uid'];
         $ting->aid=$reqs['aid'];
+        $ting->cid=$reqs['cid'];
         if($request->hasFile('img')){
             $path = $request->file('img')->store('images');
             $ting->img='/uploads/'.$path;
@@ -72,6 +75,8 @@ class TingController extends Controller
             DB::rollBack();
             return redirect('error','添加失败');
         }
+
+
     }
 
     /**
@@ -141,8 +146,24 @@ class TingController extends Controller
      */
     public function destroy($id)
     {
-        $res=Ting::destroy($id);
-       // $res1=Userinfo::where('uid',$id)->delete();
+        $ting = Ting::find($id);
+        $ting_comment = TingComment::where('tid',$id)->get();
+        if($ting->img){
+        $res = Storage::delete(ltrim($ting->img,'/uploads/'));
+     }
+       foreach($ting_comment as $k=>$v){
+            $temp = $v->id;
+            $report = Report::where('idid',$temp)->where('table','ting_comment')->get();
+            foreach ($report as $kk => $vv) {
+                 $vv->delete();
+             }
+            $v->delete();
+        }
+        $report = Report::where('idid',$id)->where('table','ting')->get();
+         foreach ($report as $k => $v) {
+             $v->delete();
+         }
+        $res = $ting->delete();
         DB::beginTransaction();
         if($res){
             DB::commit();  //提交事务

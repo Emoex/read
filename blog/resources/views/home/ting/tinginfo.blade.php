@@ -32,7 +32,7 @@
            <div class="btn-pause play-status-btn" style="display:block;">
             暂停Ting
            </div>
-           <div  style="display: none"><audio src="{{ $info->music }}" id="audio" autoplay="" controls=""></audio></div>
+           <div  style="display: none"><audio src="{{ $info->music }}" id="audio" autoplay controls=""></audio></div>
           </div>
           </label> 
           <script type="text/javascript">
@@ -48,8 +48,19 @@
                    $('#audio').click(function(){
                      alert(1);
                    })
+
+                  var player = $("#audio")[0];
+                  if(player.paused){
+                     $('.btn-pause').css('display','none');
+                      $('.btn-play').css('display','block');
+                      player.pause();
+                    }else{
+                      $('.btn-play').css('display','none');
+                      $('.btn-pause').css('display','block');
+                       player.play();
+                    }
                   music = function(){
-                    var player = $("#audio")[0];
+                    
                     if (player.paused){ /*如果已经暂停*/
                         player.play(); /*播放*/
                     }else {
@@ -59,10 +70,13 @@
               })
           </script>
           @if(isset($info->is_like))
-          <div class="likes-cpt ting-like likes"></div> 
+          <div class="likes-cpt ting-like likes" style="margin-left:0px;"></div> 
           @else
-          <div class="likes-cpt ting-like"></div> 
+          <div class="likes-cpt ting-like" style="margin-left:0px;width:50px;"></div> 
           @endif
+          @if(session('user')['id'] == $info->uid)
+         <a href="javascript:;" style="letter-spacing:3px;font-size:12px;" onclick="del({{ $info->id }})">删除</a>
+         @endif
          </div>
         </div> 
         <div class="ting-article-content">
@@ -100,13 +114,13 @@
 <!-- 评论开始 -->
 <script type="text/javascript">
        $(function(){
-            article = function(id){
+            del = function(id){
             confirm('删除的内容不可找回, 确认删除?');
             $('#confirm div:eq(1)').unbind("click").click(function(){
               $('.Confirm').addClass('hidden');
               $.post('/home/ting/'+id,{'_token':$('input[name=_token]').val(),'_method':'DELETE'},function(msg){
                 if( msg == 'success'){
-                  window.location.href='/home/article';
+                  window.location.href='/home/ting';
                 }else{
                   error('删除失败！');
                 }
@@ -130,7 +144,7 @@
                       var content = $('.reply').eq(index).val();
                       $.post('/home/ting/comment',{'_token':$('input[name=_token]').val(),'tid':{{ $info->id }},'content':content,'parent_id':parent_id},function(data){
                      if(data['msg'] == 'success'){
-                       div = '<div class="comment-content-others"><input type="hidden" name="parent_id" value="'+data['id']+'"><a href="../user/user.html?uid=4934695" target="_blank">　'+data['uname']+':</a>'+data['content']+'<span class="comment-del report" style="display: none;">举报</span><span class="comment-del" style="display:none">删除</span></div>';
+                       div = '<div class="comment-content-others"><input type="hidden" name="parent_id" value="'+data['id']+'"><a href="../user/user.html?uid=4934695" target="_blank">　'+data['uname']+':</a>'+data['content']+'<span class="comment-del" onclick="destroy('+data['uid']+','+data['id']+',this,2)">删除</span></div>';
                        $('.com-textarea').eq(index).before(div);
                        $('.com-textarea').eq(index).addClass('hidden'); 
                        $('.reply').eq(index).val('');
@@ -161,6 +175,7 @@
                            $('.comment-content:last').text(data['content']);
                            $('.comment-number:last').text(data['like']);
                            $('.comment-cpt:last').css('display','');
+                           $('.del:last').attr('onclick','destroy('+data['uid']+','+data['id']+',this,1)');
                            $('.comment-list-group:first').prepend('<div class="comment-cpt" style="">'+$('.comment-cpt:last').html()+'</div>');
                            $('.comment-cpt:last').css('display','none');
                      }else{
@@ -305,8 +320,7 @@
          <div class="comment-user-info">
           <a href="../user/user.html?uid=3404651" target="_blank">吱吱1453813691</a><span>2018-12-4 13:35</span>  
           <span class="comment-reply">回复</span> 
-          <span class="comment-del" >删除</span> 
-          <span class="comment-del report">举报</span>
+          <span class="comment-del del" >删除</span> 
          </div> 
          <div class="comment-content">
           谢谢

@@ -3,7 +3,7 @@
  <head> 
   <meta charset="UTF-8" /> 
   <meta type="" /> 
-  <title>嘻嘻嘻</title> 
+  <title>{{ $title or '嘻嘻嘻' }}</title> 
   <script src="/assets/js/core/jquery.3.2.1.min.js"></script>
   <link href="https://qnstatic.pianke.me/public/assets/favicon.ico" rel="icon" type="image/x-icon" /> 
   <link rel="stylesheet" href="/css/client.css" />  
@@ -26,7 +26,7 @@
     
   @show
  </head> 
- <body  style="overflow: visible;"> 
+ <body  style=""> 
   <a id="top"></a>
   <div pause-scroll-trigger="true" style="height: 100%" class="m-index-container">
    <div>
@@ -47,9 +47,6 @@
           <div class="alert alert-danger alert-dismissible" role="alert" style="background:#fff;border:0px;margin-bottom:-8px;width:200px;margin-left:200px;font-size:12px;">
             <strong>{{ session('error') }}</strong> 
           </div>
-          <script>
-                 $('.login').css('display','block'); 
-          </script>
           {{ session(['error'=>'']) }}
         @endif
 
@@ -61,9 +58,6 @@
                 @endforeach  
             </ul>
          </div>
-           <script>
-                   $('.login').css('display','block'); 
-            </script>
         @endif 
 
         <div class="login-content" style="display: block;"> 
@@ -88,7 +82,7 @@
             <form action="/home/login" method="post" onsubmit="return false;" id="register_form">
            {{ csrf_field() }}
            <div class="login-input" style="margin-top:-20px;"> 
-             <label for=""><span style="font-size:12px;">用户名</span><input type="text"  name="reuname" placeholder="4-10位字母开头字母数字" style="width:140px;"/> </label>
+             <label for=""><span style="font-size:12px;">用户名</span><input type="text"  name="reuname" placeholder="4-10位字母开头字母数字" style="width:130px;"/> </label>
              <span class="info"></span>
            </div> 
            <div class="login-input" style="margin-top:-10px;"> 
@@ -117,7 +111,7 @@
 
     <header class="" style="">
      <div class="head">
-      <div class="head-logo">
+      <div class="head-logo" style="background-image: url(  {{  $logo->content or '/images/logo.JPG' }}  );">
        <a href=""></a>
       </div> 
       <ul class="navbar">

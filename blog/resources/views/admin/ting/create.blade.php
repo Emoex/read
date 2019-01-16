@@ -27,9 +27,9 @@
 	</div>
 	<div class="form-group">
 			<label for="tingcate">电台类别:</label>
-			<select class="form-control" id="tingcate" name="tingcate">
+			<select class="form-control" id="tingcate" name="cid">
 				@foreach($tingcate as $k=>$v)
-				<option value="{{ $v->name }}">{{ $v->name }}</option>
+				<option value="{{ $v->id }}">{{ $v->name }}</option>
 				@endforeach
 			</select>
 	</div>

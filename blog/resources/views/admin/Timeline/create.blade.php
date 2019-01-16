@@ -28,6 +28,7 @@
 		  	</div>
 		  	<div>
 				  	<select class="form-control" name="cid" id="disabledSelect">
+				  			<option value=" ">添加碎片</option>
 				  		@foreach( $cate as $k=>$v)
 							<option value="{{ $v->id }}">{{ $v->name }}</option>
 						@endforeach

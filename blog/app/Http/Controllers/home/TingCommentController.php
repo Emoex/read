@@ -45,6 +45,8 @@ class TingCommentController extends Controller
         $res = $comment->save();
         $arr = [];
         if($res){
+            $arr['id'] = $comment->id;
+            $arr['uid'] = $comment->uid;
             $arr['uname'] = $comment->User->uname;
             $arr['nickname'] = $comment->User->nickname;
             $arr['face'] = $comment->User->face;

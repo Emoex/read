@@ -1,7 +1,7 @@
 <html lang="en">
  <head> 
   <meta charset="UTF-8" /> 
-  <title>片刻</title> 
+  <title>{{ $title or '嘻嘻嘻' }}</title> 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
   <link href="https://qnstatic.pianke.me/editor/assets/favicon.ico" rel="icon" type="image/x-icon" /> 
   <link rel="stylesheet" href="/css/common.css">
@@ -55,25 +55,18 @@
       </div> 
       <div class="articlecontent" style="margin-top:-63px;"> 
        <div class="text-center ueditoButton pull-right" style="margin-top:0px;padding-top:0px;"> 
-        <span class="preview">保存</span> 
 
         <input type="submit" value='提交' style="background-color:#5BAD6B;border: 0px;color:#fff;width:70px;height:39px;" id='submit'>
        </div> 
        <div class="articleTitle tingTitle" style="height:178px;"> 
         <div>
-         <input type="text" name='title' maxlength="30"  value="" placeholder="请输入标题" style="font-size:30px;color:#333" />
+         <input type="text" name='title' maxlength="30"  value="" placeholder="请输入标题" style="font-size:20px;color:#ccc" />
         </div> 
        </div> 
        <hr class="tingTitleHr" /> 
        <div class="articleType tingType"> 
          
         <div class="dropdown dropdownType"> 
-        <!--  <a href="" class="dropdown-toggle" data-toggle="dropdown" style="color:#999"> <span>选择分类</span> <img width="11px" src="http://pianke.image.alimmdn.com/webUeditor/assets/img/downpoint.png" /> </a> 
-        <ul class="dropdown-menu dropMenuDownpoint dropMenuDownpointTing"> 
-        @foreach($cate as $k=>$v)
-         <li class="tagLi"> <a>{{ $v->name }}</a></li> 
-         @endforeach
-        </ul>  -->
         <select name="cate" class="dropdown-toggle" id="">
             @foreach($cate as $k=>$v)
             <option value="{{ $v->id }}">{{ $v->name }}</option>
@@ -89,16 +82,6 @@
               <input type="file" name='img' value="" class='img' style="display: none">
               <img src="http://pianke.image.alimmdn.com/webUeditor/assets/img/uploadImgD.png" class='ssrc'/>
           </label> 
-          <script type="text/javascript">
-              /*$('.img').change(function(){
-                //C:\fakepath\41ac7977597008a42a70bd73afe5e9c120180805.jpg
-                    var im=$(this).val();
-                    var age=im.substr(12);
-                    var image='/uploads/images/'+age;
-                    $(this).next().attr('src',image);
-                    
-              });*/
-          </script>
           <div class="uploadText">
            请上传封面, 建议尺寸640x640
           </div> 
