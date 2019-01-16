@@ -53,6 +53,7 @@ class TingController extends Controller
     public function store(Request $request)
     {
         $reqs=$request->except(['_token']);
+        dd($request->hasFile('img'),$reqs);
         DB::beginTransaction();
         $ting=new Ting;
         $ting->title=$reqs['title'];
